@@ -1,0 +1,13 @@
+
+.userInfoBlock{
+    background: red;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.userInfo{
+    width: 250px;
+    background: blue;
+    display: flex;
+    justify-content: space-between;
+}

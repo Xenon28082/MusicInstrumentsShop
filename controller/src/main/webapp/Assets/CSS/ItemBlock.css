@@ -1,0 +1,33 @@
+.product{
+    border: #2ecc71 solid 2px;
+    width: 200px;
+    height: 400px;
+}
+
+.image img{
+    display: block;
+    margin-top: 5px;
+    margin-left: auto;
+    margin-right: auto
+}
+
+.info{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.addToCart{
+    width: 100%;
+}
+
+.blockCont {
+    padding-top: 85px;
+    margin-left: 210px
+}
+
+@media screen and (max-width: 1152px) {
+    .blockCont {
+        padding-top: 85px;
+        margin-left: 60px
+    }
+}
