@@ -16,9 +16,8 @@ public class ShowUserBasketCommand implements Command {
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse res) throws SQLException, ServletException, IOException {
-        long id = 1;
 //        Reserve reserve = new Reserve((Long) req.getSession().getAttribute("id"), Long.parseLong(req.getParameter("productId")), 1);
-        List<Reserve> reservs = reserveService.getReservations((int) id);
+        List<Reserve> reservs = reserveService.getReservations((Long )req.getSession().getAttribute("id"));
         req.getSession(true).setAttribute("reservations", reservs);
         req.getRequestDispatcher("UserBasket.jsp").forward(req, res);
 

@@ -22,7 +22,7 @@ public class ReserveServiceImpl implements ReserveService {
     }
 
     @Override
-    public List<Reserve> getReservations(int userId) throws SQLException {
+    public List<Reserve> getReservations(long userId) throws SQLException {
         ReserveDAO dao = new ReserveDAOImpl();
         return dao.getOrders(userId);
     }
