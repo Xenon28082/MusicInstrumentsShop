@@ -11,12 +11,13 @@
 <body>
 <c:set var="error" value="${param.message}"/>
 <div class="box">
+
     <form id="LoginForm" action="FrontController" method="post">
         <h1>Login</h1>
         <input type="hidden" name="COMMAND" value="FIND_USER"/>
         <input type="text" name="userloginLog" placeholder="Username" autocomplete="off">
         <input type="password" name="passwordLog" placeholder="Password" autocomplete="off">
-        <input type="submit" name="" placeholder="Login">
+        <input type="submit" placeholder="Login" value="Sign in">
     </form>
 
     <form id="RegForm" action="FrontController" method="post" style="display: none;">
@@ -25,18 +26,20 @@
         <input type="text" name="userlogin" placeholder="Userlogin" autocomplete="off">
         <input type="text" name="username" placeholder="Username" autocomplete="off">
         <input type="text" name="userlastname" placeholder="Userlastname" autocomplete="off">
-        <input type="password" name="password" placeholder="password" autocomplete="off">
-        <input type="submit" placeholder="Login">
+        <input type="password" name="password" placeholder="Password" autocomplete="off">
+        <input type="password" name="checkPassword" placeholder="Repeat password" autocomplete="off">
+        <input type="submit" placeholder="Login" value="Sign up">
     </form>
 
     <button id="GoToLogin"
             onclick="document.getElementById('LoginForm').style.display='block'; document.getElementById('RegForm').style.display='none';;document.getElementById('GoToLogin').style.display='none'; document.getElementById('GoToReg').style.display='block';"
-            style="display:none;"> Go to loginisation
+            style="display:none;">
+        Sign in
     </button>
 
     <button id="GoToReg"
             onclick=" document.getElementById('LoginForm').style.display='none'; document.getElementById('RegForm').style.display='block';document.getElementById('GoToReg').style.display='none'; document.getElementById('GoToLogin').style.display='block';">
-        Go to registration
+        Sign up
     </button>
     <c:if test="${error == 'noSuchUser'}">
         <p style="color: red">There is no such user</p>
@@ -44,84 +47,10 @@
     <c:if test="${error == 'loginExists'}">
         <p style="color: red">Login exists</p>
     </c:if>
+    <c:if test="${error == 'passwordsnotmatch'}">
+        <p style="color: red">Entered passwords don't match</p>
+    </c:if>
 </div>
-
-</body>
-</html>
-
-
-<%--<!DOCTYPE html>--%>
-<%--<html lang="en">--%>
-<%--<head>--%>
-<%--    <meta charset="UTF-8">--%>
-<%--    <title>Title</title>--%>
-<%--&lt;%&ndash;    <link rel="stylesheet" href="Assets/CSS/FallenBox.css">&ndash;%&gt;--%>
-<%--</head>--%>
-<%--<body>--%>
-<%--&lt;%&ndash;<jsp:include page="Assets/HTML/EnterForm.html"/>&ndash;%&gt;--%>
-<%--&lt;%&ndash;<div style="position: absolute; top: 120vh; width: 1000px; height: 50px; border: 3px solid red; color: red">&ndash;%&gt;--%>
-<%--    <c:if test="${error == 'noSuchUser'}">--%>
-<%--        <p style="color: red">There is no such user</p>--%>
-<%--    </c:if>--%>
-<%--    <c:if test="${error == 'loginExists'}">--%>
-<%--        <p style="color: red">Login exists</p>--%>
-<%--    </c:if>--%>
-<%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-<%--</body>--%>
-<%--</html>--%>
-
-<%--<html>--%>
-<%--<body>--%>
-
-
-<%--<jsp:include page="Assets/HTML/EnterForm.html"/>--%>
-
-<%--<p>Registration form</p>--%>
-<%----%>
-<%--<form method="post" action="FrontController">--%>
-<%--    <input type="hidden" name="COMMAND" value="CREATE_NEW_USER"/>--%>
-<%--    Login: <input name="userlogin"/>--%>
-<%--    <br/>--%>
-<%--    Name: <input name="username"/>--%>
-<%--    <br/>--%>
-<%--    Lastname: <input name="userlastname"/>--%>
-<%--    <br/>--%>
-<%--    Password: <input name="password"/>--%>
-<%--    <br/>--%>
-<%--    <button type="submit">Submit</button>--%>
-<%--</form>--%>
-<%----%>
-<%--<p>Login form</p>--%>
-<%----%>
-<%--<form method="get" action="FrontController">--%>
-<%--    <input type="hidden" name="COMMAND" value="FIND_USER"/>--%>
-<%--    Login: <input name="userloginLog"/>--%>
-<%--    <br/>--%>
-<%--    Password: <input name="passwordLog"/>--%>
-<%--    <br/>--%>
-<%--    <button type="submit">Submit</button>--%>
-<%--</form>--%>
-<%----%>
-<%--<form method="get" action="FrontController">--%>
-<%--    <input type="hidden" name="COMMAND" value="GET_PRODUCTS"/>--%>
-<%--    <button type="submit">Go to items page</button>--%>
-<%--</form>--%>
-<%----%>
-<%----%>
-<%--<br/>--%>
-
-
-<%--<c:set var="test" value="${sessionScope.test}"/>--%>
-
-<%--<c:out value="${test}"/>--%>
-
-
-<p>
-</p>
-
-<%--<c:set var="q" value="qwer"/>--%>
-
-<%--<c:out value="${q}"/>--%>
 
 </body>
 </html>

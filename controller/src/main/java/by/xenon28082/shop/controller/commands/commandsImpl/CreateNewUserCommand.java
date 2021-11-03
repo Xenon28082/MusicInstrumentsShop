@@ -20,22 +20,26 @@ public class CreateNewUserCommand implements Command {
         String name = req.getParameter("username");
         String lastname = req.getParameter("userlastname");
         String password = req.getParameter("password");
-        User newUser = new User(login, name, lastname, password);
-        User user = null;
-        try {
-            user = userService.registration(newUser);
-        } catch (SQLException throwables) {
-            res.sendRedirect("index.jsp?message=loginExists");
-        }
-        if(user != null){
-            req.getSession(true).setAttribute("login", user.getLogin());
-            req.getSession().setAttribute("id", user.getId());
-            req.getSession().setAttribute("role", user.getRole());
-            System.out.println("Successfull registration");
-            req.getRequestDispatcher("userPage.jsp").forward(req, res);
-        }
-        else{
-            System.out.println("Reg failed");
+        String checkPassword = req.getParameter("checkPassword");
+        if (!password.equals(checkPassword)) {
+            res.sendRedirect("index.jsp?message=passwordsnotmatch");
+        } else {
+            User newUser = new User(login, name, lastname, password);
+            User user = null;
+            try {
+                user = userService.registration(newUser);
+            } catch (SQLException throwables) {
+                res.sendRedirect("index.jsp?message=loginExists");
+            }
+            if (user != null) {
+                req.getSession(true).setAttribute("login", user.getLogin());
+                req.getSession().setAttribute("id", user.getId());
+                req.getSession().setAttribute("role", user.getRole());
+                System.out.println("Successfull registration");
+                req.getRequestDispatcher("userPage.jsp").forward(req, res);
+            } else {
+                System.out.println("Reg failed");
+            }
         }
     }
 

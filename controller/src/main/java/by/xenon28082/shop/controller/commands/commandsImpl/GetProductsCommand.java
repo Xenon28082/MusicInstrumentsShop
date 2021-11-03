@@ -29,15 +29,8 @@ public class GetProductsCommand implements Command {
         else
             products = service.getProducts();
 
-        for (Product product:
-             products) {
-            System.out.println("Product id - " + product.getId() + " Name - " + product.getName());
-        }
         req.setAttribute("items", products);
         req.setAttribute("type", type);
-//        req.getSession(true).setAttribute("message", "JUST A STRING");
-//        res.sendRedirect("try.jsp");
-        //Type передался через +
         req.getRequestDispatcher("itemsPage.jsp").forward(req, res);
     }
 

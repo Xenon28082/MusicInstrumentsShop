@@ -21,7 +21,6 @@ public class LoginCommand implements Command {
         User user = new User(login, password);
         UserDTO userDTO = userService.logination(user);
         if(userDTO == null){
-            System.out.println("Error");
             request.getSession(true).setAttribute("test", "This is test session");
             response.sendRedirect("index.jsp?message=noSuchUser");
         }

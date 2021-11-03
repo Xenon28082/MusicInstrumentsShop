@@ -12,12 +12,6 @@ public class ReserveServiceImpl implements ReserveService {
     @Override
     public boolean reserveProduct(Reserve reserve) throws SQLException {
         ReserveDAO dao = new ReserveDAOImpl();
-        System.out.println("Reserve");
-        System.out.println("User id - " + reserve.getUserId());
-        System.out.println("Prod id - " + reserve.getProductId());
-        System.out.println("Amount - " + reserve.getAmount());
-        System.out.println("______________________");
-//        return dao.save(reserve);
         return dao.save(reserve) != null;
     }
 
@@ -28,8 +22,8 @@ public class ReserveServiceImpl implements ReserveService {
     }
 
     @Override
-    public boolean deleteReservation(long userId, long orderId) {
+    public boolean deleteReservation(long userId, long orderId, int amount) {
         ReserveDAO dao = new ReserveDAOImpl();
-        return dao.deleteOrder(userId, orderId);
+        return dao.deleteOrder(userId, orderId, amount);
     }
 }

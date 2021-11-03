@@ -14,5 +14,4 @@ public interface UserService {
     boolean deleteUser(User user);
     List<User> getUsers(int row);
     long countUsers() throws SQLException;
-
 }

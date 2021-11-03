@@ -117,7 +117,6 @@ public class ProductDAOImpl implements ProductDAO {
                         resultSet.getString(5),
                         findProductVendor(resultSet.getLong(6))
                 );
-                System.out.println(productFound.getVendor());
                 products.add(productFound);
             }
 

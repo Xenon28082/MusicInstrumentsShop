@@ -20,6 +20,7 @@ public class CommandsFiller {
         commandMap.put("ADD_TO_BASKET", new AddToBasketCommand());
         commandMap.put("SHOW_BASKET", new ShowUserBasketCommand());
         commandMap.put("DELETE_FROM_BASKET", new DeleteFromBasketCommand());
+        commandMap.put("LOGOUT", new LogoutCommand());
 
         return commandMap;
     }

@@ -16,18 +16,14 @@ public class AddToBasketCommand implements Command {
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse res) throws SQLException, ServletException, IOException {
-//        long id = 1;
-        System.out.println("ProdId = " + Long.parseLong(req.getParameter("productId")));
-        System.out.println("UserId = " + (Long) req.getSession().getAttribute("id"));
-        Reserve reserve = new Reserve((Long) req.getSession().getAttribute("id"), Long.parseLong(req.getParameter("productId")), 1);
-        boolean isProductAdded = reserveService.reserveProduct(reserve);
+        try {
+            Reserve reserve = new Reserve((Long) req.getSession().getAttribute("id"), Long.parseLong(req.getParameter("productId")), Integer.valueOf(req.getParameter("productAmount")));
+            boolean isProductAdded = reserveService.reserveProduct(reserve);
+        } catch (NumberFormatException e) {
+            System.out.println("Number exception happened");
+        }
 
-//        if (isProductAdded) {
-            req.getRequestDispatcher("FrontController?COMMAND=GET_PRODUCTS").forward(req, res);
-//        } else {
-//            req.setAttribute("message", "Failed: add product to basket");
-//
-//        }
+        req.getRequestDispatcher("FrontController?COMMAND=GET_PRODUCTS").forward(req, res);
     }
 
     @Override

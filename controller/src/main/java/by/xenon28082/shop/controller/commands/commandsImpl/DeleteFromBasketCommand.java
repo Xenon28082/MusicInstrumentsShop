@@ -14,7 +14,7 @@ public class DeleteFromBasketCommand implements Command {
     ReserveService reserveService = new ReserveServiceImpl();
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse res) throws SQLException, ServletException, IOException {
-        reserveService.deleteReservation((Long) req.getSession().getAttribute("id"), Long.parseLong(req.getParameter("productId")));
+        reserveService.deleteReservation((Long) req.getSession().getAttribute("id"), Long.parseLong(req.getParameter("productId")), Integer.parseInt(req.getParameter("productAmount")));
         req.getRequestDispatcher("FrontController?COMMAND=SHOW_BASKET").forward(req, res);
     }
 

@@ -9,6 +9,13 @@
 </head>
 <body>
 
+<%
+    if(session.getAttribute("id") == null){
+        String redirectURL = "index.jsp";
+        response.sendRedirect(redirectURL);
+    }
+%>
+
 <header>
     <div class="head" style="display: flex; justify-content: space-between">
         <div class="ico">
@@ -49,7 +56,7 @@
             <span>Понравившиеся</span></a>
         </li>
 
-        <li><a class="mainRef" href="#4">
+        <li><a class="mainRef" href="FrontController?COMMAND=LOGOUT">
             <div class="img_n"><img src="https://img.icons8.com/ios/50/000000/exit.png"/></div>
             <span>Выход</span></a>
         </li>

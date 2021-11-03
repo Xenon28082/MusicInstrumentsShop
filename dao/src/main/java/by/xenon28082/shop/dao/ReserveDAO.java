@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ReserveDAO extends EntityFacade<Reserve>{
     List<Reserve> getOrders(long userId) throws SQLException;
-    boolean deleteOrder(long userId, long orderId);
+    boolean deleteOrder(long userId, long orderId, int amount);
 }

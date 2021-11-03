@@ -12,6 +12,14 @@
     <link rel="stylesheet" href="Assets/CSS/VerticalMenu.css">
 </head>
 <body>
+
+<%
+    if(session.getAttribute("id") == null){
+        String redirectURL = "index.jsp";
+        response.sendRedirect(redirectURL);
+    }
+%>
+
 <header>
     <div class="head" style="display: flex; justify-content: space-between">
         <div class="ico">
@@ -82,6 +90,7 @@
                     <input type="hidden" name="TYPE" value="${type}"/>
                     <input type="hidden" name="COMMAND" value="ADD_TO_BASKET"/>
                     <input type="hidden" name="productId" value="${fn:escapeXml(item.getId())}"/>
+                    <input type="number" name="productAmount" min="1" value="1">
                     <button class="addToCart" type="submit"><img
                             src="https://img.icons8.com/material-outlined/24/ffffff/plus--v1.png"/></button>
                 </form>

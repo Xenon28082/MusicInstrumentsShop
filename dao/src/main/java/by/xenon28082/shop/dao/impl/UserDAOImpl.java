@@ -47,7 +47,6 @@ public class UserDAOImpl implements UserDAO {
         if (user.getLogin() != null) {
             return user;
         }
-        System.out.println("Error in logination");
         return null;
     }
 
