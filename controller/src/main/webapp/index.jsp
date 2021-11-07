@@ -23,9 +23,9 @@
     <form id="RegForm" action="FrontController" method="post" style="display: none;">
         <h1>Registration</h1>
         <input type="hidden" name="COMMAND" value="CREATE_NEW_USER"/>
-        <input type="text" name="userlogin" placeholder="Userlogin" autocomplete="off">
-        <input type="text" name="username" placeholder="Username" autocomplete="off">
-        <input type="text" name="userlastname" placeholder="Userlastname" autocomplete="off">
+        <input type="text" name="userlogin" placeholder="Login" autocomplete="off">
+        <input type="text" name="username" placeholder="Name" autocomplete="off">
+        <input type="text" name="userlastname" placeholder="Lastname" autocomplete="off">
         <input type="password" name="password" placeholder="Password" autocomplete="off">
         <input type="password" name="checkPassword" placeholder="Repeat password" autocomplete="off">
         <input type="submit" placeholder="Login" value="Sign up">

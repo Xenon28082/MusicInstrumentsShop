@@ -25,15 +25,18 @@ public class LoginCommand implements Command {
             response.sendRedirect("index.jsp?message=noSuchUser");
         }
         else{
-            request.getSession(true).setAttribute("id", userDTO.id);
-            request.getSession().setAttribute("role",  userDTO.role);
-            request.getSession().setAttribute("login",  userDTO.login);
+
+            request.getSession(true).setAttribute("id", userDTO.getId());
+            request.getSession().setAttribute("role",  userDTO.getRole());
+            request.getSession().setAttribute("login",  userDTO.getLogin());
+
+            if(userDTO.getRole() == 1){
+                System.out.println("Going to admin page");
+                request.getRequestDispatcher("adminPage.jsp").forward(request, response);
+                return;
+            }
             request.getRequestDispatcher("userPage.jsp").forward(request, response);
         }
     }
 
-    @Override
-    public void print() {
-        System.out.println("\"Login\" command");
-    }
 }

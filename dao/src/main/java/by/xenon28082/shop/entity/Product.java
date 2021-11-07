@@ -18,6 +18,14 @@ public class Product {
         this.vendor = vendor;
     }
 
+    public Product(String name, double price, long stock, String type, String vendor) {
+        this.name = name;
+        this.price = price;
+        this.stock = stock;
+        this.type = type;
+        this.vendor = vendor;
+    }
+
     public Product(){
 
     }

@@ -20,11 +20,10 @@ public class GetProductsCommand implements Command {
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse res) throws SQLException, ServletException, IOException {
-        String type = null;
-        type = req.getParameter("TYPE");
+        String type = req.getParameter("TYPE");
         List<Product> products = null;
 
-        if(type != null)
+        if (type != null)
             products = service.getProductsByType(type);
         else
             products = service.getProducts();
@@ -34,8 +33,4 @@ public class GetProductsCommand implements Command {
         req.getRequestDispatcher("itemsPage.jsp").forward(req, res);
     }
 
-    @Override
-    public void print() {
-        System.out.println("Get products comand");
-    }
 }

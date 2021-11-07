@@ -43,13 +43,4 @@ public class CreateNewUserCommand implements Command {
         }
     }
 
-    public void print() {
-        System.out.println("You came in right execute block");
-    }
-
-
-    @Override
-    public String toString() {
-        return "\"Create new user\" command";
-    }
 }

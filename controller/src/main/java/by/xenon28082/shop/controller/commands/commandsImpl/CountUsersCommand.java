@@ -20,8 +20,4 @@ public class CountUsersCommand implements Command {
         }
     }
 
-    @Override
-    public void print() {
-        System.out.println("\"Count Users\" command");
-    }
 }

@@ -1,19 +1,19 @@
 package by.xenon28082.shop.entity;
 
-public class Reserve {
+public class Order {
     private long orderId;
     private long userId;
     private Product product;
     private long productId;
     private int amount;
 
-    public Reserve(long userId, Product product, int amount) {
+    public Order(long userId, Product product, int amount) {
         this.userId = userId;
         this.product = product;
         this.amount = amount;
     }
 
-    public Reserve(long userId, long productId, int amount) {
+    public Order(long userId, long productId, int amount) {
         this.userId = userId;
         this.productId = productId;
         this.amount = amount;
@@ -58,5 +58,16 @@ public class Reserve {
 
     public void setProductId(long productId) {
         this.productId = productId;
+    }
+
+    @Override
+    public String toString() {
+        return "Reserve{" +
+                "orderId=" + orderId +
+                ", userId=" + userId +
+                ", product=" + product +
+                ", productId=" + productId +
+                ", amount=" + amount +
+                '}';
     }
 }

@@ -19,39 +19,50 @@ public class UserDAOImpl implements UserDAO {
 
 
     @Override
-    public User save(User user) throws SQLException {
-        Connection connection = DataBaseConfig.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(SAVE_USER_QUERY);
-        preparedStatement.setString(1, user.getLogin());
-        preparedStatement.setString(2, user.getName());
-        preparedStatement.setString(3, user.getLastname());
-        preparedStatement.setString(4, user.getPassword());
-        int result = preparedStatement.executeUpdate();
+    public User save(User user) {
 
+        try {
+            Connection connection = DataBaseConfig.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SAVE_USER_QUERY);
+            preparedStatement.setString(1, user.getLogin());
+            preparedStatement.setString(2, user.getName());
+            preparedStatement.setString(3, user.getLastname());
+            preparedStatement.setString(4, user.getPassword());
+            int result = preparedStatement.executeUpdate();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return find(user);
     }
 
     @Override
-    public User find(User user) throws SQLException {
-        Connection connection = DataBaseConfig.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(FIND_USER_BY_LOGIN_AND_PASSWORD_QUERY);
-        preparedStatement.setString(1, user.getLogin());
-        preparedStatement.setString(2, user.getPassword());
-        ResultSet resultSet = preparedStatement.executeQuery();
-        user = new User();
-        while (resultSet.next()) {
-            user.setLogin(resultSet.getString(1));
-            user.setId(resultSet.getLong(5));
-            user.setRole(resultSet.getInt(6));
+    public User find(User user) {
+
+        try {
+            Connection connection = DataBaseConfig.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(FIND_USER_BY_LOGIN_AND_PASSWORD_QUERY);
+            preparedStatement.setString(1, user.getLogin());
+            preparedStatement.setString(2, user.getPassword());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            user = new User();
+            while (resultSet.next()) {
+                user.setLogin(resultSet.getString(1));
+                user.setId(resultSet.getLong(5));
+                user.setRole(resultSet.getInt(6));
+            }
+            if (user.getLogin() != null) {
+                return user;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
-        if (user.getLogin() != null) {
-            return user;
-        }
+
         return null;
     }
 
     @Override
-    public User findOne(long id) {
+    public User findById(long id) {
         return null;
     }
 

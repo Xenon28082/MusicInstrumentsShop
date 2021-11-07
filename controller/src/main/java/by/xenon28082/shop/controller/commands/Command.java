@@ -9,5 +9,4 @@ import java.sql.SQLException;
 public interface Command {
     void execute(HttpServletRequest req, HttpServletResponse res) throws SQLException, ServletException, IOException;
 
-    void print();
 }

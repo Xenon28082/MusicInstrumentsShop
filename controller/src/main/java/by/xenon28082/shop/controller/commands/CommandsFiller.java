@@ -21,6 +21,8 @@ public class CommandsFiller {
         commandMap.put("SHOW_BASKET", new ShowUserBasketCommand());
         commandMap.put("DELETE_FROM_BASKET", new DeleteFromBasketCommand());
         commandMap.put("LOGOUT", new LogoutCommand());
+        commandMap.put("ADD_NEW_ITEM", new AddNewItemCommand());
+        commandMap.put("GET_VENDORS", new GetVendorsCommand());
 
         return commandMap;
     }

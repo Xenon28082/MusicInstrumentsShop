@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface EntityFacade<T>{
 
-    T save(T t) throws SQLException;
+    T save(T t);
 
-    T find(T t) throws SQLException;
+    T find(T t);
 
-    T findOne(long id);
+    T findById(long id);
 
     boolean update(T t);
 

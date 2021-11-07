@@ -1,4 +1,3 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -9,8 +8,8 @@
 </head>
 <body>
 
-    <%
-    if(session.getAttribute("id") == null){
+<%
+    if (session.getAttribute("id") == null) {
         String redirectURL = "index.jsp";
         response.sendRedirect(redirectURL);
     }
@@ -35,7 +34,7 @@
 
 <nav id="menuVertical">
     <ul>
-        <li ><a class="mainRef" href="FrontController?COMMAND=GET_PRODUCTS">
+        <li><a class="mainRef" href="FrontController?COMMAND=GET_PRODUCTS">
             <div class="img_n"><img class="try" src="https://img.icons8.com/ios/50/000000/progressive-rock.png"/></div>
             <span>Каталог</span></a>
             <ul>
@@ -51,12 +50,12 @@
             <span>Корзина</span></a>
         </li>
 
-        <li><a class="mainRef" href="#3">
-            <div class="img_n"><img src="https://img.icons8.com/ios/50/000000/like--v2.png"/></div>
+        <li><a class="mainRef" href="FrontController?COMMAND=GET_VENDORS">
+            <div class="img_n"><img src="https://img.icons8.com/ios/50/ffffff/plus--v1.png"/></div>
             <span>Добавить новый товар</span></a>
         </li>
 
-        <li><a class="mainRef" href="#4">
+        <li><a class="mainRef" href="FrontController?COMMAND=LOGOUT">
             <div class="img_n"><img src="https://img.icons8.com/ios/50/000000/exit.png"/></div>
             <span>Выход</span></a>
         </li>
@@ -66,3 +65,4 @@
 <div class="menu">
     <div class="footer">Copyright</div>
 </div>
+</body>

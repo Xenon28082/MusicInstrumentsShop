@@ -14,7 +14,7 @@
 <body>
 
 <%
-    if(session.getAttribute("id") == null){
+    if (session.getAttribute("id") == null) {
         String redirectURL = "index.jsp";
         response.sendRedirect(redirectURL);
     }
@@ -60,7 +60,7 @@
             <span>Понравившиеся</span></a>
         </li>
 
-        <li><a class="mainRef" href="#4">
+        <li><a class="mainRef" href="FrontController?COMMAND=LOGOUT">
             <div class="img_n"><img src="https://img.icons8.com/ios/50/000000/exit.png"/></div>
             <span>Выход</span></a>
         </li>
@@ -73,6 +73,7 @@
 
 <c:set var="items" value="${requestScope.items}"/>
 <c:set var="type" value="${requestScope.type}"/>
+<c:set var="userRole" value="${sessionScope.role}"/>
 
 <div class="blockCont" style="display: flex; justify-content: flex-start; flex-wrap: wrap;">
     <c:forEach var="item" items="${items}">
@@ -85,15 +86,17 @@
                 <div><c:out value="ItemName - ${item.getName()}"/></div>
                 <div><c:out value="ItemPrice - ${item.getPrice()}"/></div>
                 <div><c:out value="ItemVendor - ${item.getVendor()}"/></div>
-
-                <form method="post" action="FrontController">
-                    <input type="hidden" name="TYPE" value="${type}"/>
-                    <input type="hidden" name="COMMAND" value="ADD_TO_BASKET"/>
-                    <input type="hidden" name="productId" value="${fn:escapeXml(item.getId())}"/>
-                    <input type="number" name="productAmount" min="1" value="1">
-                    <button class="addToCart" type="submit"><img
-                            src="https://img.icons8.com/material-outlined/24/ffffff/plus--v1.png"/></button>
-                </form>
+                <div><c:out value="InStock - ${item.getStock()}"/></div>
+                <c:if test="${userRole == 2}">
+                    <form method="post" action="FrontController">
+                        <input type="hidden" name="TYPE" value="${type}"/>
+                        <input type="hidden" name="COMMAND" value="ADD_TO_BASKET"/>
+                        <input type="hidden" name="productId" value="${fn:escapeXml(item.getId())}"/>
+                        <input type="number" name="productAmount" min="1" value="1">
+                        <button class="addToCart" type="submit"><img
+                                src="https://img.icons8.com/material-outlined/24/ffffff/plus--v1.png"/></button>
+                    </form>
+                </c:if>
             </div>
 
         </div>

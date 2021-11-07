@@ -11,13 +11,5 @@ public class GetUsersCommand implements Command {
         System.out.println("Wrong door");
     }
 
-    @Override
-    public void print() {
-        System.out.println("GetUsers");
-    }
 
-    @Override
-    public String toString() {
-        return "\"Get users\" command";
-    }
 }
