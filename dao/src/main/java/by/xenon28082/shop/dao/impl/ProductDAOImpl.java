@@ -22,9 +22,11 @@ public class ProductDAOImpl implements ProductDAO {
     private static final String GET_VENDORS_QUERY = "SELECT * FROM vendors";
     private static final String FIND_VENDOR_BY_NAME_QUERY = "SELECT * FROM vendors WHERE vendor_name = ?";
     private static final String ADD_NEW_PRODUCTS_QUERY = "INSERT INTO products (product_name, price, in_stock, product_type, vendor_id) VALUES (?, ?, ?, ?, ?)";
+    private static final String UPDATE_PRODUCT_QUERY = "UPDATE products SET in_stock = in_stock - ? WHERE product_id = ?";
+    private static final String DELETE_PRODUCT_QUERY = "DELETE FROM products WHERE product_id = ?";
 
     @Override
-    public Product save(Product product){
+    public Product save(Product product) {
         try {
             Connection connection = DataBaseConfig.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(ADD_NEW_PRODUCTS_QUERY);
@@ -43,7 +45,7 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public Product find(Product product){
+    public Product find(Product product) {
         return null;
     }
 
@@ -77,8 +79,20 @@ public class ProductDAOImpl implements ProductDAO {
         return false;
     }
 
+
     @Override
-    public boolean delete(long id) {
+    public boolean delete(long productId) {
+        try {
+
+            Connection connection = DataBaseConfig.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_PRODUCT_QUERY);
+            preparedStatement.setLong(1, productId);
+
+            return preparedStatement.executeUpdate() != 0;
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return false;
     }
 
@@ -194,5 +208,24 @@ public class ProductDAOImpl implements ProductDAO {
             throwables.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public boolean update(long productId, long productAmount) {
+        try {
+            Connection connection = DataBaseConfig.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PRODUCT_QUERY);
+            preparedStatement.setLong(1, productAmount);
+            preparedStatement.setLong(2, productId);
+            int rows = preparedStatement.executeUpdate();
+            Product gotProduct = findById(productId);
+            if (gotProduct.getStock() == 0) {
+                return delete(productId);
+            }
+            return rows != 0;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return false;
     }
 }

@@ -11,8 +11,6 @@ public class CommandsFiller {
     private static Map<String, Command> commandMap = new HashMap<String, Command>();
 
     public static Map<String, Command> initCommandMap(){
-
-        commandMap.put("GET_USERS", new GetUsersCommand());
         commandMap.put("CREATE_NEW_USER", new CreateNewUserCommand());
         commandMap.put("COUNT_USERS", new CountUsersCommand());
         commandMap.put("FIND_USER", new LoginCommand());
@@ -23,7 +21,9 @@ public class CommandsFiller {
         commandMap.put("LOGOUT", new LogoutCommand());
         commandMap.put("ADD_NEW_ITEM", new AddNewItemCommand());
         commandMap.put("GET_VENDORS", new GetVendorsCommand());
-
+        commandMap.put("DELETE_SOME", new DeleteItemCommand());
+        commandMap.put("GET_USER_INFO", new FindUserCommand());
+        commandMap.put("UPDATE_USER", new UpdateUserCommand());
         return commandMap;
     }
 

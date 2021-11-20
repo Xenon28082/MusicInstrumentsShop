@@ -9,4 +9,6 @@ public interface OrderService {
     boolean reserveProduct(Order order) throws SQLException;
     List<Order> getReservations(long userId) throws SQLException;
     boolean deleteReservation(long userId, long orderId, int amount);
+    boolean findReservation(long productId);
+    boolean deleteAllByProductId(long productId);
 }

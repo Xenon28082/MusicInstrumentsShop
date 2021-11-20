@@ -11,4 +11,5 @@ public interface ProductService {
     List<Product> getProductsByType(String type);
     List<Vendor> getVendors();
     Product addNewProduct(Product product) throws SQLException;
+    boolean updateProduct(long productId, long amount);
 }

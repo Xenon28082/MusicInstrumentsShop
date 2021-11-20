@@ -17,6 +17,14 @@ public class User {
         this.role = user.role;
     }
 
+    public User(String login, String firsname, String lastname, long id, int role){
+        this.login = login;
+        this.name = firsname;
+        this.lastname = lastname;
+        this.id = id;
+        this.role = role;
+    }
+
     public User(String login, String name, String lastname, String password, long id) {
         this.login = login;
         this.name = name;
@@ -88,5 +96,17 @@ public class User {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "login='" + login + '\'' +
+                ", name='" + name + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", password='" + password + '\'' +
+                ", role=" + role +
+                ", id=" + id +
+                '}';
     }
 }

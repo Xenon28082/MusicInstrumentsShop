@@ -10,10 +10,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AddNewItemCommand implements Command {
+    private static final Logger logger = LoggerFactory.getLogger(AddNewItemCommand.class);
+
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse res) throws SQLException, ServletException, IOException {
+
+        logger.info("Got to AddNewItemCommand");
+
         Product product = new Product(
                 req.getParameter("productName"),
                 Double.valueOf(req.getParameter("productPrice")),

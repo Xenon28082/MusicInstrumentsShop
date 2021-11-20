@@ -20,6 +20,11 @@
     }
 %>
 
+<c:set var="items" value="${requestScope.items}"/>
+<c:set var="type" value="${requestScope.type}"/>
+<c:set var="userRole" value="${sessionScope.role}"/>
+<c:set var="error" value="${param.message}"/>
+
 <header>
     <div class="head" style="display: flex; justify-content: space-between">
         <div class="ico">
@@ -50,15 +55,24 @@
             </ul>
         </li>
 
-        <li><a class="mainRef" href="FrontController?COMMAND=SHOW_BASKET">
-            <div class="img_n"><img src="https://img.icons8.com/ios/50/000000/shopping-basket.png"/></div>
-            <span>Корзина</span></a>
-        </li>
 
-        <li><a class="mainRef" href="#3">
-            <div class="img_n"><img src="https://img.icons8.com/ios/50/000000/like--v2.png"/></div>
-            <span>Понравившиеся</span></a>
-        </li>
+        <c:if test="${userRole == 2}">
+            <li><a class="mainRef" href="FrontController?COMMAND=SHOW_BASKET">
+                <div class="img_n"><img src="https://img.icons8.com/ios/50/000000/shopping-basket.png"/></div>
+                <span>Корзина</span></a>
+            </li>
+        </c:if>
+
+        <c:if test="${userRole == 1 || userRole == 3}">
+            <li><a class="mainRef" href="FrontController?COMMAND=GET_VENDORS">
+                <div class="img_n"><img src="https://img.icons8.com/ios/50/ffffff/plus--v1.png"/></div>
+                <span>Добавить новый товар</span></a>
+            </li>
+            <li><a class="mainRef" href="changeUserPage.jsp">
+                <div class="img_n"><img src="https://img.icons8.com/ios/50/000000/shopping-basket.png"/></div>
+                <span>Изменить роль пользователя</span></a>
+            </li>
+        </c:if>
 
         <li><a class="mainRef" href="FrontController?COMMAND=LOGOUT">
             <div class="img_n"><img src="https://img.icons8.com/ios/50/000000/exit.png"/></div>
@@ -71,11 +85,13 @@
     <div class="footer">Copyright</div>
 </div>
 
-<c:set var="items" value="${requestScope.items}"/>
-<c:set var="type" value="${requestScope.type}"/>
-<c:set var="userRole" value="${sessionScope.role}"/>
 
 <div class="blockCont" style="display: flex; justify-content: flex-start; flex-wrap: wrap;">
+    <c:if test="${error == 'noProducts'}">
+        <div style="border: red solid 2px">
+            There is no products
+        </div>
+    </c:if>
     <c:forEach var="item" items="${items}">
         <div class="product">
             <div class="image">
@@ -87,11 +103,25 @@
                 <div><c:out value="ItemPrice - ${item.getPrice()}"/></div>
                 <div><c:out value="ItemVendor - ${item.getVendor()}"/></div>
                 <div><c:out value="InStock - ${item.getStock()}"/></div>
+                <c:if test="${userRole == 1}">
+                    <form method="post" action="FrontController">
+                        <input type="hidden" name="COMMAND" value="DELETE_SOME"/>
+                        <input type="hidden" name="productId" value="${item.getId()}">
+                        <input type="number" name="deleteValue" min="1" value="1">
+                        <button type="submit">Delete Some</button>
+                    </form>
+                    <form method="post" action="FrontController">
+                        <input type="hidden" name="COMMAND" value="DELETE_SOME"/>
+                        <input type="hidden" name="productId" value="${item.getId()}">
+                        <input type="hidden" name="deleteValue" value="${item.getStock()}">
+                        <button type="submit">Delete all</button>
+                    </form>
+                </c:if>
                 <c:if test="${userRole == 2}">
                     <form method="post" action="FrontController">
                         <input type="hidden" name="TYPE" value="${type}"/>
                         <input type="hidden" name="COMMAND" value="ADD_TO_BASKET"/>
-                        <input type="hidden" name="productId" value="${fn:escapeXml(item.getId())}"/>
+                        <input type="hidden" name="productId" value="${item.getId()}"/>
                         <input type="number" name="productAmount" min="1" value="1">
                         <button class="addToCart" type="submit"><img
                                 src="https://img.icons8.com/material-outlined/24/ffffff/plus--v1.png"/></button>

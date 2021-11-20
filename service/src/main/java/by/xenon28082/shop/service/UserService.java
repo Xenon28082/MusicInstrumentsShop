@@ -10,8 +10,10 @@ public interface UserService {
     User registration(User user) throws SQLException;
     UserDTO logination(User user) throws SQLException;
     User findUserWithId(long id);
+    User findUserByLogin(String login);
     boolean changePassword(User user, String newPassword, String login);
     boolean deleteUser(User user);
     List<User> getUsers(int row);
     long countUsers() throws SQLException;
+    boolean updateUserRole(User user);
 }

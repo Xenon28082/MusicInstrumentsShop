@@ -5,6 +5,7 @@ import by.xenon28082.shop.dao.databaseConnection.DataBaseConfig;
 import by.xenon28082.shop.entity.User;
 import by.xenon28082.shop.entity.UserDTO;
 
+import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,7 +17,8 @@ public class UserDAOImpl implements UserDAO {
     private static final String COUNT_USERS_QUERY = "SELECT COUNT(*) FROM users";
     private static final String SAVE_USER_QUERY = "INSERT INTO users (login, firstname, lastname, password) VALUES (?, ?, ?, ?)";
     private static final String FIND_USER_BY_LOGIN_AND_PASSWORD_QUERY = "SELECT * FROM users WHERE login = ? AND password = ?";
-
+    private static final String UPDATE_USER_ROLE_QUERY = "UPDATE users SET role_id = ? WHERE id = ?";
+    private static final String FIND_USER_BY_LOGIN = "SELECT * FROM users WHERE login = ?";
 
     @Override
     public User save(User user) {
@@ -68,6 +70,15 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public boolean update(User user) {
+        try {
+            Connection connection = DataBaseConfig.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_ROLE_QUERY);
+            preparedStatement.setInt(1, user.getRole());
+            preparedStatement.setLong(2, user.getId());
+            return preparedStatement.executeUpdate() != 0;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return false;
     }
 
@@ -92,7 +103,24 @@ public class UserDAOImpl implements UserDAO {
 
 
     @Override
-    public UserDTO findUserByLogin(User user) {
+    public User findUserByLogin(String login) {
+        try {
+            Connection connection = DataBaseConfig.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(FIND_USER_BY_LOGIN);
+            preparedStatement.setString(1, login);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            User foundUser = new User(
+                    resultSet.getString(1),
+                    resultSet.getString(2),
+                    resultSet.getString(3),
+                    resultSet.getLong(5),
+                    resultSet.getInt(6)
+                    );
+            return foundUser;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return null;
     }
 

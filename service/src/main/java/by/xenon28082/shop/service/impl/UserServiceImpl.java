@@ -29,6 +29,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findUserByLogin(String login) {
+        UserDAO userDAO = new UserDAOImpl();
+        return userDAO.findUserByLogin(login);
+    }
+
+    @Override
     public boolean changePassword(User user, String newPassword, String login) {
         return false;
     }
@@ -47,5 +53,11 @@ public class UserServiceImpl implements UserService {
     public long countUsers() throws SQLException {
         UserDAO dao = new UserDAOImpl();
         return dao.countAll();
+    }
+
+    @Override
+    public boolean updateUserRole(User user) {
+        UserDAO dao = new UserDAOImpl();
+        return dao.update(user);
     }
 }

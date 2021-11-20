@@ -50,6 +50,9 @@
     <c:if test="${error == 'passwordsnotmatch'}">
         <p style="color: red">Entered passwords don't match</p>
     </c:if>
+    <c:if test="${error == 'failedToRegister'}">
+        <p style="color: red">Failed to register</p>
+    </c:if>
 </div>
 
 </body>
