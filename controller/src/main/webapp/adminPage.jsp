@@ -35,7 +35,7 @@
 <nav id="menuVertical">
     <ul>
         <li><a class="mainRef" href="FrontController?COMMAND=GET_PRODUCTS">
-            <div class="img_n"><img class="try" src="https://img.icons8.com/ios/50/000000/progressive-rock.png"/></div>
+            <div class="img_n"><img src="https://img.icons8.com/ios/50/000000/refresh-folder.png"/></div>
             <span>Каталог</span></a>
             <ul>
                 <li><a href="FrontController?COMMAND=GET_PRODUCTS&TYPE=guitar">Гитары</a></li>
@@ -46,12 +46,12 @@
         </li>
 
         <li><a class="mainRef" href="FrontController?COMMAND=GET_VENDORS">
-            <div class="img_n"><img src="https://img.icons8.com/ios/50/ffffff/plus--v1.png"/></div>
+            <div class="img_n"><img src="https://img.icons8.com/ios/50/000000/plus--v1.png"/></div>
             <span>Добавить новый товар</span></a>
         </li>
 
         <li><a class="mainRef" href="changeUserPage.jsp">
-            <div class="img_n"><img src="https://img.icons8.com/ios/50/000000/shopping-basket.png"/></div>
+            <div class="img_n"><img src="https://img.icons8.com/ios/50/000000/lifecycle--v1.png"/></div>
             <span>Изменить роль пользователя</span></a>
         </li>
 

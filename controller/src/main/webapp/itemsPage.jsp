@@ -13,7 +13,7 @@
 </head>
 <body>
 
-<%
+    <%
     if (session.getAttribute("id") == null) {
         String redirectURL = "index.jsp";
         response.sendRedirect(redirectURL);
@@ -107,7 +107,7 @@
                     <form method="post" action="FrontController">
                         <input type="hidden" name="COMMAND" value="DELETE_SOME"/>
                         <input type="hidden" name="productId" value="${item.getId()}">
-                        <input type="number" name="deleteValue" min="1" value="1">
+                        <input type="number" name="deleteValue" min="0" value="0">
                         <button type="submit">Delete Some</button>
                     </form>
                     <form method="post" action="FrontController">
@@ -116,6 +116,24 @@
                         <input type="hidden" name="deleteValue" value="${item.getStock()}">
                         <button type="submit">Delete all</button>
                     </form>
+                    <form method="post" action="FrontController">
+                        <input type="hidden" name="COMMAND" value="DELETE_SOME"/>
+                        <input type="hidden" name="productId" value="${item.getId()}">
+                        <input id="1" onchange="getValue()" type="number" name="deleteValue" min="0" value="0">
+                        <button type="submit">Add some</button>
+                    </form>
+
+                    <script type="text/javascript">
+                        function getValue() {
+                            var text = document.getElementById("1");
+                            var val = text.value;
+                            setValue(val);
+                        }
+                        function setValue(value){
+                            var elem = document.getElementById("1");
+                            elem.value = -value;
+                        }
+                    </script>
                 </c:if>
                 <c:if test="${userRole == 2}">
                     <form method="post" action="FrontController">
@@ -133,6 +151,6 @@
     </c:forEach>
 
 </div>
-</body>
+
 
 </html>
