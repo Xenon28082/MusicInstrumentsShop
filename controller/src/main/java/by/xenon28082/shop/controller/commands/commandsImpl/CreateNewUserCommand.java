@@ -4,6 +4,7 @@ import by.xenon28082.shop.controller.commands.Command;
 import by.xenon28082.shop.entity.User;
 import by.xenon28082.shop.service.UserService;
 import by.xenon28082.shop.service.impl.UserServiceImpl;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,11 +25,13 @@ public class CreateNewUserCommand implements Command {
         String name = req.getParameter("username");
         String lastname = req.getParameter("userlastname");
         String password = req.getParameter("password");
+
         String checkPassword = req.getParameter("checkPassword");
         if (!password.equals(checkPassword)) {
             logger.info("Passwords don't match(Error)");
             res.sendRedirect("index.jsp?message=passwordsnotmatch");
         } else {
+            password = DigestUtils.md5Hex(password);
             User newUser = new User(login, name, lastname, password);
             User user = null;
             try {

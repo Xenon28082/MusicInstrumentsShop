@@ -38,7 +38,7 @@
 <nav id="menuVertical">
     <ul>
         <li><a class="mainRef" href="FrontController?COMMAND=GET_PRODUCTS">
-            <div class="img_n"><img class="try" src="https://img.icons8.com/ios/50/000000/progressive-rock.png"/></div>
+            <div class="img_n"><img class="try" src="https://img.icons8.com/ios/50/ffffff/progressive-rock.png"/></div>
             <span>Каталог</span></a>
             <ul>
                 <li><a href="FrontController?COMMAND=GET_PRODUCTS&TYPE=guitar">Гитары</a></li>
@@ -49,12 +49,12 @@
         </li>
 
         <li><a class="mainRef" href="FrontController?COMMAND=SHOW_BASKET">
-            <div class="img_n"><img src="https://img.icons8.com/ios/50/000000/shopping-basket.png"/></div>
+            <div class="img_n"><img src="https://img.icons8.com/ios/50/ffffff/shopping-basket.png"/></div>
             <span>Корзина</span></a>
         </li>
 
         <li><a class="mainRef" href="FrontController?COMMAND=LOGOUT">
-            <div class="img_n"><img src="https://img.icons8.com/ios/50/000000/exit.png"/></div>
+            <div class="img_n"><img src="https://img.icons8.com/ios/50/ffffff/exit.png"/></div>
             <span>Выход</span></a>
         </li>
 

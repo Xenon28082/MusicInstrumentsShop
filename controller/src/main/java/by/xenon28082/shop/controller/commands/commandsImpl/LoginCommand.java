@@ -5,6 +5,7 @@ import by.xenon28082.shop.entity.User;
 import by.xenon28082.shop.entity.UserDTO;
 import by.xenon28082.shop.service.UserService;
 import by.xenon28082.shop.service.impl.UserServiceImpl;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +24,7 @@ public class LoginCommand implements Command {
         UserService userService = new UserServiceImpl();
         String login = request.getParameter("userloginLog");
         String password = request.getParameter("passwordLog");
+        password = DigestUtils.md5Hex(password);
         User user = new User(login, password);
         UserDTO userDTO = userService.logination(user);
         if(userDTO == null){

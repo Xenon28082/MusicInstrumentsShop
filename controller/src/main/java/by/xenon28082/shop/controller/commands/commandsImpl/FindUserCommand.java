@@ -19,13 +19,11 @@ public class FindUserCommand implements Command {
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse res) throws SQLException, ServletException, IOException {
         logger.info("Got to FindUserCommand");
-        System.out.println("Got to FindUserCommand");
         String userLogin = req.getParameter("userLogin");
         if(userLogin == ""){
             logger.info("All fields must be fulfilled (ERROR)");
-//            res.sendRedirect("changeUserPage.jsp?message=fieldsMustBeFulfilled");
             req.getRequestDispatcher("changeUserPage.jsp?message=fieldsMustBeFulfilled").forward(req, res);
-        }//else {
+        }
             UserService userService = new UserServiceImpl();
             User foundUser = userService.findUserByLogin(userLogin);
             if (foundUser.getRole() != 3) {
@@ -35,6 +33,5 @@ public class FindUserCommand implements Command {
                 System.out.println("This is a director");
             }
             req.getRequestDispatcher("changeUserPage.jsp").forward(req, res);
-        //}
     }
 }
