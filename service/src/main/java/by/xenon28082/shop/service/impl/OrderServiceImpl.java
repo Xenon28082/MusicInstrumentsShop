@@ -1,5 +1,6 @@
 package by.xenon28082.shop.service.impl;
 
+import by.xenon28082.shop.DaoFactory;
 import by.xenon28082.shop.dao.OrderDAO;
 import by.xenon28082.shop.dao.exception.DaoException;
 import by.xenon28082.shop.dao.impl.OrderDAOImpl;
@@ -12,11 +13,9 @@ import java.util.List;
 
 public class OrderServiceImpl implements OrderService {
 
-    private final OrderDAO dao = new OrderDAOImpl();
+    private final OrderDAO dao = DaoFactory.getInstance().getOrderDao();
 
-//    public OrderServiceImpl(OrderDAO dao) {
-//        this.dao = dao;
-//    }
+
 
     @Override
     public boolean reserveProduct(Order order) throws ServiceException {

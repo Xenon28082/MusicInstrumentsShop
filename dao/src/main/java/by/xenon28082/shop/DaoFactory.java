@@ -17,9 +17,10 @@ public class DaoFactory {
     private final ConnectionPool connectionPool = new ConnectionPoolImpl(new DataBaseConfig());
     private final UserDAO userDao = new UserDAOImpl(connectionPool);
     private final ProductDAO productDao = new ProductDAOImpl(connectionPool);
-//    private final OrderDAO orderDao = new OrderDAOImpl(connectionPool);
+    private final OrderDAO orderDao = new OrderDAOImpl(connectionPool);
 
-    private DaoFactory() {}
+    private DaoFactory() {
+    }
 
     public static DaoFactory getInstance() {
         return INSTANCE;
@@ -33,7 +34,7 @@ public class DaoFactory {
         return productDao;
     }
 
-//    public OrderDAO getOrderDao() {
-//        return orderDao;
-//    }
+    public OrderDAO getOrderDao() {
+        return orderDao;
+    }
 }

@@ -15,8 +15,6 @@ import static java.util.Objects.nonNull;
 public abstract class AbstractDAO {
     private ConnectionPool connectionPool = null;
 
-    public AbstractDAO() {
-    }
 
     public AbstractDAO(final ConnectionPool connectionPool) {
         this.connectionPool = connectionPool;

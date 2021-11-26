@@ -12,7 +12,7 @@ public class ServiceFactory {
     private final DaoFactory daoFactory = DaoFactory.getInstance();
     private final UserService userService = new UserServiceImpl(daoFactory.getUserDao());
     private final ProductService productService = new ProductServiceImpl(daoFactory.getProductDao());
-//    private final OrderService orderService = new OrderServiceImpl(daoFactory.getOrderDao());
+    private final OrderService orderService = new OrderServiceImpl();
 
     private ServiceFactory() {}
 
@@ -28,5 +28,5 @@ public class ServiceFactory {
         return productService;
     }
 
-//    public OrderService getOrderService() { return orderService;}
+    public OrderService getOrderService() { return orderService;}
 }

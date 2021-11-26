@@ -22,7 +22,7 @@ public class AddToBasketCommand implements Command {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AddToBasketCommand.class);
 
-    private final OrderService reserveService = new OrderServiceImpl();//ServiceFactory.getInstance().getOrderService();
+    private final OrderService reserveService = ServiceFactory.getInstance().getOrderService();
     private final ProductService productService = ServiceFactory.getInstance().getProductService();
 
     private static final String ID = "id";
