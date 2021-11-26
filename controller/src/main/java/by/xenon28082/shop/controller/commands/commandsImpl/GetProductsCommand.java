@@ -3,7 +3,9 @@ package by.xenon28082.shop.controller.commands.commandsImpl;
 import by.xenon28082.shop.controller.commands.Command;
 import by.xenon28082.shop.entity.Product;
 import by.xenon28082.shop.service.ProductService;
+import by.xenon28082.shop.service.ServiceFactory;
 import by.xenon28082.shop.service.UserService;
+import by.xenon28082.shop.service.exception.ServiceException;
 import by.xenon28082.shop.service.impl.ProductServiceImpl;
 import by.xenon28082.shop.service.impl.UserServiceImpl;
 import org.slf4j.Logger;
@@ -17,26 +19,32 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class GetProductsCommand implements Command {
-    private static final Logger logger = LoggerFactory.getLogger(GetProductsCommand.class);
-    ProductService service = new ProductServiceImpl();
+    private static final Logger LOGGER = LoggerFactory.getLogger(GetProductsCommand.class);
+
+    private final ProductService productService = ServiceFactory.getInstance().getProductService();
+
+    private static final String TYPE = "TYPE";
 
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse res) throws SQLException, ServletException, IOException {
-        logger.info("Got to GetProductsCommand");
-        String type = req.getParameter("TYPE");
+    public void execute(HttpServletRequest req, HttpServletResponse res) throws SQLException, ServletException, IOException, ServiceException {
+        LOGGER.info("Got to GetProductsCommand");
+        String type = req.getParameter(TYPE);
         List<Product> products = null;
 
         if (type == null || type.equals(""))
-            products = service.getProducts();
+            products = productService.getProducts();
         else
-            products = service.getProductsByType(type);
+            products = productService.getProductsByType(type);
 
         req.setAttribute("items", products);
         req.setAttribute("type", type);
         if (products.size() == 0) {
+//            res.sendRedirect("itemsPage.jsp?message=noProducts");
             req.getRequestDispatcher("itemsPage.jsp?message=noProducts").forward(req, res);
-        } else
+        } else {
+//            res.sendRedirect("itemsPage.jsp");
             req.getRequestDispatcher("itemsPage.jsp").forward(req, res);
+        }
     }
 
 }

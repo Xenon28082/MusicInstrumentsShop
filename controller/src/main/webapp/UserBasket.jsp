@@ -91,7 +91,7 @@
                     <input type="hidden" name="COMMAND" value="DELETE_FROM_BASKET"/>
                     <input type="hidden" name="orderId" value="${fn:escapeXml(order.getOrderId())}"/>
                     <input type="hidden" name="productId" value="${fn:escapeXml(order.getProduct().getId())}"/>
-                    <input type="number" name="productAmount" min="1" value="1">
+                    <input type="number" name="productAmount" value="1">
                     <button class="addToCart" type="submit">DELETE</button>
                 </form>
             </div>

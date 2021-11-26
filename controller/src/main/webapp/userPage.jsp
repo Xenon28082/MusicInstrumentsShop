@@ -23,7 +23,7 @@
             </a>
         </div>
         <div class="ico" style="display: flex; justify-content: space-between; padding-right: 30px; width: 150px">
-            <img src="https://img.icons8.com/external-kiranshastry-solid-kiranshastry/64/ffffff/external-user-interface-kiranshastry-solid-kiranshastry-1.png"/>
+            <img src="https://img.icons8.com/external-kiranshastry-solid-kiranshastry/64/000000/external-user-interface-kiranshastry-solid-kiranshastry-1.png"/>
             <p>
                 <%=(String) session.getAttribute("login")%>
             </p>

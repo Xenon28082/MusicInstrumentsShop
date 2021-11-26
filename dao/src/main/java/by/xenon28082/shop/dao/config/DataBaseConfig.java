@@ -1,4 +1,4 @@
-package by.xenon28082.shop.dao.databaseConnection;
+package by.xenon28082.shop.dao.config;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -7,7 +7,7 @@ import java.util.Properties;
 
 public class DataBaseConfig {
 
-    public static String URL = "jdbc:postgresql://localhost:5432/mytestdb";
+    public static String URL = "jdbc:postgresql://localhost:5432/";
 
     public static String DATABASE_NAME = "mytestdb";
 
@@ -26,7 +26,7 @@ public class DataBaseConfig {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        connection = DriverManager.getConnection(URL, properties);
+        connection = DriverManager.getConnection(URL + DATABASE_NAME, properties);
         return connection;
     }
 

@@ -94,6 +94,11 @@
             There is no products
         </div>
     </c:if>
+    <c:set var="message" value="${param.message}"/>
+
+    <c:if test="${message=='negative'}">
+        <div style="border: red solid 2px"><c:out value="You can't insert negative values in input fields"/></div>
+    </c:if>
     <c:forEach var="item" items="${items}">
         <div class="product">
             <div class="image">
@@ -105,11 +110,11 @@
                 <div><c:out value="ItemPrice - ${item.getPrice()}"/></div>
                 <div><c:out value="ItemVendor - ${item.getVendor()}"/></div>
                 <div><c:out value="InStock - ${item.getStock()}"/></div>
-                <c:if test="${userRole == 1}">
+                <c:if test="${userRole == 1 || userRole == 3}">
                     <form method="post" action="FrontController">
                         <input type="hidden" name="COMMAND" value="DELETE_SOME"/>
                         <input type="hidden" name="productId" value="${item.getId()}">
-                        <input type="number" name="deleteValue" min="0" value="0">
+                        <input type="number" name="deleteValue" value="0">
                         <button type="submit">Delete Some</button>
                     </form>
                     <form method="post" action="FrontController">
@@ -119,31 +124,19 @@
                         <button type="submit">Delete all</button>
                     </form>
                     <form method="post" action="FrontController">
-                        <input type="hidden" name="COMMAND" value="DELETE_SOME"/>
+                        <input type="hidden" name="COMMAND" value="ADD_SOME"/>
                         <input type="hidden" name="productId" value="${item.getId()}">
-                        <input id="1" onchange="getValue()" type="number" name="deleteValue" min="0" value="0">
+                        <input id="1"  type="number" name="addValue" value="0">
                         <button type="submit">Add some</button>
                     </form>
 
-                    <script type="text/javascript">
-                        function getValue() {
-                            var text = document.getElementById("1");
-                            var val = text.value;
-                            setValue(val);
-                        }
-
-                        function setValue(value) {
-                            var elem = document.getElementById("1");
-                            elem.value = -value;
-                        }
-                    </script>
                 </c:if>
                 <c:if test="${userRole == 2}">
                     <form method="post" action="FrontController">
                         <input type="hidden" name="TYPE" value="${type}"/>
                         <input type="hidden" name="COMMAND" value="ADD_TO_BASKET"/>
                         <input type="hidden" name="productId" value="${item.getId()}"/>
-                        <input type="number" name="productAmount" min="1" value="1">
+                        <input type="number" name="productAmount" value="1">
                         <button class="addToCart" type="submit"><img
                                 src="https://img.icons8.com/material-outlined/24/ffffff/plus--v1.png"/></button>
                     </form>

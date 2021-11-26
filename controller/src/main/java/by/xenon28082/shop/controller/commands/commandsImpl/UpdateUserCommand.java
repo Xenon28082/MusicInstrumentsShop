@@ -2,7 +2,9 @@ package by.xenon28082.shop.controller.commands.commandsImpl;
 
 import by.xenon28082.shop.controller.commands.Command;
 import by.xenon28082.shop.entity.User;
+import by.xenon28082.shop.service.ServiceFactory;
 import by.xenon28082.shop.service.UserService;
+import by.xenon28082.shop.service.exception.ServiceException;
 import by.xenon28082.shop.service.impl.UserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,19 +16,30 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class UpdateUserCommand implements Command {
-    private static final Logger logger = LoggerFactory.getLogger(UpdateUserCommand.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UpdateUserCommand.class);
+    private UserService userService = ServiceFactory.getInstance().getUserService();
+
+    private static final String USER_LOGIN = "userLogin";
+    private static final String USER_FIRSTNAME = "userFirstname";
+    private static final String USER_LASTNAME = "userLastname";
+    private static final String USER_ROLE = "userRole";
+    private static final String USER_ID = "userId";
+    private static final String USER_LASTROLE = "userLastRole";
+    private static final String ROLE = "role";
+    private static final String ID = "id";
 
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse res) throws SQLException, ServletException, IOException {
-        logger.info("Got to UpdateUserCommand");
-        String userLogin = req.getParameter("userLogin");
-        String userName = req.getParameter("userFirstname");
-        String userLastname = req.getParameter("userLastname");
-        int userRole = Integer.parseInt(req.getParameter("userRole"));
-        long id = Long.parseLong(req.getParameter("userId"));
-        int lastRole = Integer.parseInt(req.getParameter("userLastRole"));
-        int currentRole = (int) req.getSession().getAttribute("role");
-        long currentId = (long) req.getSession().getAttribute("id");
+
+    public void execute(HttpServletRequest req, HttpServletResponse res) throws SQLException, ServletException, IOException, ServiceException {
+        LOGGER.info("Got to UpdateUserCommand");
+        String userLogin = req.getParameter(USER_LOGIN);
+        String userName = req.getParameter(USER_FIRSTNAME);
+        String userLastname = req.getParameter(USER_LASTNAME);
+        int userRole = Integer.parseInt(req.getParameter(USER_ROLE));
+        long id = Long.parseLong(req.getParameter(USER_ID));
+        int lastRole = Integer.parseInt(req.getParameter(USER_LASTROLE));
+        int currentRole = (int) req.getSession().getAttribute(ROLE);
+        long currentId = (long) req.getSession().getAttribute(ID);
 
         if (userLogin == "" ||
                 userName == "" ||
@@ -34,18 +47,17 @@ public class UpdateUserCommand implements Command {
                 userRole == 0 ||
                 id == 0
         ) {
-            logger.info("all fields must be fulfilled (ERROR)");
+            LOGGER.info("all fields must be fulfilled (ERROR)");
             req.getRequestDispatcher("changeUserPage.jsp?message=fieldsMustBeFulfilled").forward(req, res);
         }
-        if(lastRole == 1 && userRole == 2 && currentRole != 3){
-            logger.info("Trying to delete admin being not a director (ERROR)");
+        if (lastRole == 1 && userRole == 2 && currentRole != 3) {
+            LOGGER.info("Trying to delete admin being not a director (ERROR)");
             req.getRequestDispatcher("changeUserPage.jsp?message=mustBeADir").forward(req, res);
         }
-        if(currentId == id){
-            logger.info("Trying to update himself");
+        if (currentId == id) {
+            LOGGER.info("Trying to update himself");
             req.getRequestDispatcher("changeUserPage.jsp?message=updateSelf").forward(req, res);
         }
-        UserService userService = new UserServiceImpl();
         User user = new User(
                 userLogin,
                 userName,
@@ -54,11 +66,11 @@ public class UpdateUserCommand implements Command {
                 userRole
         );
         boolean isUpdated = userService.updateUserRole(user);
-        if(isUpdated){
-            logger.info("Update:" + user + "(SUCCESS)");
-        }else{
-            logger.info("Update:" + user + "(FAILED)");
+        if (isUpdated) {
+            LOGGER.info("Update:" + user + "(SUCCESS)");
+        } else {
+            LOGGER.info("Update:" + user + "(FAILED)");
         }
-        req.getRequestDispatcher("changeUserPage.jsp").forward(req, res);
+        req.getRequestDispatcher("changeUserPage.jsp?message=updated").forward(req, res);
     }
 }

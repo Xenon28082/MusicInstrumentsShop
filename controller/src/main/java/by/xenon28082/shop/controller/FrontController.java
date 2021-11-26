@@ -2,6 +2,8 @@ package by.xenon28082.shop.controller;
 
 import by.xenon28082.shop.controller.commands.Command;
 import by.xenon28082.shop.controller.commands.CommandsMap;
+import by.xenon28082.shop.dao.exception.DaoException;
+import by.xenon28082.shop.service.exception.ServiceException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,9 +23,11 @@ public class FrontController extends HttpServlet {
             execute(req, resp);
         } catch (SQLException | ServletException throwables) {
             throwables.printStackTrace();
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        } catch (DaoException e) {
+            e.printStackTrace();
         }
-
-
     }
 
     @Override
@@ -32,12 +36,17 @@ public class FrontController extends HttpServlet {
             execute(req, resp);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        } catch (DaoException e) {
+            e.printStackTrace();
         }
     }
 
-    private void execute(HttpServletRequest req, HttpServletResponse resp) throws SQLException, ServletException, IOException {
+    private void execute(HttpServletRequest req, HttpServletResponse resp) throws SQLException, ServletException, IOException, ServiceException, DaoException {
         String choice = req.getParameter("COMMAND");
-        Command command = CommandsMap.getCommand(choice);
+        CommandsMap map = new CommandsMap();
+        Command command = map.getCommand(choice);
         command.execute(req, resp);
     }
 }

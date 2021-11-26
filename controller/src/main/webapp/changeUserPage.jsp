@@ -83,9 +83,9 @@
             <div>
                 <input type="hidden" name="userId" value="${foundUser.getId()}"/>
                 <input type="hidden" name="userLastRole" value="${foundUser.getRole()}"/>
-                <input name="userLogin" value="${foundUser.getLogin()}"/>
-                <input name="userFirstname" value="${foundUser.getName()}"/>
-                <input name="userLastname" value="${foundUser.getLastname()}"/>
+                <input disabled name="userLogin" value="${foundUser.getLogin()}"/>
+                <input disabled name="userFirstname" value="${foundUser.getName()}"/>
+                <input disabled name="userLastname" value="${foundUser.getLastname()}"/>
                 <select name="userRole">
                     <option value="1">Administrator</option>
                     <option value="2">Customer</option>
@@ -103,6 +103,15 @@
     </c:if>
     <c:if test="${error == 'Cant change yourself'}">
         <p style="color: red">Only director can update admin role</p>
+    </c:if>
+    <c:if test="${error == 'Cant change dir'}">
+        <p style="color: red">can't get director info</p>
+    </c:if>
+    <c:if test="${error == 'noUser'}">
+        <p style="color: red">There is no user with such login</p>
+    </c:if>
+    <c:if test="${error == 'updated'}">
+        <p style="color: green">Updated</p>
     </c:if>
 </div>
 </body>

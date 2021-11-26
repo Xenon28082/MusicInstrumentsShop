@@ -20,8 +20,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeleteItemCommand implements Command {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DeleteItemCommand.class);
+public class AddItemCommand implements Command {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AddItemCommand.class);
 
     private final OrderService orderService = new OrderServiceImpl();//ServiceFactory.getInstance().getOrderService();
     private final ProductService productService = ServiceFactory.getInstance().getProductService();
@@ -29,34 +30,33 @@ public class DeleteItemCommand implements Command {
     private final Validator validator = ValidatorImpl.getInstance();
 
     private static final String PRODUCT_ID = "productId";
-    private static final String DELETE_VALUE = "deleteValue";
-
+    private static final String ADD_VALUE = "addValue";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse res) throws SQLException, ServletException, IOException, ServiceException {
         LOGGER.info("Got to DeleteItemCommand");
         long productId = Long.parseLong(req.getParameter(PRODUCT_ID));
-        long valueToDelete = Integer.parseInt(req.getParameter(DELETE_VALUE));
+        long valueToAdd = Integer.parseInt(req.getParameter(ADD_VALUE));
 
         System.out.println("Id - " + productId);
-        System.out.println("delete - " + valueToDelete);
+        System.out.println("delete - " + valueToAdd);
 
         List<Long> longParams = new ArrayList<>();
         longParams.add(productId);
-        longParams.add(valueToDelete);
-        if(validator.validateIsNotPositive(validator.convertToStringList(longParams))){
+        longParams.add(valueToAdd);
+        if (validator.validateIsNotPositive(validator.convertToStringList(longParams))) {
             LOGGER.info("Negative values");
             res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&message=negative");
-        }else {
-
+        } else {
+            valueToAdd = -valueToAdd;
             if (orderService.findReservation(productId)) {
                 orderService.deleteAllByProductId(productId);
             }
 
-            if (productService.updateProduct(productId, valueToDelete)) {
-                LOGGER.info("Delete complete productId - " + productId + " deleteValue - " + valueToDelete + " (SUCCESS)");
+            if (productService.updateProduct(productId, valueToAdd)) {
+                LOGGER.info("Add complete productId - " + productId + " deleteValue - " + valueToAdd + " (SUCCESS)");
             } else {
-                LOGGER.info("Delete complete productId - " + productId + " deleteValue - " + valueToDelete + " (FAILED)");
+                LOGGER.info("Add complete productId - " + productId + " deleteValue - " + valueToAdd + " (FAILED)");
             }
             res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS");
 //        req.getRequestDispatcher("FrontController?COMMAND=GET_PRODUCTS").forward(req, res);

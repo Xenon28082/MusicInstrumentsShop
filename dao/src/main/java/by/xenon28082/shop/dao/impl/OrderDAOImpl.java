@@ -1,13 +1,14 @@
 package by.xenon28082.shop.dao.impl;
 
+import by.xenon28082.shop.DaoFactory;
 import by.xenon28082.shop.dao.ProductDAO;
 import by.xenon28082.shop.dao.OrderDAO;
-import by.xenon28082.shop.dao.databaseConnection.DataBaseConfig;
+import by.xenon28082.shop.dao.config.DatabaseConfig2;
+//import by.xenon28082.shop.dao.databaseConnection.DataBaseConfig;
+import by.xenon28082.shop.dao.exception.DaoException;
 import by.xenon28082.shop.entity.Product;
 import by.xenon28082.shop.entity.Order;
-import com.sun.org.apache.xpath.internal.operations.Or;
 
-import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,11 +27,13 @@ public class OrderDAOImpl implements OrderDAO {
     private static final String FIND_RESERVATION_BY_PRODUCT_ID_QUERY = "SELECT * FROM orders WHERE product_id = ?";
     private static final String DELETE_ALL_BY_PRODUCT_ID_QUERY = "DELETE FROM orders WHERE product_id = ?";
 
+
+
     @Override
     public List<Order> getOrders(long userId){
 
         try {
-            Connection connection = DataBaseConfig.getConnection();
+            Connection connection = DatabaseConfig2.getConnection();
             ArrayList<Order> reservations = new ArrayList<>();
 
 
@@ -38,7 +41,7 @@ public class OrderDAOImpl implements OrderDAO {
             preparedStatement.setLong(1, userId);
 
             ResultSet resultSet = preparedStatement.executeQuery();
-            ProductDAO dao = new ProductDAOImpl();
+            ProductDAO dao = DaoFactory.getInstance().getProductDao();
             while (resultSet.next()) {
                 long productId = resultSet.getLong(3);
                 Product searchProduct = dao.findById(productId);
@@ -53,7 +56,7 @@ public class OrderDAOImpl implements OrderDAO {
                 reservations.add(orderFound);
             }
             return reservations;
-        } catch (SQLException throwables) {
+        } catch (SQLException | DaoException throwables) {
             throwables.printStackTrace();
         }
         return null;
@@ -77,7 +80,7 @@ public class OrderDAOImpl implements OrderDAO {
             if (updatedOrder.getAmount() != 0) {
                 return update(updatedOrder);
             } else {
-                Connection connection = DataBaseConfig.getConnection();
+                Connection connection = DatabaseConfig2.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(DELETE_RESERVATION_QUERY);
                 preparedStatement.setLong(1, userId);
                 preparedStatement.setLong(2, orderId);
@@ -93,7 +96,7 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public boolean findByProductId(long productId) {
         try {
-            Connection connection = DataBaseConfig.getConnection();
+            Connection connection = DatabaseConfig2.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(FIND_RESERVATION_BY_PRODUCT_ID_QUERY);
             preparedStatement.setLong(1, productId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -116,7 +119,7 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public boolean deleteAllByProductId(long productId) {
         try {
-            Connection connection = DataBaseConfig.getConnection();
+            Connection connection = DatabaseConfig2.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ALL_BY_PRODUCT_ID_QUERY);
             preparedStatement.setLong(1, productId);
             return preparedStatement.executeUpdate() != 0;
@@ -129,10 +132,10 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public Order save(Order order){
         try {
-            Connection connection = DataBaseConfig.getConnection();
+            Connection connection = DatabaseConfig2.getConnection();
             Order foundOrder = find(order);
 
-            ProductDAO dao = new ProductDAOImpl();
+            ProductDAO dao = DaoFactory.getInstance().getProductDao();
             Product foundProduct = dao.findById(order.getProductId());
             if (foundProduct.getStock() < order.getAmount()) {
                 return null;
@@ -153,7 +156,7 @@ public class OrderDAOImpl implements OrderDAO {
                 preparedStatement.setLong(3, order.getAmount());
                 int result = preparedStatement.executeUpdate();
             }
-        } catch (SQLException throwables) {
+        } catch (SQLException | DaoException throwables) {
             throwables.printStackTrace();
         }
 
@@ -163,7 +166,7 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public Order find(Order order){
         try {
-            Connection connection = DataBaseConfig.getConnection();
+            Connection connection = DatabaseConfig2.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(FIND_RESERVATION_QUERY);
             preparedStatement.setLong(1, order.getUserId());
             preparedStatement.setLong(2, order.getProductId());
@@ -187,7 +190,7 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public Order findById(long id) {
         try {
-            Connection connection = DataBaseConfig.getConnection();
+            Connection connection = DatabaseConfig2.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(FIND_RESERVATION_BY_ID_QUERY);
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -208,7 +211,7 @@ public class OrderDAOImpl implements OrderDAO {
     public boolean update(Order order) {
 
         try {
-            Connection connection = DataBaseConfig.getConnection();
+            Connection connection = DatabaseConfig2.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_QUERY);
             preparedStatement.setInt(1, order.getAmount());
             preparedStatement.setLong(2, order.getUserId());

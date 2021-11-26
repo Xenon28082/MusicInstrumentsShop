@@ -1,12 +1,35 @@
 package by.xenon28082.shop.controller.commands;
 
+import by.xenon28082.shop.controller.commands.commandsImpl.*;
+
+import java.util.HashMap;
 import java.util.Map;
 
 public class CommandsMap {
 
-    private static final Map<String, Command> COMMANDS = CommandsFiller.initCommandMap();
+    private Map<String, Command> COMMANDS = new HashMap<String, Command>();
 
-    public static Command getCommand(String command){
+    public CommandsMap() {
+        initMap();
+    }
+
+    private void initMap(){
+        COMMANDS.put("CREATE_NEW_USER", new CreateNewUserCommand());
+        COMMANDS.put("FIND_USER", new LoginCommand());
+        COMMANDS.put("GET_PRODUCTS", new GetProductsCommand());
+        COMMANDS.put("ADD_TO_BASKET", new AddToBasketCommand());
+        COMMANDS.put("SHOW_BASKET", new ShowUserBasketCommand());
+        COMMANDS.put("DELETE_FROM_BASKET", new DeleteFromBasketCommand());
+        COMMANDS.put("LOGOUT", new LogoutCommand());
+        COMMANDS.put("ADD_NEW_ITEM", new AddNewItemCommand());
+        COMMANDS.put("GET_VENDORS", new GetVendorsCommand());
+        COMMANDS.put("DELETE_SOME", new DeleteItemCommand());
+        COMMANDS.put("GET_USER_INFO", new FindUserCommand());
+        COMMANDS.put("UPDATE_USER", new UpdateUserCommand());
+        COMMANDS.put("ADD_SOME", new AddItemCommand());
+    }
+
+    public Command getCommand(String command){
         return COMMANDS.get(command);
     }
 

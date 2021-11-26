@@ -1,9 +1,10 @@
 package by.xenon28082.shop.dao.impl;
 
 import by.xenon28082.shop.dao.ProductDAO;
-import by.xenon28082.shop.dao.databaseConnection.DataBaseConfig;
+import by.xenon28082.shop.dao.config.DataBaseConfig;
+import by.xenon28082.shop.dao.databaseConnection.ConnectionPool;
+import by.xenon28082.shop.dao.exception.DaoException;
 import by.xenon28082.shop.entity.Product;
-import by.xenon28082.shop.entity.User;
 import by.xenon28082.shop.entity.Vendor;
 
 import java.sql.Connection;
@@ -13,7 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductDAOImpl implements ProductDAO {
+public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
 
     private static final String FIND_ALL_PRODUCTS_QUERY = "SELECT * FROM products";
     private static final String FIND_PRODUCTS_BY_TYPE_QUERY = "SELECT * FROM products WHERE product_type = ?";
@@ -25,11 +26,17 @@ public class ProductDAOImpl implements ProductDAO {
     private static final String UPDATE_PRODUCT_QUERY = "UPDATE products SET in_stock = in_stock - ? WHERE product_id = ?";
     private static final String DELETE_PRODUCT_QUERY = "DELETE FROM products WHERE product_id = ?";
 
+    public ProductDAOImpl(ConnectionPool connectionPool) {
+        super(connectionPool);
+    }
+
     @Override
-    public Product save(Product product) {
+    public Product save(Product product) throws DaoException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
         try {
-            Connection connection = DataBaseConfig.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(ADD_NEW_PRODUCTS_QUERY);
+            connection = getConnection(false);
+            preparedStatement = connection.prepareStatement(ADD_NEW_PRODUCTS_QUERY);
             preparedStatement.setString(1, product.getName());
             preparedStatement.setDouble(2, product.getPrice());
             preparedStatement.setLong(3, product.getStock());
@@ -37,11 +44,13 @@ public class ProductDAOImpl implements ProductDAO {
             preparedStatement.setLong(5, findVendorId(product.getVendor()));
 
             int rows = preparedStatement.executeUpdate();
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+            return rows != 0 ? new Product() : null;
+        } catch (SQLException | DaoException e) {
+            throw new DaoException(e);
+        } finally {
+            close(preparedStatement);
+            retrieve(connection);
         }
-        return null;
     }
 
     @Override
@@ -50,14 +59,15 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public Product findById(long id) {
-
+    public Product findById(long id) throws DaoException {
         Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         try {
-            connection = DataBaseConfig.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(FIND_PRODUCT_BY_ID_QUERY);
+            connection = getConnection(true);
+            preparedStatement = connection.prepareStatement(FIND_PRODUCT_BY_ID_QUERY);
             preparedStatement.setLong(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             Product foundProduct = new Product();
             while (resultSet.next()) {
                 foundProduct.setName(resultSet.getString(2));
@@ -67,11 +77,13 @@ public class ProductDAOImpl implements ProductDAO {
                 foundProduct.setVendor(resultSet.getString(6));
             }
             return foundProduct;
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            close(resultSet);
+            close(preparedStatement);
+            retrieve(connection);
         }
-
-        return null;
     }
 
     @Override
@@ -81,19 +93,23 @@ public class ProductDAOImpl implements ProductDAO {
 
 
     @Override
-    public boolean delete(long productId) {
+    public boolean delete(long productId) throws DaoException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
         try {
 
-            Connection connection = DataBaseConfig.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_PRODUCT_QUERY);
+            connection = getConnection(true);
+            preparedStatement = connection.prepareStatement(DELETE_PRODUCT_QUERY);
             preparedStatement.setLong(1, productId);
 
             return preparedStatement.executeUpdate() != 0;
 
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException | DaoException e) {
+            throw new DaoException(e);
+        } finally {
+            close(preparedStatement);
+            retrieve(connection);
         }
-        return false;
     }
 
     @Override
@@ -107,12 +123,15 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public List<Product> findAllProducts() {
+    public List<Product> findAllProducts() throws DaoException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         try {
-            Connection connection = DataBaseConfig.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_PRODUCTS_QUERY);
+            connection = getConnection(true);
+            preparedStatement = connection.prepareStatement(FIND_ALL_PRODUCTS_QUERY);
             ArrayList<Product> products = new ArrayList<>();
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Product productFound = new Product(
                         resultSet.getLong(1),
@@ -124,22 +143,27 @@ public class ProductDAOImpl implements ProductDAO {
                 );
                 products.add(productFound);
             }
-
             return products;
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException | DaoException e) {
+            throw new DaoException(e);
+        } finally {
+            close(resultSet);
+            close(preparedStatement);
+            retrieve(connection);
         }
-        return null;
     }
 
     @Override
-    public List<Product> findProductsByType(String type) {
+    public List<Product> findProductsByType(String type) throws DaoException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         try {
-            Connection connection = DataBaseConfig.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(FIND_PRODUCTS_BY_TYPE_QUERY);
+            connection = getConnection(true);
+            preparedStatement = connection.prepareStatement(FIND_PRODUCTS_BY_TYPE_QUERY);
             preparedStatement.setString(1, type);
             ArrayList<Product> products = new ArrayList<>();
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Product productFound = new Product(
                         resultSet.getLong(1),
@@ -153,48 +177,67 @@ public class ProductDAOImpl implements ProductDAO {
             }
 
             return products;
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException | DaoException e) {
+            throw new DaoException(e);
+        } finally {
+            close(resultSet);
+            close(preparedStatement);
+            retrieve(connection);
         }
-        return null;
     }
 
     @Override
-    public String findProductVendor(long id) {
+    public String findProductVendor(long id) throws DaoException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         try {
-            Connection connection = DataBaseConfig.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(FIND_VENDOR_QUERY);
+            connection = getConnection(true);
+            preparedStatement = connection.prepareStatement(FIND_VENDOR_QUERY);
             preparedStatement.setLong(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             resultSet.next();
             return resultSet.getString(2);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException | DaoException e) {
+            throw new DaoException(e);
+        }finally {
+            close(resultSet);
+            close(preparedStatement);
+            retrieve(connection);
         }
-        return null;
+
     }
 
     @Override
-    public long findVendorId(String name) {
+    public long findVendorId(String name) throws DaoException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         try {
-            Connection connection = DataBaseConfig.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(FIND_VENDOR_BY_NAME_QUERY);
+            connection = getConnection(true);
+            preparedStatement = connection.prepareStatement(FIND_VENDOR_BY_NAME_QUERY);
             preparedStatement.setString(1, name);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             resultSet.next();
             return resultSet.getLong(1);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException | DaoException e) {
+            throw new DaoException(e);
+        }finally {
+            close(resultSet);
+            close(preparedStatement);
+            retrieve(connection);
         }
-        return 0;
     }
 
     @Override
-    public List<Vendor> getVendors() {
+    public List<Vendor> getVendors() throws DaoException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         try {
-            Connection connection = DataBaseConfig.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(GET_VENDORS_QUERY);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            connection = getConnection(true);
+            preparedStatement = connection.prepareStatement(GET_VENDORS_QUERY);
+            resultSet = preparedStatement.executeQuery();
             List<Vendor> vendorNames = new ArrayList<>();
             while (resultSet.next()) {
                 Vendor vendor = new Vendor(
@@ -204,17 +247,22 @@ public class ProductDAOImpl implements ProductDAO {
                 vendorNames.add(vendor);
             }
             return vendorNames;
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException | DaoException e) {
+            throw new DaoException(e);
+        }finally {
+            close(resultSet);
+            close(preparedStatement);
+            retrieve(connection);
         }
-        return null;
     }
 
     @Override
-    public boolean update(long productId, long productAmount) {
+    public boolean update(long productId, long productAmount) throws DaoException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
         try {
-            Connection connection = DataBaseConfig.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PRODUCT_QUERY);
+            connection = getConnection(true);
+            preparedStatement = connection.prepareStatement(UPDATE_PRODUCT_QUERY);
             preparedStatement.setLong(1, productAmount);
             preparedStatement.setLong(2, productId);
             int rows = preparedStatement.executeUpdate();
@@ -223,9 +271,12 @@ public class ProductDAOImpl implements ProductDAO {
                 return delete(productId);
             }
             return rows != 0;
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException | DaoException e) {
+            throw new DaoException(e);
+        }finally {
+            close(preparedStatement);
+            retrieve(connection);
         }
-        return false;
+
     }
 }

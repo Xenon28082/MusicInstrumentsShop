@@ -53,6 +53,9 @@
     <c:if test="${error == 'failedToRegister'}">
         <p style="color: red">Failed to register</p>
     </c:if>
+    <c:if test="${error == 'empty'}">
+        <p style="color: red">All fields must be fulfilled</p>
+    </c:if>
 </div>
 
 </body>

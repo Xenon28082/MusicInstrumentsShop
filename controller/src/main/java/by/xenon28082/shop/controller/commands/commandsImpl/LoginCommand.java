@@ -1,9 +1,13 @@
 package by.xenon28082.shop.controller.commands.commandsImpl;
 
 import by.xenon28082.shop.controller.commands.Command;
+import by.xenon28082.shop.controller.validators.Validator;
+import by.xenon28082.shop.controller.validators.ValidatorImpl;
 import by.xenon28082.shop.entity.User;
 import by.xenon28082.shop.entity.UserDTO;
+import by.xenon28082.shop.service.ServiceFactory;
 import by.xenon28082.shop.service.UserService;
+import by.xenon28082.shop.service.exception.ServiceException;
 import by.xenon28082.shop.service.impl.UserServiceImpl;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
@@ -14,36 +18,51 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginCommand implements Command {
-    private static final Logger logger = LoggerFactory.getLogger(LoginCommand.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoginCommand.class);
+    private UserService userService = ServiceFactory.getInstance().getUserService();
+    private static Validator validator = ValidatorImpl.getInstance();
+
+    private static String USER_LOGIN = "userloginLog";
+    private static String PASSWORD = "passwordLog";
+
 
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
-        logger.info("Got to LoginCommand");
-        UserService userService = new UserServiceImpl();
-        String login = request.getParameter("userloginLog");
-        String password = request.getParameter("passwordLog");
-        password = DigestUtils.md5Hex(password);
-        User user = new User(login, password);
-        UserDTO userDTO = userService.logination(user);
-        if(userDTO == null){
-            logger.info("There is no such user (Error)");
-            request.getSession(true).setAttribute("test", "This is test session");
-            response.sendRedirect("index.jsp?message=noSuchUser");
-        }
-        else{
-            request.getSession(true).setAttribute("id", userDTO.getId());
-            request.getSession().setAttribute("role",  userDTO.getRole());
-            request.getSession().setAttribute("login",  userDTO.getLogin());
+    public void execute(HttpServletRequest req, HttpServletResponse res) throws SQLException, ServletException, IOException, ServiceException {
+        LOGGER.info("Got to LoginCommand");
 
-            if(userDTO.getRole() == 1 || userDTO.getRole() == 3){
-                logger.info("Going to admin page");
-                request.getRequestDispatcher("adminPage.jsp").forward(request, response);
-                return;
+        String login = req.getParameter(USER_LOGIN);
+        String password = req.getParameter(PASSWORD);
+        List<String> params = new ArrayList<>();
+        params.add(login);
+        params.add(password);
+        if (validator.validateIsEmpty(params)) {
+            LOGGER.info("Empty fields");
+            res.sendRedirect("index.jsp?message=empty");
+        } else {
+            password = DigestUtils.md5Hex(password);
+            User user = new User(login, password);
+            UserDTO userDTO = userService.logination(user);
+            if (validator.validateIsNull(userDTO)) {
+                LOGGER.info("There is no such user (Error)");
+                res.sendRedirect("index.jsp?message=noSuchUser");
+            } else {
+                req.getSession(true).setAttribute("id", userDTO.getId());
+                req.getSession().setAttribute("role", userDTO.getRole());
+                req.getSession().setAttribute("login", userDTO.getLogin());
+
+                if (userDTO.getRole() == 1 || userDTO.getRole() == 3) {
+                    LOGGER.info("Going to admin page");
+                    req.getRequestDispatcher("adminPage.jsp").forward(req, res);
+                    return;
+                }
+                LOGGER.info("Going to user page");
+                res.sendRedirect("userPage.jsp");
+//            req.getRequestDispatcher("userPage.jsp").forward(req, res);
             }
-            logger.info("Going to user page");
-            request.getRequestDispatcher("userPage.jsp").forward(request, response);
         }
     }
 

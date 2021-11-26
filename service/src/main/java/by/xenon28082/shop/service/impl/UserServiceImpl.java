@@ -1,26 +1,42 @@
 package by.xenon28082.shop.service.impl;
 
 import by.xenon28082.shop.dao.UserDAO;
+import by.xenon28082.shop.dao.exception.DaoException;
 import by.xenon28082.shop.dao.impl.UserDAOImpl;
 import by.xenon28082.shop.entity.User;
 import by.xenon28082.shop.entity.UserDTO;
 import by.xenon28082.shop.service.UserService;
+import by.xenon28082.shop.service.exception.ServiceException;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
-    @Override
-    public User registration(User user) throws SQLException {
-        UserDAO dao = new UserDAOImpl();
-        return dao.save(user);
+
+    private final UserDAO dao;
+
+    public UserServiceImpl(final UserDAO dao) {
+        this.dao = dao;
     }
 
     @Override
-    public UserDTO logination(User user) throws SQLException {
-        UserDAO dao = new UserDAOImpl();
-        user = dao.find(user);
-        return (user == null) ? null : new UserDTO(user);
+    public User registration(User user) throws ServiceException {
+        try {
+            return dao.save(user);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public UserDTO logination(User user) throws ServiceException {
+        try {
+            user = dao.find(user);
+            return (user == null) ? null : new UserDTO(user);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+
     }
 
     @Override
@@ -29,9 +45,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserByLogin(String login) {
-        UserDAO userDAO = new UserDAOImpl();
-        return userDAO.findUserByLogin(login);
+    public User findUserByLogin(String login) throws ServiceException {
+        try {
+            return dao.findUserByLogin(login);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
@@ -50,14 +69,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public long countUsers() throws SQLException {
-        UserDAO dao = new UserDAOImpl();
-        return dao.countAll();
+    public long countUsers() throws SQLException, ServiceException {
+        try {
+            return dao.countAll();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
-    public boolean updateUserRole(User user) {
-        UserDAO dao = new UserDAOImpl();
-        return dao.update(user);
+    public boolean updateUserRole(User user) throws ServiceException {
+        try {
+            return dao.update(user);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 }

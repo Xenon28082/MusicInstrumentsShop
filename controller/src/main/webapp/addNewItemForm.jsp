@@ -20,6 +20,8 @@
     }
 %>
 
+<c:set var="message" value="${param.message}"/>
+
 <header>
     <div class="head" style="display: flex; justify-content: space-between">
         <div class="ico">
@@ -82,9 +84,14 @@
         <p></p>
         <input type="number" name="productStock" placeholder="Product stock" autocomplete="off">
         <p></p>
-        <input type="text" name="productType" placeholder="Product type" autocomplete="off">
+        <select name="productType">
+            <option value="guitar">guitar</option>
+            <option value="percussion">percussion</option>
+            <option value="keys">keys</option>
+            <option value="whistle">whistle</option>
+            <option></option>
+        </select>
         <p></p>
-        <%--        <input type="number" name="productVendor" placeholder="Product vendor" autocomplete="off">--%>
         <select name="vendorSelect">
             <c:forEach var="vendor" items="${vendors}">
                 <option value="${vendor.getName()}">${vendor.getName()}</option>
@@ -94,5 +101,12 @@
         <button type="submit">Add new item</button>
     </form>
 
+    <c:if test="${message == 'negative'}">
+        <div style="border: red solid 2px">All number fields must be positive</div>
+    </c:if>
+
+    <c:if test="${message == 'empty'}">
+        <div style="border: red solid 2px">All fields must be fulfilled</div>
+    </c:if>
 </div>
 </body>

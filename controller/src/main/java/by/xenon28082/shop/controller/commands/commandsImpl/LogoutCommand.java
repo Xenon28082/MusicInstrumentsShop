@@ -12,11 +12,11 @@ import java.sql.SQLException;
 
 public class LogoutCommand implements Command {
 
-    private static final Logger logger = LoggerFactory.getLogger(LogoutCommand.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LogoutCommand.class);
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse res) throws SQLException, ServletException, IOException {
-        logger.info("Got to logout");
+        LOGGER.info("Got to logout");
         req.getSession().invalidate();
         res.sendRedirect("index.jsp");
     }
