@@ -1,7 +1,6 @@
 package by.xenon28082.shop.dao.impl;
 
 import by.xenon28082.shop.dao.ProductDAO;
-import by.xenon28082.shop.dao.config.DataBaseConfig;
 import by.xenon28082.shop.dao.databaseConnection.ConnectionPool;
 import by.xenon28082.shop.dao.exception.DaoException;
 import by.xenon28082.shop.entity.Product;

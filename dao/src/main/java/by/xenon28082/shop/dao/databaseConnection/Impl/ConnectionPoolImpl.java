@@ -1,6 +1,6 @@
 package by.xenon28082.shop.dao.databaseConnection.Impl;
 
-import by.xenon28082.shop.dao.config.DataBaseConfig;
+import by.xenon28082.shop.dao.config.DatabaseConfig;
 import by.xenon28082.shop.dao.databaseConnection.ConnectionPool;
 import by.xenon28082.shop.dao.exception.DaoException;
 
@@ -9,16 +9,14 @@ import java.sql.SQLException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.logging.Logger;
 
-import static java.util.Objects.nonNull;
-
 public class ConnectionPoolImpl  implements ConnectionPool {
     private static final Logger LOGGER = Logger.getLogger(ConnectionPoolImpl.class.getName());
     private static final int CONNECTIONS_TOTAL = 4;
-    private final DataBaseConfig dataBaseConfig;
+    private final DatabaseConfig dataBaseConfig;
     private final ArrayBlockingQueue<Connection> pool;
     private final ArrayBlockingQueue<Connection> taken;
 
-    public ConnectionPoolImpl(final DataBaseConfig dataBaseConfig) {
+    public ConnectionPoolImpl(final DatabaseConfig dataBaseConfig) {
         this.dataBaseConfig = dataBaseConfig;
         pool = new ArrayBlockingQueue<>(CONNECTIONS_TOTAL);
         taken = new ArrayBlockingQueue<>(CONNECTIONS_TOTAL);

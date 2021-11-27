@@ -3,8 +3,8 @@ package by.xenon28082.shop.dao.impl;
 import by.xenon28082.shop.DaoFactory;
 import by.xenon28082.shop.dao.ProductDAO;
 import by.xenon28082.shop.dao.OrderDAO;
-import by.xenon28082.shop.dao.config.DatabaseConfig2;
-//import by.xenon28082.shop.dao.databaseConnection.DataBaseConfig;
+import by.xenon28082.shop.dao.config.DatabaseConfig;
+
 import by.xenon28082.shop.dao.exception.DaoException;
 import by.xenon28082.shop.entity.Product;
 import by.xenon28082.shop.entity.Order;
@@ -31,9 +31,8 @@ public class OrderDAOImpl implements OrderDAO {
 
     @Override
     public List<Order> getOrders(long userId){
-
         try {
-            Connection connection = DatabaseConfig2.getConnection();
+            Connection connection = DatabaseConfig.getConnection();
             ArrayList<Order> reservations = new ArrayList<>();
 
 
@@ -80,7 +79,7 @@ public class OrderDAOImpl implements OrderDAO {
             if (updatedOrder.getAmount() != 0) {
                 return update(updatedOrder);
             } else {
-                Connection connection = DatabaseConfig2.getConnection();
+                Connection connection = DatabaseConfig.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(DELETE_RESERVATION_QUERY);
                 preparedStatement.setLong(1, userId);
                 preparedStatement.setLong(2, orderId);
@@ -96,7 +95,7 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public boolean findByProductId(long productId) {
         try {
-            Connection connection = DatabaseConfig2.getConnection();
+            Connection connection = DatabaseConfig.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(FIND_RESERVATION_BY_PRODUCT_ID_QUERY);
             preparedStatement.setLong(1, productId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -119,7 +118,7 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public boolean deleteAllByProductId(long productId) {
         try {
-            Connection connection = DatabaseConfig2.getConnection();
+            Connection connection = DatabaseConfig.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ALL_BY_PRODUCT_ID_QUERY);
             preparedStatement.setLong(1, productId);
             return preparedStatement.executeUpdate() != 0;
@@ -132,7 +131,7 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public Order save(Order order){
         try {
-            Connection connection = DatabaseConfig2.getConnection();
+            Connection connection = DatabaseConfig.getConnection();
             Order foundOrder = find(order);
 
             ProductDAO dao = DaoFactory.getInstance().getProductDao();
@@ -166,7 +165,7 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public Order find(Order order){
         try {
-            Connection connection = DatabaseConfig2.getConnection();
+            Connection connection = DatabaseConfig.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(FIND_RESERVATION_QUERY);
             preparedStatement.setLong(1, order.getUserId());
             preparedStatement.setLong(2, order.getProductId());
@@ -190,7 +189,7 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public Order findById(long id) {
         try {
-            Connection connection = DatabaseConfig2.getConnection();
+            Connection connection = DatabaseConfig.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(FIND_RESERVATION_BY_ID_QUERY);
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -211,7 +210,7 @@ public class OrderDAOImpl implements OrderDAO {
     public boolean update(Order order) {
 
         try {
-            Connection connection = DatabaseConfig2.getConnection();
+            Connection connection = DatabaseConfig.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_QUERY);
             preparedStatement.setInt(1, order.getAmount());
             preparedStatement.setLong(2, order.getUserId());

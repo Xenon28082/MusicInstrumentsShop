@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class DataBaseConfig {
+public class DatabaseConfig {
 
     public static String URL = "jdbc:postgresql://localhost:5432/";
 
