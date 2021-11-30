@@ -22,67 +22,17 @@
 
 <c:set var="message" value="${param.message}"/>
 
-<header>
-    <div class="head" style="display: flex; justify-content: space-between">
-        <div class="ico">
-            <a href="#">
-                <img src="Assets/images/test.png">
-            </a>
-        </div>
-        <div class="ico" style="display: flex; justify-content: space-between; padding-right: 30px; width: 150px">
-            <img src="https://img.icons8.com/external-kiranshastry-solid-kiranshastry/64/ffffff/external-user-interface-kiranshastry-solid-kiranshastry-1.png"/>
-            <p>
-                <%=(String) session.getAttribute("login")%>
-            </p>
-        </div>
-    </div>
-</header>
-
-
-<nav id="menuVertical">
-    <ul>
-        <li><a class="mainRef" href="FrontController?COMMAND=GET_PRODUCTS">
-            <div class="img_n"><img src="https://img.icons8.com/ios/50/ffffff/refresh-folder.png"/></div>
-            <span>Каталог</span></a>
-            <ul>
-                <li><a href="FrontController?COMMAND=GET_PRODUCTS&TYPE=guitar">Гитары</a></li>
-                <li><a href="FrontController?COMMAND=GET_PRODUCTS&TYPE=keys">Клавишные</a></li>
-                <li><a href="FrontController?COMMAND=GET_PRODUCTS&TYPE=percussion">Перкуссионные</a></li>
-                <li><a href="FrontController?COMMAND=GET_PRODUCTS&TYPE=whistle">Духовые</a></li>
-            </ul>
-        </li>
-
-        <li><a class="mainRef" href="FrontController?COMMAND=GET_VENDORS">
-            <div class="img_n"><img src="https://img.icons8.com/ios/50/ffffff/plus--v1.png"/></div>
-            <span>Добавить новый товар</span></a>
-        </li>
-
-        <li><a class="mainRef" href="changeUserPage.jsp">
-            <div class="img_n"><img src="https://img.icons8.com/ios/50/ffffff/lifecycle--v1.png"/></div>
-            <span>Изменить роль пользователя</span></a>
-        </li>
-
-
-        <li><a class="mainRef" href="FrontController?COMMAND=LOGOUT">
-            <div class="img_n"><img src="https://img.icons8.com/ios/50/ffffff/exit.png"/></div>
-            <span>Выход</span></a>
-        </li>
-
-    </ul>
-</nav>
-<div class="menu">
-    <div class="footer">Copyright</div>
-</div>
+<jsp:include page="Assets/MenuJSPs/AdminMenu.jsp"/>
 
 
 <c:set var="vendors" value="${requestScope.vendors}"/>
 <div class="blockCont" style="display: flex; justify-content: flex-start; flex-wrap: wrap;">
     <form method="post" action="FrontController?COMMAND=ADD_NEW_ITEM">
-        <input type="text" name="productName" placeholder="Product name" autocomplete="off">
+        <input type="text" name="productName" placeholder="Product name" autocomplete="off" required>
         <p></p>
-        <input type="number" name="productPrice" placeholder="Product price" autocomplete="off">
+        <input type="number" name="productPrice" placeholder="Product price" autocomplete="off" required>
         <p></p>
-        <input type="number" name="productStock" placeholder="Product stock" autocomplete="off">
+        <input type="number" name="productStock" placeholder="Product stock" autocomplete="off" required>
         <p></p>
         <select name="productType">
             <option value="guitar">guitar</option>

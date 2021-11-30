@@ -18,6 +18,8 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
     private static final String FIND_USER_BY_LOGIN_AND_PASSWORD_QUERY = "SELECT * FROM users WHERE login = ? AND password = ?";
     private static final String UPDATE_USER_ROLE_QUERY = "UPDATE users SET role_id = ? WHERE id = ?";
     private static final String FIND_USER_BY_LOGIN = "SELECT * FROM users WHERE login = ?";
+    private static final String UPDATE_USER_LOGIN = "UPDATE users SET login = ? WHERE id = ?";
+    private static final String UPDATE_USER_PASSWORD = "UPDATE users SET password = ? WHERE id = ?";
 
     public UserDAOImpl(final ConnectionPool connectionPool) {
         super(connectionPool);
@@ -64,7 +66,7 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
             if (user.getLogin() != null) {
                 return user;
             }
-            return find(user);
+            return null;
         } catch (SQLException | DaoException e) {
             throw new DaoException(e);
         } finally {
@@ -80,6 +82,7 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
     public User findById(long id) {
         return null;
     }
+
 
     @Override
     public boolean update(User user) throws DaoException {
@@ -162,5 +165,41 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
     @Override
     public boolean changeUserPassword(User user, String newPassword) {
         return false;
+    }
+
+    @Override
+    public boolean updateLogin(String newLogin, long userId) throws DaoException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = getConnection(true);
+            preparedStatement = connection.prepareStatement(UPDATE_USER_LOGIN);
+            preparedStatement.setString(1, newLogin);
+            preparedStatement.setLong(2, userId);
+            return preparedStatement.executeUpdate() != 0;
+        } catch (DaoException | SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            close(preparedStatement);
+            retrieve(connection);
+        }
+    }
+
+    @Override
+    public boolean updatePassword(String newPassword, long userId) throws DaoException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = getConnection(true);
+            preparedStatement = connection.prepareStatement(UPDATE_USER_PASSWORD);
+            preparedStatement.setString(1, newPassword);
+            preparedStatement.setLong(2, userId);
+            return preparedStatement.executeUpdate() != 0;
+        } catch (DaoException | SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            close(preparedStatement);
+            retrieve(connection);
+        }
     }
 }

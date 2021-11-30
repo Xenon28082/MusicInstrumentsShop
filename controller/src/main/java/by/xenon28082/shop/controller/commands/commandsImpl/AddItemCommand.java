@@ -24,7 +24,7 @@ public class AddItemCommand implements Command {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AddItemCommand.class);
 
-    private final OrderService orderService = new OrderServiceImpl();//ServiceFactory.getInstance().getOrderService();
+    private static final OrderService orderService = ServiceFactory.getInstance().getOrderService();
     private final ProductService productService = ServiceFactory.getInstance().getProductService();
 
     private final Validator validator = ValidatorImpl.getInstance();

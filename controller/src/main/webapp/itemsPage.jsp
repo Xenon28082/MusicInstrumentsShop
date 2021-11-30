@@ -25,67 +25,12 @@
 <c:set var="userRole" value="${sessionScope.role}"/>
 <c:set var="error" value="${param.message}"/>
 
-<header>
-    <div class="head" style="display: flex; justify-content: space-between">
-        <div class="ico">
-            <a href="#">
-                <img src="Assets/images/test.png">
-            </a>
-        </div>
-        <div class="ico" style="display: flex; justify-content: space-between; padding-right: 30px; width: 150px">
-            <img src="https://img.icons8.com/external-kiranshastry-solid-kiranshastry/64/ffffff/external-user-interface-kiranshastry-solid-kiranshastry-1.png"/>
-            <p>
-                <%=(String) session.getAttribute("login")%>
-            </p>
-        </div>
-    </div>
-</header>
-
-
-<nav id="menuVertical">
-    <ul>
-        <li><a class="mainRef" href="FrontController?COMMAND=GET_PRODUCTS">
-            <div class="img_n">
-                <img class="try" src="https://img.icons8.com/ios/50/ffffff/progressive-rock.png"/>
-            </div>
-            <span>Каталог</span></a>
-            <ul>
-                <li><a href="FrontController?COMMAND=GET_PRODUCTS&TYPE=guitar">Гитары</a></li>
-                <li><a href="FrontController?COMMAND=GET_PRODUCTS&TYPE=keys">Клавишные</a></li>
-                <li><a href="FrontController?COMMAND=GET_PRODUCTS&TYPE=percussion">Перкуссионные</a></li>
-                <li><a href="FrontController?COMMAND=GET_PRODUCTS&TYPE=whistle">Духовые</a></li>
-            </ul>
-        </li>
-
-
-        <c:if test="${userRole == 2}">
-            <li><a class="mainRef" href="FrontController?COMMAND=SHOW_BASKET">
-                <div class="img_n"><img src="https://img.icons8.com/ios/50/ffffff/shopping-basket.png"/></div>
-                <span>Корзина</span></a>
-            </li>
-        </c:if>
-
-        <c:if test="${userRole == 1 || userRole == 3}">
-            <li><a class="mainRef" href="FrontController?COMMAND=GET_VENDORS">
-                <div class="img_n"><img src="https://img.icons8.com/ios/50/ffffff/plus--v1.png"/></div>
-                <span>Добавить новый товар</span></a>
-            </li>
-            <li><a class="mainRef" href="changeUserPage.jsp">
-                <div class="img_n"><img src="https://img.icons8.com/ios/50/ffffff/shopping-basket.png"/></div>
-                <span>Изменить роль пользователя</span></a>
-            </li>
-        </c:if>
-
-        <li><a class="mainRef" href="FrontController?COMMAND=LOGOUT">
-            <div class="img_n"><img src="https://img.icons8.com/ios/50/ffffff/exit.png"/></div>
-            <span>Выход</span></a>
-        </li>
-
-    </ul>
-</nav>
-<div class="menu">
-    <div class="footer">Copyright</div>
-</div>
+<c:if test="${userRole == 2}">
+    <jsp:include page="Assets/MenuJSPs/UserMenu.jsp"/>
+</c:if>
+<c:if test="${userRole == 1 || userRole == 3}">
+        <jsp:include page="Assets/MenuJSPs/AdminMenu.jsp"/>
+</c:if>
 
 
 <div class="blockCont" style="display: flex; justify-content: flex-start; flex-wrap: wrap;">
@@ -114,7 +59,7 @@
                     <form method="post" action="FrontController">
                         <input type="hidden" name="COMMAND" value="DELETE_SOME"/>
                         <input type="hidden" name="productId" value="${item.getId()}">
-                        <input type="number" name="deleteValue" value="0">
+                        <input type="number" name="deleteValue" value="0" required>
                         <button type="submit">Delete Some</button>
                     </form>
                     <form method="post" action="FrontController">
@@ -126,7 +71,7 @@
                     <form method="post" action="FrontController">
                         <input type="hidden" name="COMMAND" value="ADD_SOME"/>
                         <input type="hidden" name="productId" value="${item.getId()}">
-                        <input id="1"  type="number" name="addValue" value="0">
+                        <input id="1" type="number" name="addValue" value="0" required>
                         <button type="submit">Add some</button>
                     </form>
 
@@ -136,7 +81,7 @@
                         <input type="hidden" name="TYPE" value="${type}"/>
                         <input type="hidden" name="COMMAND" value="ADD_TO_BASKET"/>
                         <input type="hidden" name="productId" value="${item.getId()}"/>
-                        <input type="number" name="productAmount" value="1">
+                        <input type="number" name="productAmount" value="1" required>
                         <button class="addToCart" type="submit"><img
                                 src="https://img.icons8.com/material-outlined/24/ffffff/plus--v1.png"/></button>
                     </form>

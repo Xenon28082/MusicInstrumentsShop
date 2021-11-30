@@ -18,51 +18,9 @@
     }
 %>
 
-<header>
-    <div class="head" style="display: flex; justify-content: space-between">
-        <div class="ico">
-            <a href="#">
-                <img src="Assets/images/test.png">
-            </a>
-        </div>
-        <div class="ico" style="display: flex; justify-content: space-between; padding-right: 30px; width: 150px">
-            <img src="https://img.icons8.com/external-kiranshastry-solid-kiranshastry/64/000000/external-user-interface-kiranshastry-solid-kiranshastry-1.png"/>
-            <p>
-                <%=(String) session.getAttribute("login")%>
-            </p>
-        </div>
-    </div>
-</header>
 
+<jsp:include page="Assets/MenuJSPs/UserMenu.jsp"/>
 
-<nav id="menuVertical">
-    <ul>
-        <li><a class="mainRef" href="FrontController?COMMAND=GET_PRODUCTS">
-            <div class="img_n"><img class="try" src="https://img.icons8.com/ios/50/ffffff/progressive-rock.png"/></div>
-            <span>Каталог</span></a>
-            <ul>
-                <li><a href="FrontController?COMMAND=GET_PRODUCTS&TYPE=guitar">Гитары</a></li>
-                <li><a href="FrontController?COMMAND=GET_PRODUCTS&TYPE=keys">Клавишные</a></li>
-                <li><a href="FrontController?COMMAND=GET_PRODUCTS&TYPE=percussion">Перкуссионные</a></li>
-                <li><a href="FrontController?COMMAND=GET_PRODUCTS&TYPE=whistle">Духовые</a></li>
-            </ul>
-        </li>
-
-        <li><a class="mainRef" href="FrontController?COMMAND=SHOW_BASKET">
-            <div class="img_n"><img src="https://img.icons8.com/ios/50/ffffff/shopping-basket.png"/></div>
-            <span>Корзина</span></a>
-        </li>
-
-        <li><a class="mainRef" href="FrontController?COMMAND=LOGOUT">
-            <div class="img_n"><img src="https://img.icons8.com/ios/50/ffffff/exit.png"/></div>
-            <span>Выход</span></a>
-        </li>
-
-    </ul>
-</nav>
-<div class="menu">
-    <div class="footer">Copyright</div>
-</div>
 
 <c:set var="orders" value="${sessionScope.reservations}"/>
 <c:set var="error" value="${param.message}"/>
@@ -91,8 +49,24 @@
                     <input type="hidden" name="COMMAND" value="DELETE_FROM_BASKET"/>
                     <input type="hidden" name="orderId" value="${fn:escapeXml(order.getOrderId())}"/>
                     <input type="hidden" name="productId" value="${fn:escapeXml(order.getProduct().getId())}"/>
-                    <input type="number" name="productAmount" value="1">
+                    <input type="number" name="productAmount" value="1" required>
                     <button class="addToCart" type="submit">DELETE</button>
+                </form>
+
+                <form method="post" id="reserveForm" action="FrontController">
+                    <input type="hidden" name="COMMAND" value="RESERVATE_PRODUCT">
+                    <c:if test="${order.isReserved()}">
+                        <input disabled type="checkbox" checked/>
+                        <input type="hidden" name="isreserved" value="delete">
+                        <input type="hidden" name="orderId" value="${order.getOrderId()}">
+                        <button type="submit">Delete from reserve</button>
+                    </c:if>
+                    <c:if test="${!order.isReserved()}">
+                        <input disabled type="checkbox" />
+                        <input type="hidden" name="isreserved" value="add">
+                        <input type="hidden" name="orderId" value="${order.getOrderId()}">
+                        <button type="submit">Add to reserve</button>
+                    </c:if>
                 </form>
             </div>
 

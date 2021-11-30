@@ -5,6 +5,7 @@ import by.xenon28082.shop.dao.ProductDAO;
 import by.xenon28082.shop.dao.OrderDAO;
 import by.xenon28082.shop.dao.config.DatabaseConfig;
 
+import by.xenon28082.shop.dao.databaseConnection.ConnectionPool;
 import by.xenon28082.shop.dao.exception.DaoException;
 import by.xenon28082.shop.entity.Product;
 import by.xenon28082.shop.entity.Order;
@@ -16,7 +17,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderDAOImpl implements OrderDAO {
+public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
 
     private static final String SAVE_RESERVATION_QUERY = "INSERT INTO orders (user_id, product_id, amount) VALUES (?,?,?)";
     private static final String GET_RESERVATIONS_QUERY = "SELECT * FROM orders WHERE user_id = ?";
@@ -26,7 +27,11 @@ public class OrderDAOImpl implements OrderDAO {
     private static final String UPDATE_QUERY = "UPDATE orders SET amount = ? WHERE user_id = ? AND product_id = ?";
     private static final String FIND_RESERVATION_BY_PRODUCT_ID_QUERY = "SELECT * FROM orders WHERE product_id = ?";
     private static final String DELETE_ALL_BY_PRODUCT_ID_QUERY = "DELETE FROM orders WHERE product_id = ?";
+    private static final String ADD_TO_RESERVE = "UPDATE orders SET in_reservation = ? WHERE order_id = ?";
 
+    public OrderDAOImpl(ConnectionPool connectionPool) {
+        super(connectionPool);
+    }
 
 
     @Override
@@ -34,8 +39,6 @@ public class OrderDAOImpl implements OrderDAO {
         try {
             Connection connection = DatabaseConfig.getConnection();
             ArrayList<Order> reservations = new ArrayList<>();
-
-
             PreparedStatement preparedStatement = connection.prepareStatement(GET_RESERVATIONS_QUERY);
             preparedStatement.setLong(1, userId);
 
@@ -48,7 +51,8 @@ public class OrderDAOImpl implements OrderDAO {
                 Order orderFound = new Order(
                         resultSet.getLong(2),
                         searchProduct,
-                        resultSet.getInt(4)
+                        resultSet.getInt(4),
+                        resultSet.getBoolean(5)
                 );
                 orderFound.setOrderId(productId);
                 orderFound.setOrderId(resultSet.getLong(1));
@@ -104,8 +108,10 @@ public class OrderDAOImpl implements OrderDAO {
                     resultSet.getLong(1),
                     resultSet.getLong(2),
                     resultSet.getLong(3),
-                    resultSet.getInt(4)
+                    resultSet.getInt(4),
+                    resultSet.getBoolean(5)
             );
+
             if(order.getOrderId() != 0){
                 return true;
             }
@@ -121,6 +127,20 @@ public class OrderDAOImpl implements OrderDAO {
             Connection connection = DatabaseConfig.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ALL_BY_PRODUCT_ID_QUERY);
             preparedStatement.setLong(1, productId);
+            return preparedStatement.executeUpdate() != 0;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateIsReserved(boolean isReserved, long orderId) {
+        try {
+            Connection connection = DatabaseConfig.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(ADD_TO_RESERVE);
+            preparedStatement.setBoolean(1, isReserved);
+            preparedStatement.setLong(2, orderId);
             return preparedStatement.executeUpdate() != 0;
         } catch (SQLException throwables) {
             throwables.printStackTrace();

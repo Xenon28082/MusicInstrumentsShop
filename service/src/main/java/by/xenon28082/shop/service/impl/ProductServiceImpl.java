@@ -2,18 +2,21 @@ package by.xenon28082.shop.service.impl;
 
 import by.xenon28082.shop.dao.ProductDAO;
 import by.xenon28082.shop.dao.exception.DaoException;
-import by.xenon28082.shop.dao.impl.ProductDAOImpl;
 import by.xenon28082.shop.dao.impl.comparators.ProductIdComparator;
 import by.xenon28082.shop.entity.Product;
 import by.xenon28082.shop.entity.Vendor;
 import by.xenon28082.shop.service.ProductService;
 import by.xenon28082.shop.service.exception.ServiceException;
+import by.xenon28082.shop.service.validators.Validator;
+import by.xenon28082.shop.service.validators.ValidatorImpl;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class ProductServiceImpl implements ProductService {
 
     private final ProductDAO dao;
+    private final Validator validator = ValidatorImpl.getInstance();
 
     public ProductServiceImpl(final ProductDAO productDAO){
         this.dao = productDAO;
@@ -34,6 +37,9 @@ public class ProductServiceImpl implements ProductService {
 
     public List<Product> getProductsByType(String type) throws ServiceException {
         try {
+            if(validator.validateIsEmpty(Arrays.asList(type))){
+                return null;
+            }
             return dao.findProductsByType(type);
         } catch (DaoException e) {
             throw new ServiceException(e);
@@ -52,6 +58,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product addNewProduct(Product product) throws ServiceException{
         try {
+            if(validator.validateIsNull(product)){
+                return null;
+            }
             return dao.save(product);
         } catch (DaoException e) {
             throw new ServiceException(e);
@@ -61,6 +70,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public boolean updateProduct(long productId, long amount) throws ServiceException {
         try {
+            if (validator.validateIsEmpty(Arrays.asList(String.valueOf(productId), String.valueOf(amount)))){
+                return false;
+            }
             return dao.update(productId, amount);
         } catch (DaoException e) {
             throw new ServiceException(e);

@@ -8,4 +8,6 @@ public interface UserDAO extends EntityFacade<User> {
 
     User findUserByLogin(String login) throws DaoException;
     boolean changeUserPassword(User user, String newPassword);
+    boolean updateLogin(String newLogin, long userId) throws DaoException;
+    boolean updatePassword(String newPassword, long userId) throws DaoException;
 }

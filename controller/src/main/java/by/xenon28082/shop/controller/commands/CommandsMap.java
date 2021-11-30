@@ -25,8 +25,11 @@ public class CommandsMap {
         COMMANDS.put("GET_VENDORS", new GetVendorsCommand());
         COMMANDS.put("DELETE_SOME", new DeleteItemCommand());
         COMMANDS.put("GET_USER_INFO", new FindUserCommand());
-        COMMANDS.put("UPDATE_USER", new UpdateUserCommand());
+        COMMANDS.put("UPDATE_USER", new UpdateUserRoleCommand());
         COMMANDS.put("ADD_SOME", new AddItemCommand());
+        COMMANDS.put("UPDATE_USER_LOGIN", new UpdateUserLoginCommand());
+        COMMANDS.put("UPDATE_USER_PASSWORD", new UpdateUserPasswordCommand());
+        COMMANDS.put("RESERVATE_PRODUCT", new ReservateProductCommand());
     }
 
     public Command getCommand(String command){

@@ -5,7 +5,6 @@ import by.xenon28082.shop.entity.User;
 import by.xenon28082.shop.service.ServiceFactory;
 import by.xenon28082.shop.service.UserService;
 import by.xenon28082.shop.service.exception.ServiceException;
-import by.xenon28082.shop.service.impl.UserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,8 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class UpdateUserCommand implements Command {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UpdateUserCommand.class);
+public class UpdateUserRoleCommand implements Command {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UpdateUserRoleCommand.class);
     private UserService userService = ServiceFactory.getInstance().getUserService();
 
     private static final String USER_LOGIN = "userLogin";
@@ -28,8 +27,9 @@ public class UpdateUserCommand implements Command {
     private static final String ROLE = "role";
     private static final String ID = "id";
 
-    @Override
 
+
+    @Override
     public void execute(HttpServletRequest req, HttpServletResponse res) throws SQLException, ServletException, IOException, ServiceException {
         LOGGER.info("Got to UpdateUserCommand");
         String userLogin = req.getParameter(USER_LOGIN);

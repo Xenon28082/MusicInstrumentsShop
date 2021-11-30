@@ -1,5 +1,6 @@
 package by.xenon28082.shop.service;
 
+import by.xenon28082.shop.dao.exception.DaoException;
 import by.xenon28082.shop.entity.User;
 import by.xenon28082.shop.entity.UserDTO;
 import by.xenon28082.shop.service.exception.ServiceException;
@@ -17,4 +18,6 @@ public interface UserService {
     List<User> getUsers(int row);
     long countUsers() throws SQLException, ServiceException;
     boolean updateUserRole(User user) throws ServiceException;
+    boolean updateUserLogin(String newLogin, long userId) throws DaoException;
+    boolean updateUserPassword(String newPassword, long userId) throws DaoException;
 }

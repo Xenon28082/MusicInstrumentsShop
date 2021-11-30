@@ -11,4 +11,5 @@ public interface OrderDAO extends EntityFacade<Order>{
     boolean deleteOrder(long userId, long orderId, int amount) throws DaoException;
     boolean findByProductId(long productId) throws DaoException;
     boolean deleteAllByProductId(long productId) throws DaoException;
+    boolean updateIsReserved(boolean isReserved, long orderId);
 }

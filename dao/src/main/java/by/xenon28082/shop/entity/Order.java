@@ -6,11 +6,14 @@ public class Order {
     private Product product;
     private long productId;
     private int amount;
+    private boolean isReserved;
 
-    public Order(long userId, Product product, int amount) {
+    public Order(long userId, Product product, int amount, boolean isReserved) {
         this.userId = userId;
         this.product = product;
         this.amount = amount;
+        this.isReserved = isReserved;
+
     }
 
     public Order(long userId, long productId, int amount) {
@@ -19,11 +22,12 @@ public class Order {
         this.amount = amount;
     }
 
-    public Order(long orderId, long userId, long productId, int amount) {
+    public Order(long orderId, long userId, long productId, int amount, boolean isReserved) {
         this.orderId = orderId;
         this.userId = userId;
         this.productId = productId;
         this.amount = amount;
+        this.isReserved = isReserved;
     }
 
     public Order(){}
@@ -67,6 +71,14 @@ public class Order {
 
     public void setProductId(long productId) {
         this.productId = productId;
+    }
+
+    public boolean isReserved() {
+        return isReserved;
+    }
+
+    public void setReserved(boolean reserved) {
+        isReserved = reserved;
     }
 
     @Override

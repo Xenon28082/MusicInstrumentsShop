@@ -22,7 +22,7 @@ public class AddToBasketCommand implements Command {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AddToBasketCommand.class);
 
-    private final OrderService reserveService = new OrderServiceImpl();//ServiceFactory.getInstance().getOrderService();
+    private static final OrderService orderService = ServiceFactory.getInstance().getOrderService();
     private final ProductService productService = ServiceFactory.getInstance().getProductService();
 
     private static final String ID = "id";
@@ -38,7 +38,7 @@ public class AddToBasketCommand implements Command {
             int productAmount = Integer.parseInt(req.getParameter(PRODUCT_AMOUNT));
 
             Order order = new Order(userId, productId, productAmount);
-            boolean isProductAdded = reserveService.reserveProduct(order);
+            boolean isProductAdded = orderService.reserveProduct(order);
             productService.updateProduct(productId, productAmount);
             if(isProductAdded){
                 LOGGER.info("Order - " + order + "has been added(SUCCESS)");
@@ -49,7 +49,6 @@ public class AddToBasketCommand implements Command {
             System.out.println("Number exception happened");
         }
         res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS");
-//        req.getRequestDispatcher("FrontController?COMMAND=GET_PRODUCTS").forward(req, res);
     }
 
 }

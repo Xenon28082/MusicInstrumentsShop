@@ -28,23 +28,30 @@ public class FindUserCommand implements Command {
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse res) throws SQLException, ServletException, IOException, ServiceException {
         LOGGER.info("Got to FindUserCommand");
+        String role = String.valueOf(req.getSession().getAttribute("role"));
+        String path = "";
+        if(role.equals("2")){
+            path = "updateUser.jsp";
+        }else{
+            path = "changeUserPage.jsp";
+        }
         String userLogin = req.getParameter(USER_LOGIN);
         if (userLogin == "") {
             LOGGER.info("All fields must be fulfilled (ERROR)");
-            res.sendRedirect("changeUserPage.jsp?message=fieldsMustBeFulfilled");
+            res.sendRedirect(path + "?message=fieldsMustBeFulfilled");
 //            req.getRequestDispatcher("changeUserPage.jsp?message=fieldsMustBeFulfilled").forward(req, res);
         } else {
             User foundUser = userService.findUserByLogin(userLogin);
             if (validator.validateIsNull(foundUser)) {
                 LOGGER.info("No user");
-                res.sendRedirect("changeUserPage.jsp?message=noUser");
+                res.sendRedirect(path + "?message=noUser");
             } else {
                 if (foundUser.getRole() != 3) {
                     req.setAttribute("foundUser", foundUser);
                 } else {
-                    res.sendRedirect("changeUserPage.jsp?message=Cant change dir");
+                    res.sendRedirect(path + "?message=Cant change dir");
                 }
-                req.getRequestDispatcher("changeUserPage.jsp").forward(req, res);
+                req.getRequestDispatcher(path).forward(req, res);
 //                res.sendRedirect("changeUserPage.jsp");
             }
         }
