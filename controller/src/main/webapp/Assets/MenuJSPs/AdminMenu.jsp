@@ -22,7 +22,7 @@
 <header>
     <div class="head" style="display: flex; justify-content: space-between">
         <div class="ico">
-            <a href="#">
+            <a href="adminPage.jsp">
                 <img src="Assets/images/test.png">
             </a>
         </div>
@@ -38,7 +38,7 @@
 
 <nav id="menuVertical">
     <ul>
-        <li><a class="mainRef" href="FrontController?COMMAND=GET_PRODUCTS">
+        <li><a class="mainRef" href="FrontController?COMMAND=GET_PRODUCTS&page=0&shift=3">
             <div class="img_n"><img src="https://img.icons8.com/ios/50/ffffff/refresh-folder.png"/></div>
             <span>Каталог</span></a>
             <ul>
@@ -59,6 +59,10 @@
             <span>Изменить роль пользователя</span></a>
         </li>
 
+        <li><a class="mainRef" href="FrontController?COMMAND=GET_ORDERS">
+            <div class="img_n"><img src="https://img.icons8.com/ios/50/ffffff/lifecycle--v1.png"/></div>
+            <span>Изменить статус заказа</span></a>
+        </li>
 
         <li><a class="mainRef" href="FrontController?COMMAND=LOGOUT">
             <div class="img_n"><img src="https://img.icons8.com/ios/50/ffffff/exit.png"/></div>

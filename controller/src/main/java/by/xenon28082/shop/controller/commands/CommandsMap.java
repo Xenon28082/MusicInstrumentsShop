@@ -30,6 +30,11 @@ public class CommandsMap {
         COMMANDS.put("UPDATE_USER_LOGIN", new UpdateUserLoginCommand());
         COMMANDS.put("UPDATE_USER_PASSWORD", new UpdateUserPasswordCommand());
         COMMANDS.put("RESERVATE_PRODUCT", new ReservateProductCommand());
+        COMMANDS.put("SHOW_ORDER", new ShowOrderCommand());
+        COMMANDS.put("CLOSE_ORDER", new CloseOrderCommand());
+        COMMANDS.put("GET_ORDERS", new ControlOrderCommand());
+        COMMANDS.put("ACCEPT_FINAL_ORDER", new AcceptFinalOrderCommand());
+        COMMANDS.put("REFUSE_FINAL_ORDER", new RefuseFinalOrderCommand());
     }
 
     public Command getCommand(String command){

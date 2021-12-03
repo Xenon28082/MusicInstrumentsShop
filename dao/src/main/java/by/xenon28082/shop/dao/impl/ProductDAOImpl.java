@@ -16,6 +16,7 @@ import java.util.List;
 public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
 
     private static final String FIND_ALL_PRODUCTS_QUERY = "SELECT * FROM products";
+    private static final String FIND_PAGE_PRODUCTS_QUERY = "SELECT * FROM products LIMIT ? OFFSET ?";
     private static final String FIND_PRODUCTS_BY_TYPE_QUERY = "SELECT * FROM products WHERE product_type = ?";
     private static final String FIND_PRODUCT_BY_ID_QUERY = "SELECT * FROM products WHERE product_id = ?";
     private static final String FIND_VENDOR_QUERY = "SELECT * FROM vendors WHERE vendor_id = ?";
@@ -24,9 +25,64 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
     private static final String ADD_NEW_PRODUCTS_QUERY = "INSERT INTO products (product_name, price, in_stock, product_type, vendor_id) VALUES (?, ?, ?, ?, ?)";
     private static final String UPDATE_PRODUCT_QUERY = "UPDATE products SET in_stock = in_stock - ? WHERE product_id = ?";
     private static final String DELETE_PRODUCT_QUERY = "DELETE FROM products WHERE product_id = ?";
+    private static final String COUNT_PRODUCTS = "SELECT COUNT(*) FROM products";
 
     public ProductDAOImpl(ConnectionPool connectionPool) {
         super(connectionPool);
+    }
+
+    @Override
+    public long countProducts() throws DaoException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = getConnection(true);
+            preparedStatement = connection.prepareStatement(COUNT_PRODUCTS);
+            resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            return resultSet.getLong(1);
+        } catch (DaoException | SQLException e) {
+            throw new DaoException(e);
+        }finally {
+            close(resultSet);
+            close(preparedStatement);
+            retrieve(connection);
+        }
+
+    }
+
+    @Override
+    public List<Product> getProductsPage(int page, int shift) throws DaoException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = getConnection(true);
+            preparedStatement = connection.prepareStatement(FIND_PAGE_PRODUCTS_QUERY);
+            preparedStatement.setInt(1, shift);
+            preparedStatement.setInt(2, page * 3);
+            ArrayList<Product> products = new ArrayList<>();
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Product productFound = new Product(
+                        resultSet.getLong(1),
+                        resultSet.getString(2),
+                        resultSet.getDouble(3),
+                        resultSet.getLong(4),
+                        resultSet.getString(5),
+                        findProductVendor(resultSet.getLong(6))
+                );
+                products.add(productFound);
+            }
+            return products;
+        } catch (DaoException | SQLException e) {
+            throw new DaoException(e);
+        }finally {
+            close(preparedStatement);
+            close(resultSet);
+            retrieve(connection);
+        }
     }
 
     @Override
@@ -199,7 +255,7 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
             return resultSet.getString(2);
         } catch (SQLException | DaoException e) {
             throw new DaoException(e);
-        }finally {
+        } finally {
             close(resultSet);
             close(preparedStatement);
             retrieve(connection);
@@ -221,7 +277,7 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
             return resultSet.getLong(1);
         } catch (SQLException | DaoException e) {
             throw new DaoException(e);
-        }finally {
+        } finally {
             close(resultSet);
             close(preparedStatement);
             retrieve(connection);
@@ -248,7 +304,7 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
             return vendorNames;
         } catch (SQLException | DaoException e) {
             throw new DaoException(e);
-        }finally {
+        } finally {
             close(resultSet);
             close(preparedStatement);
             retrieve(connection);
@@ -266,13 +322,13 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
             preparedStatement.setLong(2, productId);
             int rows = preparedStatement.executeUpdate();
             Product gotProduct = findById(productId);
-            if (gotProduct.getStock() == 0) {
-                return delete(productId);
-            }
+//            if (gotProduct.getStock() == 0) {
+//                return delete(productId);
+//            }
             return rows != 0;
         } catch (SQLException | DaoException e) {
             throw new DaoException(e);
-        }finally {
+        } finally {
             close(preparedStatement);
             retrieve(connection);
         }

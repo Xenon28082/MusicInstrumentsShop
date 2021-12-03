@@ -14,4 +14,6 @@ public interface ProductDAO extends EntityFacade<Product> {
     long findVendorId(String name) throws DaoException;
     List<Vendor> getVendors() throws DaoException;
     boolean update(long productId, long productAmount) throws DaoException;
+    long countProducts() throws DaoException;
+    List<Product> getProductsPage(int page, int shift) throws DaoException;
 }

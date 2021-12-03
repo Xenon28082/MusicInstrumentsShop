@@ -9,6 +9,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" type="text/css" href="Assets/CSS/VerticalMenu.css">
+    <link rel="stylesheet" href="Assets/CSS/ItemBlock.css">
 </head>
 <body>
 <jsp:include page="Assets/MenuJSPs/UserMenu.jsp"/>

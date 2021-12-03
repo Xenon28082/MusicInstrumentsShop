@@ -40,8 +40,9 @@ public class UpdateUserPasswordCommand implements Command {
                 boolean isUpdated = userService.updateUserPassword(newPassword, Long.parseLong(userId));
                 if (isUpdated) {
                     res.sendRedirect("FrontController?COMMAND=GET_USER_INFO&userLogin=" + userLogin + "&message=success");
+                } else {
+                    res.sendRedirect("FrontController?COMMAND=GET_USER_INFO&userLogin=" + userLogin + "&message=success");
                 }
-                res.sendRedirect("FrontController?COMMAND=GET_USER_INFO&userLogin=" + userLogin + "&message=success");
             }
         }
 

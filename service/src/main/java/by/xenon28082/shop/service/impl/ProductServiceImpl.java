@@ -23,10 +23,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProducts() throws ServiceException {
+    public List<Product> getProducts(int page, int shift) throws ServiceException {
         List<Product> products = null;
         try {
-            products = dao.findAllProducts();
+            products = dao.getProductsPage(page, shift);
             products.sort(new ProductIdComparator());
             return products;
         } catch (DaoException e) {
@@ -78,4 +78,25 @@ public class ProductServiceImpl implements ProductService {
             throw new ServiceException(e);
         }
     }
+
+    @Override
+    public long countProducts() throws ServiceException {
+        try {
+            return dao.countProducts();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public Product findProductById(long productId) throws ServiceException {
+        try {
+            return dao.findById(productId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+
+    }
+
+
 }

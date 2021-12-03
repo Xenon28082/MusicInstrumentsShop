@@ -61,7 +61,6 @@ public class LoginCommand implements Command {
                 }
                 LOGGER.info("Going to user page");
                 res.sendRedirect("userPage.jsp");
-//            req.getRequestDispatcher("userPage.jsp").forward(req, res);
             }
         }
     }

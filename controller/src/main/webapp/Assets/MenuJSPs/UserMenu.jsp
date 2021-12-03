@@ -22,29 +22,30 @@
 <header>
     <div class="head" style="display: flex; justify-content: space-between">
         <div class="ico">
-            <a href="#">
+            <a href="userPage.jsp">
                 <img src="Assets/images/test.png">
             </a>
         </div>
-        <div class="ico" style="display: flex; justify-content: space-between; padding-right: 30px; width: 150px">
-            <%--            <a href="FrontController?COMMAND=GET_USER_INFO&userLogin=${sessionScope.login}"></a>--%>
+        <div class="ico" style="display: flex; justify-content: space-between; padding-right: 90px; width: 150px">
+            <p>
+                <%=(String) session.getAttribute("login")%>
+            </p>
             <img src="https://img.icons8.com/external-kiranshastry-solid-kiranshastry/64/000000/external-user-interface-kiranshastry-solid-kiranshastry-1.png"/>
             <form action="FrontController" method="get">
                 <input type="hidden" name="COMMAND" value="GET_USER_INFO">
                 <input type="hidden" name="userLogin" value="${sessionScope.login}">
                 <button type="submit">Change profile</button>
             </form>
-            <p>
-                <%=(String) session.getAttribute("login")%>
-            </p>
+
         </div>
     </div>
+
 </header>
 
 
 <nav id="menuVertical">
     <ul>
-        <li><a class="mainRef" href="FrontController?COMMAND=GET_PRODUCTS">
+        <li><a class="mainRef" href="FrontController?COMMAND=GET_PRODUCTS&page=0&shift=3">
             <div class="img_n"><img class="try" src="https://img.icons8.com/ios/50/ffffff/progressive-rock.png"/></div>
             <span>Каталог</span></a>
             <ul>
@@ -58,6 +59,11 @@
         <li><a class="mainRef" href="FrontController?COMMAND=SHOW_BASKET">
             <div class="img_n"><img src="https://img.icons8.com/ios/50/ffffff/shopping-basket.png"/></div>
             <span>Корзина</span></a>
+        </li>
+
+        <li><a class="mainRef" href="FrontController?COMMAND=SHOW_ORDER">
+            <div class="img_n"><img src="https://img.icons8.com/ios/50/ffffff/shopping-basket.png"/></div>
+            <span>Заказ</span></a>
         </li>
 
         <li><a class="mainRef" href="FrontController?COMMAND=LOGOUT">

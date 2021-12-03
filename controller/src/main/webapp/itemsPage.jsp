@@ -21,15 +21,17 @@
 %>
 
 <c:set var="items" value="${requestScope.items}"/>
+<c:set var="count" value="${requestScope.count}"/>
 <c:set var="type" value="${requestScope.type}"/>
 <c:set var="userRole" value="${sessionScope.role}"/>
 <c:set var="error" value="${param.message}"/>
+<c:set var="shift" value="3"/>
 
 <c:if test="${userRole == 2}">
     <jsp:include page="Assets/MenuJSPs/UserMenu.jsp"/>
 </c:if>
 <c:if test="${userRole == 1 || userRole == 3}">
-        <jsp:include page="Assets/MenuJSPs/AdminMenu.jsp"/>
+    <jsp:include page="Assets/MenuJSPs/AdminMenu.jsp"/>
 </c:if>
 
 
@@ -90,7 +92,16 @@
 
         </div>
     </c:forEach>
-
+</div>
+<div class="blockCont" style="display: flex; justify-content: space-around">
+    <c:forEach begin="1" end="${Math.ceil(count / shift)}" var="i">
+        <form action="FrontController">
+            <input type="hidden" name="COMMAND" value="GET_PRODUCTS"/>
+            <input type="hidden" name="shift" value="${shift}"/>
+            <input type="hidden" name="page" value="${i - 1}"/>
+            <button>${i}</button>
+        </form>
+    </c:forEach>
 </div>
 
 

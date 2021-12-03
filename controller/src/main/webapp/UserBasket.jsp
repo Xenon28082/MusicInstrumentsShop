@@ -45,33 +45,50 @@
                 <div><c:out value="ProdVendor - ${order.getProduct().getVendor()}"/></div>
                 <div><c:out value="ProdId - ${order.getProduct().getId()}"/></div>
                 <div><c:out value="Amount - ${order.getAmount()}"/></div>
+
+
                 <form method="post" action="FrontController">
                     <input type="hidden" name="COMMAND" value="DELETE_FROM_BASKET"/>
                     <input type="hidden" name="orderId" value="${fn:escapeXml(order.getOrderId())}"/>
                     <input type="hidden" name="productId" value="${fn:escapeXml(order.getProduct().getId())}"/>
-                    <input type="number" name="productAmount" value="1" required>
+                    <input type="number" name="productAmount" value="0" required>
                     <button class="addToCart" type="submit">DELETE</button>
                 </form>
-
-                <form method="post" id="reserveForm" action="FrontController">
-                    <input type="hidden" name="COMMAND" value="RESERVATE_PRODUCT">
-                    <c:if test="${order.isReserved()}">
-                        <input disabled type="checkbox" checked/>
-                        <input type="hidden" name="isreserved" value="delete">
-                        <input type="hidden" name="orderId" value="${order.getOrderId()}">
-                        <button type="submit">Delete from reserve</button>
-                    </c:if>
-                    <c:if test="${!order.isReserved()}">
-                        <input disabled type="checkbox" />
-                        <input type="hidden" name="isreserved" value="add">
-                        <input type="hidden" name="orderId" value="${order.getOrderId()}">
-                        <button type="submit">Add to reserve</button>
-                    </c:if>
-                </form>
+                <c:if test="${order.getAmount() != 0}">
+                    <form method="post" id="reserveForm" action="FrontController">
+                        <input type="hidden" name="COMMAND" value="RESERVATE_PRODUCT">
+                        <c:if test="${order.isReserved()}">
+                            <input disabled type="checkbox" checked/>
+                            <input type="hidden" name="isreserved" value="delete">
+                            <input type="hidden" name="orderId" value="${order.getOrderId()}">
+                            <button type="submit">Delete from reserve</button>
+                        </c:if>
+                        <c:if test="${!order.isReserved()}">
+                            <input disabled type="checkbox"/>
+                            <input type="hidden" name="isreserved" value="add">
+                            <input type="hidden" name="orderId" value="${order.getOrderId()}">
+                            <button type="submit">Add to reserve</button>
+                        </c:if>
+                    </form>
+                </c:if>
+                <c:if test="${order.getAmount() == 0}">
+                    <div style="color: red"> You can't order this product.</div>
+                    <div style="color: red">It's out of stock</div>
+                </c:if>
             </div>
+
 
         </div>
     </c:forEach>
+
+</div>
+
+<div class="blockCont">
+    <c:if test="${error == 'failed'}">
+        <div style="border: red solid 2px">
+            You can't delete less than 1 item
+        </div>
+    </c:if>
 </div>
 
 

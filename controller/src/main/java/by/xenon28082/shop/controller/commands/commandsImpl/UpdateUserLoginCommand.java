@@ -31,14 +31,16 @@ public class UpdateUserLoginCommand implements Command {
         String userId = req.getParameter(ID);
 
         List<String> params = Arrays.asList(newLogin, userId);
-        if(validator.validateIsEmpty(params)){
+        if (validator.validateIsEmpty(params)) {
             res.sendRedirect("FrontController?COMMAND=GET_USER_INFO&userLogin=" + newLogin + "$message=empty");
-        }else{
+        } else {
             boolean isUpdated = userService.updateUserLogin(newLogin, Long.parseLong(userId));
-            if(isUpdated){
+            if (isUpdated) {
+                req.getSession().setAttribute("login", newLogin);
                 res.sendRedirect("FrontController?COMMAND=GET_USER_INFO&userLogin=" + newLogin + "&message=success");
+            } else {
+                res.sendRedirect("FrontController?COMMAND=GET_USER_INFO&userLogin=" + newLogin + "$message=error");
             }
-            res.sendRedirect("FrontController?COMMAND=GET_USER_INFO&userLogin=" + newLogin + "$message=error");
         }
 
     }

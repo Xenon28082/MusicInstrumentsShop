@@ -9,6 +9,7 @@ import by.xenon28082.shop.service.exception.ServiceException;
 import by.xenon28082.shop.service.validators.Validator;
 import by.xenon28082.shop.service.validators.ValidatorImpl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -49,9 +50,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public boolean deleteReservation(long userId, long orderId, int amount) throws ServiceException {
+    public boolean deleteReservation(long userId, long orderId, int amount, boolean hasNotDeleted) throws ServiceException {
         try {
-            if (validator.validateIsNotPositive(Arrays.asList(String.valueOf(userId),
+            if (hasNotDeleted && validator.validateIsNotPositive(Arrays.asList(String.valueOf(userId),
                     String.valueOf(orderId), String.valueOf(amount)))) {
                 return false;
             }
@@ -62,12 +63,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public boolean findReservation(long productId) throws ServiceException {
+    public Order findReservation(long productId, long userId) throws ServiceException {
         try {
-            if(validator.validateIsNotPositive(productId)){
-                return false;
+            if (validator.validateIsNotPositive(productId)) {
+                return null;
             }
-            return dao.findByProductId(productId);
+            return dao.findByProductId(productId, userId);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -76,7 +77,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public boolean deleteAllByProductId(long productId) throws ServiceException {
         try {
-            if(validator.validateIsNotPositive(productId)){
+            if (validator.validateIsNotPositive(productId)) {
                 return false;
             }
             return dao.deleteAllByProductId(productId);
@@ -86,10 +87,80 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public boolean reserveOrder(boolean isReserved, long orderId) {
-        if(validator.validateIsNotPositive(orderId)){
-            return false;
+    public boolean reserveOrder(boolean isReserved, long orderId) throws ServiceException {
+        try {
+            if (validator.validateIsNotPositive(orderId)) {
+                return false;
+            }
+            return dao.updateIsReserved(isReserved, orderId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
         }
-        return dao.updateIsReserved(isReserved, orderId);
+    }
+
+    @Override
+    public List<Order> getUserOrders(long userId) throws ServiceException {
+        try {
+            if (validator.validateIsNotPositive(userId)) {
+                return null;
+            }
+            return dao.getReservations(userId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public boolean updateOrder(Order order) throws ServiceException {
+        try {
+            return dao.update(order);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public boolean closeOrder(long userId, List<Order> products) throws ServiceException {
+        try {
+            return dao.closeOrder(userId, products);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public boolean checkOrderPresence(long userId, List<Order> products) throws ServiceException {
+        try {
+            return dao.checkOrderPresence(userId, products);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public ArrayList<ArrayList<Order>> getFinalOrders() throws ServiceException {
+        try {
+            return dao.getFinalOrders();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public boolean acceptFinalOrder(long orderId) throws ServiceException {
+        try {
+            return dao.acceptFinalOrder(orderId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public boolean refuseFinalOrder(long orderId) throws ServiceException {
+        try {
+            return dao.refuseFinalOrder(orderId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 }

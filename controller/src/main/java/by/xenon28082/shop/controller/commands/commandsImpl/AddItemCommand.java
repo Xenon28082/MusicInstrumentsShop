@@ -37,9 +37,8 @@ public class AddItemCommand implements Command {
         LOGGER.info("Got to DeleteItemCommand");
         long productId = Long.parseLong(req.getParameter(PRODUCT_ID));
         long valueToAdd = Integer.parseInt(req.getParameter(ADD_VALUE));
+        long userId = (long)req.getSession().getAttribute("id");
 
-        System.out.println("Id - " + productId);
-        System.out.println("delete - " + valueToAdd);
 
         List<Long> longParams = new ArrayList<>();
         longParams.add(productId);
@@ -49,7 +48,7 @@ public class AddItemCommand implements Command {
             res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&message=negative");
         } else {
             valueToAdd = -valueToAdd;
-            if (orderService.findReservation(productId)) {
+            if (orderService.findReservation(productId, userId) != null) {
                 orderService.deleteAllByProductId(productId);
             }
 
@@ -58,7 +57,7 @@ public class AddItemCommand implements Command {
             } else {
                 LOGGER.info("Add complete productId - " + productId + " deleteValue - " + valueToAdd + " (FAILED)");
             }
-            res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS");
+            res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=0&shift=3");
 //        req.getRequestDispatcher("FrontController?COMMAND=GET_PRODUCTS").forward(req, res);
         }
     }

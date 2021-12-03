@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DeleteFromBasketCommand implements Command {
@@ -41,19 +42,15 @@ public class DeleteFromBasketCommand implements Command {
         final long productId = Long.parseLong(req.getParameter(PRODUCT_ID));
         final int amountToDelete = Integer.parseInt(req.getParameter(PRODUCT_AMOUNT));
 
-        List<Long> longParams = new ArrayList<>();
-        longParams.add(id);
-        longParams.add(orderId);
-        longParams.add(productId);
-        longParams.add(Long.valueOf(amountToDelete));
+        boolean hasNotDeleted = orderService.findReservation(productId, id).getAmount() != 0;//productService.findProductById(productId).getStock() != 0;
 
-        List<String> params = validator.convertToStringList(longParams);
-
-        if (validator.validateIsNotPositive(params)) {
+        if (hasNotDeleted && validator.validateIsNotPositive(
+                Arrays.asList(String.valueOf(amountToDelete))
+        )) {
             LOGGER.info("Value is not positive");
             res.sendRedirect("FrontController?COMMAND=SHOW_BASKET&message=failed");
         } else {
-            boolean isDeleted = orderService.deleteReservation(id, orderId, amountToDelete);
+            boolean isDeleted = orderService.deleteReservation(id, orderId, amountToDelete, hasNotDeleted);
             productService.updateProduct(productId, -amountToDelete);
             if (isDeleted) {
                 LOGGER.info("Delete order: id - " + id + " orderId - " + orderId + " toDelete - " + amountToDelete + " (SUCCESS)");

@@ -24,25 +24,37 @@ public class GetProductsCommand implements Command {
     private final ProductService productService = ServiceFactory.getInstance().getProductService();
 
     private static final String TYPE = "TYPE";
+    private static final String PAGE = "page";
+    private static final String SHIFT = "shift";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse res) throws SQLException, ServletException, IOException, ServiceException {
         LOGGER.info("Got to GetProductsCommand");
         String type = req.getParameter(TYPE);
+        int shift = 0;
+        int page = 0;
+        try {
+            page = Integer.parseInt(req.getParameter(PAGE));
+            shift = Integer.parseInt(req.getParameter(SHIFT));
+        } catch (NumberFormatException e) {
+            System.out.println("Null and Null");
+        }
         List<Product> products = null;
 
+        long productsCount = productService.countProducts();
+
+
         if (type == null || type.equals(""))
-            products = productService.getProducts();
+            products = productService.getProducts(page, shift);
         else
             products = productService.getProductsByType(type);
 
         req.setAttribute("items", products);
         req.setAttribute("type", type);
+        req.setAttribute("count", productsCount);
         if (products.size() == 0) {
-//            res.sendRedirect("itemsPage.jsp?message=noProducts");
             req.getRequestDispatcher("itemsPage.jsp?message=noProducts").forward(req, res);
         } else {
-//            res.sendRedirect("itemsPage.jsp");
             req.getRequestDispatcher("itemsPage.jsp").forward(req, res);
         }
     }
