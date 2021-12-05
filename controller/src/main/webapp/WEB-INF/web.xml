@@ -3,6 +3,46 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
+  <filter>
+    <filter-name>EncodingFilter</filter-name>
+    <filter-class>by.xenon28082.shop.controller.filter.EncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>EncodingFilter</filter-name>
+    <url-pattern>/FrontController</url-pattern>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>AntiInjectionFilter</filter-name>
+    <filter-class>by.xenon28082.shop.controller.filter.AntiInjectionFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>AntiInjectionFilter</filter-name>
+    <url-pattern>/FrontController</url-pattern>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>AuthenticationFilter</filter-name>
+    <filter-class>by.xenon28082.shop.controller.filter.AuthenticationFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>AuthenticationFilter</filter-name>
+    <url-pattern>/FrontController</url-pattern>
+  </filter-mapping>
+
+
   <servlet>
     <servlet-name>index</servlet-name>
     <servlet-class>by.xenon28082.shop.controller.FrontController</servlet-class>

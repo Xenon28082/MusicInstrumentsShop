@@ -45,7 +45,7 @@ public class AddItemCommand implements Command {
         longParams.add(valueToAdd);
         if (validator.validateIsNotPositive(validator.convertToStringList(longParams))) {
             LOGGER.info("Negative values");
-            res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&message=negative");
+            res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&message=negative&page=0&shift=3");
         } else {
             valueToAdd = -valueToAdd;
             if (orderService.findReservation(productId, userId) != null) {

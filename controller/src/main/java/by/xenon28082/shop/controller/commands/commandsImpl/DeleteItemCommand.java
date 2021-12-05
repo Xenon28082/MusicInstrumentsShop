@@ -4,6 +4,7 @@ import by.xenon28082.shop.controller.commands.Command;
 import by.xenon28082.shop.controller.validators.Validator;
 import by.xenon28082.shop.controller.validators.ValidatorImpl;
 import by.xenon28082.shop.entity.Order;
+import by.xenon28082.shop.entity.Product;
 import by.xenon28082.shop.service.OrderService;
 import by.xenon28082.shop.service.ProductService;
 import by.xenon28082.shop.service.ServiceFactory;
@@ -38,7 +39,7 @@ public class DeleteItemCommand implements Command {
         LOGGER.info("Got to DeleteItemCommand");
         long productId = Long.parseLong(req.getParameter(PRODUCT_ID));
         long valueToDelete = Integer.parseInt(req.getParameter(DELETE_VALUE));
-        long userId = (long)req.getSession().getAttribute("id");
+        long userId = (long) req.getSession().getAttribute("id");
 
         List<Long> longParams = new ArrayList<>();
         longParams.add(productId);
@@ -52,13 +53,17 @@ public class DeleteItemCommand implements Command {
                 foundOrder.setAmount(0);
                 orderService.updateOrder(foundOrder);
             }
-//            Order updatedOrder = orderService.findReservation(productId);
-            if (productService.updateProduct(productId, valueToDelete)) {
-                LOGGER.info("Delete complete productId - " + productId + " deleteValue - " + valueToDelete + " (SUCCESS)");
+            Product product = productService.findProductById(productId);
+            if (product.getStock() < valueToDelete) {
+                res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=0&shift=3&message=more");
             } else {
-                LOGGER.info("Delete complete productId - " + productId + " deleteValue - " + valueToDelete + " (FAILED)");
+                if (productService.updateProduct(productId, valueToDelete)) {
+                    LOGGER.info("Delete complete productId - " + productId + " deleteValue - " + valueToDelete + " (SUCCESS)");
+                } else {
+                    LOGGER.info("Delete complete productId - " + productId + " deleteValue - " + valueToDelete + " (FAILED)");
+                }
+                res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=0&shift=3");
             }
-            res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=0&shift=3");
         }
     }
 }

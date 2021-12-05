@@ -13,7 +13,7 @@
 </head>
 <body>
 
-    <%
+<%
     if (session.getAttribute("id") == null) {
         String redirectURL = "index.jsp";
         response.sendRedirect(redirectURL);
@@ -36,16 +36,7 @@
 
 
 <div class="blockCont" style="display: flex; justify-content: flex-start; flex-wrap: wrap;">
-    <c:if test="${error == 'noProducts'}">
-        <div style="border: red solid 2px">
-            There is no products
-        </div>
-    </c:if>
-    <c:set var="message" value="${param.message}"/>
 
-    <c:if test="${message=='negative'}">
-        <div style="border: red solid 2px"><c:out value="You can't insert negative values in input fields"/></div>
-    </c:if>
     <c:forEach var="item" items="${items}">
         <div class="product">
             <div class="image">
@@ -103,6 +94,20 @@
         </form>
     </c:forEach>
 </div>
+<div class="blockCont">
+    <c:if test="${error == 'noProducts'}">
+        <div style="border: red solid 2px">
+            There is no products
+        </div>
+    </c:if>
+    <c:set var="message" value="${param.message}"/>
 
-
+    <c:if test="${message=='negative'}">
+        <div style="border: red solid 2px"><c:out value="You can't insert negative values in input fields"/></div>
+    </c:if>
+    <c:if test="${message=='more'}">
+        <div style="border: red solid 2px"><c:out value="You can't delete more then is on stock"/></div>
+    </c:if>
+</div>
+</body>
 </html>
