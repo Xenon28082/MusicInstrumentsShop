@@ -1,6 +1,7 @@
 package by.xenon28082.shop.controller.commands.commandsImpl;
 
 import by.xenon28082.shop.controller.commands.Command;
+import by.xenon28082.shop.controller.exception.ControllerException;
 import by.xenon28082.shop.controller.validators.Validator;
 import by.xenon28082.shop.controller.validators.ValidatorImpl;
 import by.xenon28082.shop.entity.User;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class FindUserCommand implements Command {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(FindUserCommand.class);
 
     private UserService userService = ServiceFactory.getInstance().getUserService();
@@ -26,36 +28,39 @@ public class FindUserCommand implements Command {
     private static final String USER_LOGIN = "userLogin";
 
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse res) throws SQLException, ServletException, IOException, ServiceException {
+    public void execute(HttpServletRequest req, HttpServletResponse res) throws ControllerException {
         LOGGER.info("Got to FindUserCommand");
         String role = String.valueOf(req.getSession().getAttribute("role"));
         String path = "";
-        if(role.equals("2")){
+
+        if (role.equals("2")) {
             path = "updateUser.jsp";
-        }else{
+        } else {
             path = "changeUserPage.jsp";
         }
-        String userLogin = req.getParameter(USER_LOGIN);
-        if (userLogin == "") {
-            LOGGER.info("All fields must be fulfilled (ERROR)");
-            res.sendRedirect(path + "?message=fieldsMustBeFulfilled");
-//            req.getRequestDispatcher("changeUserPage.jsp?message=fieldsMustBeFulfilled").forward(req, res);
-        } else {
-            User foundUser = userService.findUserByLogin(userLogin);
-            if (validator.validateIsNull(foundUser)) {
-                LOGGER.info("No user");
-                res.sendRedirect(path + "?message=noUser");
+        try {
+            String userLogin = req.getParameter(USER_LOGIN);
+            if (userLogin == "") {
+                LOGGER.info("All fields must be fulfilled (ERROR)");
+                res.sendRedirect(path + "?message=fieldsMustBeFulfilled");
             } else {
-                if (foundUser.getRole() != 3) {
-                    req.setAttribute("foundUser", foundUser);
+                User foundUser = userService.findUserByLogin(userLogin);
+                if (validator.validateIsNull(foundUser)) {
+                    LOGGER.info("No user");
+                    res.sendRedirect(path + "?message=noUser");
                 } else {
-                    res.sendRedirect(path + "?message=Cant change dir");
+                    if (foundUser.getRole() != 3) {
+                        req.setAttribute("foundUser", foundUser);
+                    } else {
+                        res.sendRedirect(path + "?message=Cant change dir");
+                    }
+                    req.getRequestDispatcher(path).forward(req, res);
                 }
-                req.getRequestDispatcher(path).forward(req, res);
-//                res.sendRedirect("changeUserPage.jsp");
             }
-        }
 
+        } catch (ServletException | ServiceException | IOException e) {
+            throw new ControllerException(e);
+        }
     }
 }
 

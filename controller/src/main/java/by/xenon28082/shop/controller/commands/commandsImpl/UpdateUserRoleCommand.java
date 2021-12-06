@@ -1,6 +1,7 @@
 package by.xenon28082.shop.controller.commands.commandsImpl;
 
 import by.xenon28082.shop.controller.commands.Command;
+import by.xenon28082.shop.controller.exception.ControllerException;
 import by.xenon28082.shop.entity.User;
 import by.xenon28082.shop.service.ServiceFactory;
 import by.xenon28082.shop.service.UserService;
@@ -28,9 +29,8 @@ public class UpdateUserRoleCommand implements Command {
     private static final String ID = "id";
 
 
-
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse res) throws SQLException, ServletException, IOException, ServiceException {
+    public void execute(HttpServletRequest req, HttpServletResponse res) throws ControllerException {
         LOGGER.info("Got to UpdateUserCommand");
         String userLogin = req.getParameter(USER_LOGIN);
         String userName = req.getParameter(USER_FIRSTNAME);
@@ -41,39 +41,46 @@ public class UpdateUserRoleCommand implements Command {
         int currentRole = (int) req.getSession().getAttribute(ROLE);
         long currentId = (long) req.getSession().getAttribute(ID);
 
-        if (userLogin == "" ||
-                userName == "" ||
-                userLastname == "" ||
-                userRole == 0 ||
-                id == 0
-        ) {
-            LOGGER.info("all fields must be fulfilled (ERROR)");
-            req.getRequestDispatcher("changeUserPage.jsp?message=fieldsMustBeFulfilled").forward(req, res);
-        }else {
-            if (lastRole == 1 && userRole == 2 && currentRole != 3) {
-                LOGGER.info("Trying to delete admin being not a director (ERROR)");
-                req.getRequestDispatcher("changeUserPage.jsp?message=mustBeADir").forward(req, res);
-            }else {
-                if (currentId == id) {
-                    LOGGER.info("Trying to update himself");
-                    req.getRequestDispatcher("changeUserPage.jsp?message=updateSelf").forward(req, res);
-                }else {
-                    User user = new User(
-                            userLogin,
-                            userName,
-                            userLastname,
-                            id,
-                            userRole
-                    );
-                    boolean isUpdated = userService.updateUserRole(user);
-                    if (isUpdated) {
-                        LOGGER.info("Update:" + user + "(SUCCESS)");
+        try {
+            if (userLogin == "" ||
+                    userName == "" ||
+                    userLastname == "" ||
+                    userRole == 0 ||
+                    id == 0
+            ) {
+                LOGGER.info("all fields must be fulfilled (ERROR)");
+
+                req.getRequestDispatcher("changeUserPage.jsp?message=fieldsMustBeFulfilled").forward(req, res);
+
+            } else {
+                if (lastRole == 1 && userRole == 2 && currentRole != 3) {
+                    LOGGER.info("Trying to delete admin being not a director (ERROR)");
+                    req.getRequestDispatcher("changeUserPage.jsp?message=mustBeADir").forward(req, res);
+                } else {
+                    if (currentId == id) {
+                        LOGGER.info("Trying to update himself");
+                        req.getRequestDispatcher("changeUserPage.jsp?message=updateSelf").forward(req, res);
                     } else {
-                        LOGGER.info("Update:" + user + "(FAILED)");
+                        User user = new User(
+                                userLogin,
+                                userName,
+                                userLastname,
+                                id,
+                                userRole
+                        );
+                        if (userService.updateUserRole(user)) {
+                            LOGGER.info("Update:" + user + "(SUCCESS)");
+                            req.getRequestDispatcher("changeUserPage.jsp?message=updated").forward(req, res);
+                        } else {
+                            LOGGER.info("Update:" + user + "(FAILED)");
+                            req.getRequestDispatcher("changeUserPage.jsp?message=failed").forward(req, res);
+                        }
                     }
-                    req.getRequestDispatcher("changeUserPage.jsp?message=updated").forward(req, res);
                 }
             }
+        } catch (ServletException | IOException | ServiceException e) {
+            LOGGER.info("ServiceException");
+            throw new ControllerException(e);
         }
     }
 }

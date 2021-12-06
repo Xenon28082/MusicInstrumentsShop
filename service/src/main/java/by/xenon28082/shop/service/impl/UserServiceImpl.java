@@ -9,9 +9,8 @@ import by.xenon28082.shop.service.exception.ServiceException;
 import by.xenon28082.shop.service.validators.Validator;
 import by.xenon28082.shop.service.validators.ValidatorImpl;
 
-import java.sql.SQLException;
+
 import java.util.Arrays;
-import java.util.List;
 
 public class UserServiceImpl implements UserService {
 
@@ -49,41 +48,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserWithId(long id) {
-        return null;
-    }
-
-    @Override
     public User findUserByLogin(String login) throws ServiceException {
         try {
             if(validator.validateIsEmpty(Arrays.asList(login))){
                 return null;
             }
             return dao.findUserByLogin(login);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public boolean changePassword(User user, String newPassword, String login) {
-        return false;
-    }
-
-    @Override
-    public boolean deleteUser(User user) {
-        return false;
-    }
-
-    @Override
-    public List<User> getUsers(int row) {
-        return null;
-    }
-
-    @Override
-    public long countUsers() throws SQLException, ServiceException {
-        try {
-            return dao.countAll();
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -102,26 +72,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean updateUserLogin(String newLogin, long userId) throws DaoException {
+    public boolean updateUserLogin(String newLogin, long userId) throws ServiceException {
         try {
             if(validator.validateIsEmpty(Arrays.asList(newLogin, String.valueOf(userId)))){
                 return false;
             }
             return dao.updateLogin(newLogin, userId);
         } catch (DaoException e) {
-            throw new DaoException(e);
+            throw new ServiceException(e);
         }
     }
 
     @Override
-    public boolean updateUserPassword(String newPassword, long userId) throws DaoException {
+    public boolean updateUserPassword(String newPassword, long userId) throws ServiceException {
         try {
             if(validator.validateIsEmpty(Arrays.asList(newPassword, String.valueOf(userId)))){
                 return false;
             }
             return dao.updatePassword(newPassword, userId);
         } catch (DaoException e) {
-            throw new DaoException(e);
+            throw new ServiceException(e);
         }
     }
 }

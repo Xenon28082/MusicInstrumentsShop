@@ -2,6 +2,7 @@ package by.xenon28082.shop.controller;
 
 import by.xenon28082.shop.controller.commands.Command;
 import by.xenon28082.shop.controller.commands.CommandsMap;
+import by.xenon28082.shop.controller.exception.ControllerException;
 import by.xenon28082.shop.dao.exception.DaoException;
 import by.xenon28082.shop.service.exception.ServiceException;
 
@@ -19,34 +20,22 @@ public class FrontController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        try {
-            execute(req, resp);
-        } catch (SQLException | ServletException throwables) {
-            throwables.printStackTrace();
-        } catch (ServiceException e) {
-            e.printStackTrace();
-        } catch (DaoException e) {
-            e.printStackTrace();
-        }
+        execute(req, resp);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            execute(req, resp);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ServiceException e) {
-            e.printStackTrace();
-        } catch (DaoException e) {
-            e.printStackTrace();
-        }
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        execute(req, resp);
     }
 
-    private void execute(HttpServletRequest req, HttpServletResponse resp) throws SQLException, ServletException, IOException, ServiceException, DaoException {
+    private void execute(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String choice = req.getParameter("COMMAND");
         CommandsMap map = new CommandsMap();
         Command command = map.getCommand(choice);
-        command.execute(req, resp);
+        try {
+            command.execute(req, resp);
+        } catch (ControllerException e) {
+            resp.sendRedirect("FrontController?COMMAND=LOGOUT&message=fatal");
+        }
     }
 }

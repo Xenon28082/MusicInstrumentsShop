@@ -1,6 +1,7 @@
 package by.xenon28082.shop.controller.commands.commandsImpl;
 
 import by.xenon28082.shop.controller.commands.Command;
+import by.xenon28082.shop.controller.exception.ControllerException;
 import by.xenon28082.shop.controller.validators.Validator;
 import by.xenon28082.shop.controller.validators.ValidatorImpl;
 import by.xenon28082.shop.entity.Product;
@@ -34,7 +35,7 @@ public class AddNewItemCommand implements Command {
     private static final String VENDOR_SELECT = "vendorSelect";
 
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse res) throws SQLException, ServletException, IOException, ServiceException {
+    public void execute(HttpServletRequest req, HttpServletResponse res) throws ControllerException {
 
         LOGGER.info("Got to AddNewItemCommand");
 
@@ -46,7 +47,6 @@ public class AddNewItemCommand implements Command {
         String vendor = req.getParameter(VENDOR_SELECT);
 
 
-
         List<String> params = new ArrayList<>();
         params.add(productName);
         params.add(String.valueOf(productPrice));
@@ -54,26 +54,29 @@ public class AddNewItemCommand implements Command {
         params.add(productType);
         params.add(vendor);
 
-
-        if (validator.validateIsNotPositive(params)) {
-            LOGGER.info("Negative");
-            res.sendRedirect("FrontController?COMMAND=GET_VENDORS&message=negative");
-        } else {
-            if (validator.validateIsEmpty(params)) {
-                LOGGER.info("Empty");
-                res.sendRedirect("FrontController?COMMAND=GET_VENDORS&message=empty");
+        try {
+            if (validator.validateIsNotPositive(params)) {
+                LOGGER.info("Negative");
+                res.sendRedirect("FrontController?COMMAND=GET_VENDORS&message=negative");
             } else {
-                Product product = new Product(
-                        productName,
-                        Double.parseDouble(productPrice),
-                        Long.parseLong(productStock),
-                        productType,
-                        vendor
-                );
+                if (validator.validateIsEmpty(params)) {
+                    LOGGER.info("Empty");
+                    res.sendRedirect("FrontController?COMMAND=GET_VENDORS&message=empty");
+                } else {
+                    Product product = new Product(
+                            productName,
+                            Double.parseDouble(productPrice),
+                            Long.parseLong(productStock),
+                            productType,
+                            vendor
+                    );
 
-                productService.addNewProduct(product);
-                res.sendRedirect("FrontController?COMMAND=GET_VENDORS");
+                    productService.addNewProduct(product);
+                    res.sendRedirect("FrontController?COMMAND=GET_VENDORS");
+                }
             }
+        } catch (IOException | ServiceException e) {
+            throw new ControllerException(e);
         }
     }
 }

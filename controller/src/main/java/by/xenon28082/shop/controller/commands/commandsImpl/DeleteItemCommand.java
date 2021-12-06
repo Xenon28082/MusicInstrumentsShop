@@ -1,6 +1,7 @@
 package by.xenon28082.shop.controller.commands.commandsImpl;
 
 import by.xenon28082.shop.controller.commands.Command;
+import by.xenon28082.shop.controller.exception.ControllerException;
 import by.xenon28082.shop.controller.validators.Validator;
 import by.xenon28082.shop.controller.validators.ValidatorImpl;
 import by.xenon28082.shop.entity.Order;
@@ -35,7 +36,7 @@ public class DeleteItemCommand implements Command {
 
 
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse res) throws SQLException, ServletException, IOException, ServiceException {
+    public void execute(HttpServletRequest req, HttpServletResponse res) throws ControllerException {
         LOGGER.info("Got to DeleteItemCommand");
         long productId = Long.parseLong(req.getParameter(PRODUCT_ID));
         long valueToDelete = Integer.parseInt(req.getParameter(DELETE_VALUE));
@@ -44,26 +45,32 @@ public class DeleteItemCommand implements Command {
         List<Long> longParams = new ArrayList<>();
         longParams.add(productId);
         longParams.add(valueToDelete);
-        if (validator.validateIsNotPositive(validator.convertToStringList(longParams))) {
-            LOGGER.info("Negative values");
-            res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=0&shift=3&message=negative");
-        } else {
-            Order foundOrder = orderService.findReservation(productId, userId);
-            if (!validator.validateIsNull(foundOrder)) {
-                foundOrder.setAmount(0);
-                orderService.updateOrder(foundOrder);
-            }
+        try {
             Product product = productService.findProductById(productId);
-            if (product.getStock() < valueToDelete) {
-                res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=0&shift=3&message=more");
+            if (!(product.getStock() == 0 && valueToDelete == 0) && validator.validateIsNotPositive(validator.convertToStringList(longParams))) {
+                LOGGER.info("Negative values");
+                res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=0&shift=3&message=negative");
             } else {
-                if (productService.updateProduct(productId, valueToDelete)) {
-                    LOGGER.info("Delete complete productId - " + productId + " deleteValue - " + valueToDelete + " (SUCCESS)");
-                } else {
-                    LOGGER.info("Delete complete productId - " + productId + " deleteValue - " + valueToDelete + " (FAILED)");
+                Order foundOrder = orderService.findReservation(productId, userId);
+                if (!validator.validateIsNull(foundOrder)) {
+                    foundOrder.setAmount(0);
+                    orderService.updateOrder(foundOrder);
                 }
-                res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=0&shift=3");
+
+                if (product.getStock() < valueToDelete) {
+                    res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=0&shift=3&message=more");
+                } else {
+                    if (productService.updateProduct(productId, valueToDelete)) {
+                        LOGGER.info("Delete complete productId - " + productId + " deleteValue - " + valueToDelete + " (SUCCESS)");
+                    } else {
+                        LOGGER.info("Delete complete productId - " + productId + " deleteValue - " + valueToDelete + " (FAILED)");
+                    }
+                    res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=0&shift=3");
+                }
             }
+        } catch (IOException | ServiceException e) {
+            LOGGER.info("ServiceException");
+            throw new ControllerException(e);
         }
     }
 }

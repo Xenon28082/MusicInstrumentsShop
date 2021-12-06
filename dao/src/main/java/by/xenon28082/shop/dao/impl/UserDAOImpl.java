@@ -13,7 +13,6 @@ import java.util.List;
 
 public class UserDAOImpl extends AbstractDAO implements UserDAO {
 
-    private static final String COUNT_USERS_QUERY = "SELECT COUNT(*) FROM users";
     private static final String SAVE_USER_QUERY = "INSERT INTO users (login, firstname, lastname, password) VALUES (?, ?, ?, ?)";
     private static final String FIND_USER_BY_LOGIN_AND_PASSWORD_QUERY = "SELECT * FROM users WHERE login = ? AND password = ?";
     private static final String UPDATE_USER_ROLE_QUERY = "UPDATE users SET role_id = ? WHERE id = ?";
@@ -103,38 +102,6 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
     }
 
     @Override
-    public boolean delete(long id) {
-        return false;
-    }
-
-    @Override
-    public List<User> findAll(int row) {
-        return null;
-    }
-
-    @Override
-    public long countAll() throws DaoException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = getConnection(true);
-            preparedStatement = connection.prepareStatement(COUNT_USERS_QUERY);
-            resultSet = preparedStatement.executeQuery();
-            resultSet.next();
-            return resultSet.getLong(1);
-        } catch (SQLException | DaoException e) {
-            throw new DaoException(e);
-        } finally {
-            close(resultSet);
-            close(preparedStatement);
-            retrieve(connection);
-        }
-
-    }
-
-
-    @Override
     public User findUserByLogin(String login) throws DaoException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -144,14 +111,16 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
             preparedStatement = connection.prepareStatement(FIND_USER_BY_LOGIN);
             preparedStatement.setString(1, login);
             resultSet = preparedStatement.executeQuery();
-            resultSet.next();
-            User foundUser = new User(
-                    resultSet.getString(1),
-                    resultSet.getString(2),
-                    resultSet.getString(3),
-                    resultSet.getLong(5),
-                    resultSet.getInt(6)
-            );
+            User foundUser = null;
+            if(resultSet.next()) {
+                foundUser = new User(
+                        resultSet.getString(1),
+                        resultSet.getString(2),
+                        resultSet.getString(3),
+                        resultSet.getLong(5),
+                        resultSet.getInt(6)
+                );
+            }
             return foundUser;
         } catch (SQLException | DaoException e) {
             throw new DaoException(e);
@@ -162,10 +131,6 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
         }
     }
 
-    @Override
-    public boolean changeUserPassword(User user, String newPassword) {
-        return false;
-    }
 
     @Override
     public boolean updateLogin(String newLogin, long userId) throws DaoException {

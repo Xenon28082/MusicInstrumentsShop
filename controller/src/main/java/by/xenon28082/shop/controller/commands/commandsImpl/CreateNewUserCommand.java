@@ -1,6 +1,7 @@
 package by.xenon28082.shop.controller.commands.commandsImpl;
 
 import by.xenon28082.shop.controller.commands.Command;
+import by.xenon28082.shop.controller.exception.ControllerException;
 import by.xenon28082.shop.controller.validators.Validator;
 import by.xenon28082.shop.controller.validators.ValidatorImpl;
 import by.xenon28082.shop.entity.User;
@@ -33,7 +34,7 @@ public class CreateNewUserCommand implements Command {
     private static final String CHECK_PASSWORD = "checkPassword";
 
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+    public void execute(HttpServletRequest req, HttpServletResponse res) throws ControllerException {
         LOGGER.info("Got to CreateNewUserCommand");
         String login = req.getParameter(USER_LOGIN);
         String name = req.getParameter(USER_NAME);
@@ -47,34 +48,40 @@ public class CreateNewUserCommand implements Command {
         params.add(lastname);
         params.add(password);
         params.add(checkPassword);
+        try {
+            if (validator.validateIsEmpty(params)) {
+                LOGGER.info("Empty fields");
 
-        if (validator.validateIsEmpty(params)) {
-            LOGGER.info("Empty fields");
-            res.sendRedirect("index.jsp?message=empty");
-        } else {
-            if (!password.equals(checkPassword)) {
-                LOGGER.info("Passwords don't match(Error)");
-                res.sendRedirect("index.jsp?message=passwordsnotmatch");
+                res.sendRedirect("index.jsp?message=empty");
+
             } else {
-                password = DigestUtils.md5Hex(password);
-                User newUser = new User(login, name, lastname, password);
-                User user = null;
-                try {
-                    user = userService.registration(newUser);
-                } catch (SQLException | ServiceException throwables) {
-                    res.sendRedirect("index.jsp?message=loginExists");
-                }
-                if (user != null) {
-                    req.getSession(true).setAttribute("login", user.getLogin());
-                    req.getSession().setAttribute("id", user.getId());
-                    req.getSession().setAttribute("role", user.getRole());
-                    LOGGER.info("Created new User:login - " + login + " (SUCCESS)");
-                    req.getRequestDispatcher("userPage.jsp").forward(req, res);
+                if (!password.equals(checkPassword)) {
+                    LOGGER.info("Passwords don't match(Error)");
+                    res.sendRedirect("index.jsp?message=passwordsnotmatch");
                 } else {
-                    LOGGER.info("Failed to create new user (FAILED)");
-                    res.sendRedirect("index.jsp?message=failedToRegister");
+                    password = DigestUtils.md5Hex(password);
+                    User newUser = new User(login, name, lastname, password);
+                    User user = null;
+                    try {
+                        user = userService.registration(newUser);
+                    } catch (ServiceException throwables) {
+                        res.sendRedirect("index.jsp?message=loginExists");
+                    }
+                    if (user != null) {
+                        req.getSession(true).setAttribute("login", user.getLogin());
+                        req.getSession().setAttribute("id", user.getId());
+                        req.getSession().setAttribute("role", user.getRole());
+                        LOGGER.info("Created new User:login - " + login + " (SUCCESS)");
+                        req.getRequestDispatcher("userPage.jsp").forward(req, res);
+                    } else {
+                        LOGGER.info("Failed to create new user (FAILED)");
+                        res.sendRedirect("index.jsp?message=failedToRegister");
+                    }
                 }
             }
+        } catch (IOException | ServletException e) {
+            LOGGER.info("ServiceException");
+            throw new ControllerException(e);
         }
     }
 

@@ -30,9 +30,9 @@
     <form method="post" action="FrontController?COMMAND=ADD_NEW_ITEM">
         <input type="text" name="productName" placeholder="Product name" autocomplete="off" required>
         <p></p>
-        <input type="number" name="productPrice" placeholder="Product price" autocomplete="off" required>
+        <input type="number" name="productPrice" placeholder="Product price" min="1" autocomplete="off" required>
         <p></p>
-        <input type="number" name="productStock" placeholder="Product stock" autocomplete="off" required>
+        <input type="number" name="productStock" placeholder="Product stock" min="1" autocomplete="off" required>
         <p></p>
         <select name="productType">
             <option value="guitar">guitar</option>

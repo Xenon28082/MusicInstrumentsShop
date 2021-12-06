@@ -146,68 +146,6 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
         return false;
     }
 
-
-    @Override
-    public boolean delete(long productId) throws DaoException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        try {
-
-            connection = getConnection(true);
-            preparedStatement = connection.prepareStatement(DELETE_PRODUCT_QUERY);
-            preparedStatement.setLong(1, productId);
-
-            return preparedStatement.executeUpdate() != 0;
-
-        } catch (SQLException | DaoException e) {
-            throw new DaoException(e);
-        } finally {
-            close(preparedStatement);
-            retrieve(connection);
-        }
-    }
-
-    @Override
-    public List<Product> findAll(int row) {
-        return null;
-    }
-
-    @Override
-    public long countAll() throws SQLException {
-        return 0;
-    }
-
-    @Override
-    public List<Product> findAllProducts() throws DaoException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = getConnection(true);
-            preparedStatement = connection.prepareStatement(FIND_ALL_PRODUCTS_QUERY);
-            ArrayList<Product> products = new ArrayList<>();
-            resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                Product productFound = new Product(
-                        resultSet.getLong(1),
-                        resultSet.getString(2),
-                        resultSet.getDouble(3),
-                        resultSet.getLong(4),
-                        resultSet.getString(5),
-                        findProductVendor(resultSet.getLong(6))
-                );
-                products.add(productFound);
-            }
-            return products;
-        } catch (SQLException | DaoException e) {
-            throw new DaoException(e);
-        } finally {
-            close(resultSet);
-            close(preparedStatement);
-            retrieve(connection);
-        }
-    }
-
     @Override
     public List<Product> findProductsByType(String type) throws DaoException {
         Connection connection = null;
@@ -322,9 +260,6 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
             preparedStatement.setLong(2, productId);
             int rows = preparedStatement.executeUpdate();
             Product gotProduct = findById(productId);
-//            if (gotProduct.getStock() == 0) {
-//                return delete(productId);
-//            }
             return rows != 0;
         } catch (SQLException | DaoException e) {
             throw new DaoException(e);

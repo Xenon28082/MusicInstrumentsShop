@@ -448,20 +448,6 @@ public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
         }
     }
 
-    @Override
-    public boolean delete(long id) {
-        return false;
-    }
-
-    @Override
-    public List<Order> findAll(int row) {
-        return null;
-    }
-
-    @Override
-    public long countAll() throws SQLException {
-        return 0;
-    }
 
 
 }

@@ -24,7 +24,7 @@
 <c:set var="count" value="${requestScope.count}"/>
 <c:set var="type" value="${requestScope.type}"/>
 <c:set var="userRole" value="${sessionScope.role}"/>
-<c:set var="error" value="${param.message}"/>
+<c:set var="message" value="${param.message}"/>
 <c:set var="shift" value="3"/>
 
 <c:if test="${userRole == 2}">
@@ -74,7 +74,7 @@
                         <input type="hidden" name="TYPE" value="${type}"/>
                         <input type="hidden" name="COMMAND" value="ADD_TO_BASKET"/>
                         <input type="hidden" name="productId" value="${item.getId()}"/>
-                        <input type="number" name="productAmount" value="1" required>
+                        <input type="number" name="productAmount" min="1" value="1" required>
                         <button class="addToCart" type="submit"><img
                                 src="https://img.icons8.com/material-outlined/24/ffffff/plus--v1.png"/></button>
                     </form>
@@ -84,18 +84,20 @@
         </div>
     </c:forEach>
 </div>
-<div class="blockCont" style="display: flex; justify-content: space-around">
-    <c:forEach begin="1" end="${Math.ceil(count / shift)}" var="i">
-        <form action="FrontController">
-            <input type="hidden" name="COMMAND" value="GET_PRODUCTS"/>
-            <input type="hidden" name="shift" value="${shift}"/>
-            <input type="hidden" name="page" value="${i - 1}"/>
-            <button>${i}</button>
-        </form>
-    </c:forEach>
-</div>
+<c:if test="${type == null}">
+    <div class="blockCont" style="display: flex; justify-content: space-around">
+        <c:forEach begin="1" end="${Math.ceil(count / shift)}" var="i">
+            <form action="FrontController">
+                <input type="hidden" name="COMMAND" value="GET_PRODUCTS"/>
+                <input type="hidden" name="shift" value="${shift}"/>
+                <input type="hidden" name="page" value="${i - 1}"/>
+                <button>${i}</button>
+            </form>
+        </c:forEach>
+    </div>
+</c:if>
 <div class="blockCont">
-    <c:if test="${error == 'noProducts'}">
+    <c:if test="${message == 'noProducts'}">
         <div style="border: red solid 2px">
             There is no products
         </div>
@@ -107,6 +109,10 @@
     </c:if>
     <c:if test="${message=='more'}">
         <div style="border: red solid 2px"><c:out value="You can't delete more then is on stock"/></div>
+    </c:if>
+
+    <c:if test="${message=='less'}">
+        <div style="border: red solid 2px"><c:out value="You can't add to basket more then is on stock"/></div>
     </c:if>
 </div>
 </body>

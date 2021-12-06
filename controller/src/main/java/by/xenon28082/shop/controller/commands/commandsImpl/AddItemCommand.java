@@ -1,6 +1,7 @@
 package by.xenon28082.shop.controller.commands.commandsImpl;
 
 import by.xenon28082.shop.controller.commands.Command;
+import by.xenon28082.shop.controller.exception.ControllerException;
 import by.xenon28082.shop.controller.validators.Validator;
 import by.xenon28082.shop.controller.validators.ValidatorImpl;
 import by.xenon28082.shop.service.OrderService;
@@ -31,34 +32,41 @@ public class AddItemCommand implements Command {
 
     private static final String PRODUCT_ID = "productId";
     private static final String ADD_VALUE = "addValue";
+    private static final String ID = "id";
 
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse res) throws SQLException, ServletException, IOException, ServiceException {
+    public void execute(HttpServletRequest req, HttpServletResponse res) throws ControllerException {
         LOGGER.info("Got to DeleteItemCommand");
         long productId = Long.parseLong(req.getParameter(PRODUCT_ID));
         long valueToAdd = Integer.parseInt(req.getParameter(ADD_VALUE));
-        long userId = (long)req.getSession().getAttribute("id");
+        long userId = (long) req.getSession().getAttribute(ID);
 
 
         List<Long> longParams = new ArrayList<>();
         longParams.add(productId);
         longParams.add(valueToAdd);
-        if (validator.validateIsNotPositive(validator.convertToStringList(longParams))) {
-            LOGGER.info("Negative values");
-            res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&message=negative&page=0&shift=3");
-        } else {
-            valueToAdd = -valueToAdd;
-            if (orderService.findReservation(productId, userId) != null) {
-                orderService.deleteAllByProductId(productId);
-            }
-
-            if (productService.updateProduct(productId, valueToAdd)) {
-                LOGGER.info("Add complete productId - " + productId + " deleteValue - " + valueToAdd + " (SUCCESS)");
+        try {
+            if (validator.validateIsNotPositive(validator.convertToStringList(longParams))) {
+                LOGGER.info("Negative values");
+                res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&message=negative&page=0&shift=3");
             } else {
-                LOGGER.info("Add complete productId - " + productId + " deleteValue - " + valueToAdd + " (FAILED)");
+                valueToAdd = -valueToAdd;
+                if (orderService.findReservation(productId, userId) != null) {
+                    orderService.deleteAllByProductId(productId);
+                }
+
+                if (productService.updateProduct(productId, valueToAdd)) {
+                    LOGGER.info("Add complete productId - " + productId + " deleteValue - " + valueToAdd + " (SUCCESS)");
+                    res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=0&shift=3&message=success");
+                } else {
+                    LOGGER.info("Add complete productId - " + productId + " deleteValue - " + valueToAdd + " (FAILED)");
+                    res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=0&shift=3&message=failed");
+                }
+
             }
-            res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=0&shift=3");
-//        req.getRequestDispatcher("FrontController?COMMAND=GET_PRODUCTS").forward(req, res);
+        } catch (IOException | ServiceException e) {
+            LOGGER.info("ServiceException");
+            throw new ControllerException(e);
         }
     }
 }

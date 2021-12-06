@@ -14,22 +14,27 @@
 </head>
 <body>
 <jsp:include page="Assets/MenuJSPs/UserMenu.jsp"/>
-<c:set var="order" value="${sessionScope.orders}"/>
+<c:set var="orders" value="${sessionScope.orders}"/>
 <c:set var="message" value="${param.message}"/>
+<c:set var="finalPrice" value="${requestScope.orderPrice}"/>
 <div class="blockCont" style="display: flex; justify-content: flex-start; flex-wrap: wrap;">
-    <c:forEach var="product" items="${order}">
-        <div class="product">
+    <c:forEach var="order" items="${orders}">
+        <div class="bigProduct">
             <div class="image">
                 <img src="http://placehold.it/170x220">
             </div>
             <div class="info">
-                <p>Order id - ${product.getOrderId()}</p>
-                <p>User id - ${product.getUserId()}</p>
-                <p>Product id - ${product.getProductId()}</p>
-                <p>Amount - ${product.getAmount()}</p>
+                <p>Order id - ${order.getOrderId()}</p>
+                <p>User id - ${order.getUserId()}</p>
+                <p>Product name - ${order.getProduct().getName()}</p>
+                <p>Product price - ${order.getProduct().getPrice()}</p>
+                <p>Product type - ${order.getProduct().getType()}</p>
+                <p>Product vendor - ${order.getProduct().getVendor()}</p>
+                <p>Amount - ${order.getAmount()}</p>
             </div>
         </div>
     </c:forEach>
+
     <c:if test="${message == 'noOrder'}">
         <div style="color: red">
             There is no products in your order
@@ -37,8 +42,10 @@
     </c:if>
 </div>
 
-<c:if test="${order != null}">
+<c:if test="${orders != null}">
     <div class="blockCont">
+        <c:out value="Final price: ${finalPrice}"/>
+        <p></p>
         <c:out value="${ids}"/>
         <form action="FrontController" method="post">
             <input type="hidden" name="COMMAND" value="CLOSE_ORDER">

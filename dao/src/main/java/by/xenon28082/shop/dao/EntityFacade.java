@@ -16,10 +16,4 @@ public interface EntityFacade<T>{
 
     boolean update(T t) throws DaoException;
 
-    boolean delete(long id) throws DaoException;
-
-    List<T> findAll(int row);
-
-    long countAll() throws SQLException, DaoException;
-
 }

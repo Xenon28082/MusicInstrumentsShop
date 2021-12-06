@@ -21,12 +21,12 @@
 %>
 <jsp:include page="Assets/MenuJSPs/AdminMenu.jsp"/>
 
-<c:set var="error" value="${param.message}"/>
+<c:set var="message" value="${param.message}"/>
 <c:set var="foundUser" value="${requestScope.foundUser}"/>
 
 <div class="blockCont" style="display: flex; justify-content: flex-start; flex-wrap: wrap;">
     <form method="post" action="FrontController?COMMAND=GET_USER_INFO">
-        <input name="userLogin" placeholder="User Login"/>
+        <input name="userLogin" placeholder="User Login" required/>
         <button type="submit">Find</button>
     </form>
     <c:if test="${foundUser != null}">
@@ -45,22 +45,22 @@
             </div>
         </form>
     </c:if>
-    <c:if test="${error == 'fieldsMustBeFulfilled'}">
+    <c:if test="${message == 'fieldsMustBeFulfilled'}">
         <p style="color: red">All fields must be fulfilled</p>
     </c:if>
-    <c:if test="${error == 'mustBeADir'}">
+    <c:if test="${message == 'mustBeADir'}">
         <p style="color: red">Only director can update admin role</p>
     </c:if>
-    <c:if test="${error == 'Cant change yourself'}">
+    <c:if test="${message == 'Cant change yourself'}">
         <p style="color: red">Only director can update admin role</p>
     </c:if>
-    <c:if test="${error == 'Cant change dir'}">
+    <c:if test="${message == 'Cant change dir'}">
         <p style="color: red">can't get director info</p>
     </c:if>
-    <c:if test="${error == 'noUser'}">
+    <c:if test="${message == 'noUser'}">
         <p style="color: red">There is no user with such login</p>
     </c:if>
-    <c:if test="${error == 'updated'}">
+    <c:if test="${message == 'updated'}">
         <p style="color: green">Updated</p>
     </c:if>
 </div>

@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="Assets/CSS/FallenBox.css">
 </head>
 <body>
-<c:set var="error" value="${param.message}"/>
+<c:set var="message" value="${param.message}"/>
 <div class="box">
 
     <form id="LoginForm" action="FrontController" method="post">
@@ -41,20 +41,23 @@
             onclick=" document.getElementById('LoginForm').style.display='none'; document.getElementById('RegForm').style.display='block';document.getElementById('GoToReg').style.display='none'; document.getElementById('GoToLogin').style.display='block';">
         Sign up
     </button>
-    <c:if test="${error == 'noSuchUser'}">
+    <c:if test="${message == 'noSuchUser'}">
         <p style="color: red">There is no such user</p>
     </c:if>
-    <c:if test="${error == 'loginExists'}">
+    <c:if test="${message == 'loginExists'}">
         <p style="color: red">Login exists</p>
     </c:if>
-    <c:if test="${error == 'passwordsnotmatch'}">
+    <c:if test="${message == 'passwordsnotmatch'}">
         <p style="color: red">Entered passwords don't match</p>
     </c:if>
-    <c:if test="${error == 'failedToRegister'}">
+    <c:if test="${message == 'failedToRegister'}">
         <p style="color: red">Failed to register</p>
     </c:if>
-    <c:if test="${error == 'empty'}">
+    <c:if test="${message == 'empty'}">
         <p style="color: red">All fields must be fulfilled</p>
+    </c:if>
+    <c:if test="${message == 'fatal'}">
+        <p style="color: red">An error has been occurred, you've been disconnected</p>
     </c:if>
 </div>
 

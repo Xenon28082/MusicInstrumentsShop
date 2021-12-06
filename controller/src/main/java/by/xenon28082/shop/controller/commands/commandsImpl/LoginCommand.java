@@ -1,6 +1,7 @@
 package by.xenon28082.shop.controller.commands.commandsImpl;
 
 import by.xenon28082.shop.controller.commands.Command;
+import by.xenon28082.shop.controller.exception.ControllerException;
 import by.xenon28082.shop.controller.validators.Validator;
 import by.xenon28082.shop.controller.validators.ValidatorImpl;
 import by.xenon28082.shop.entity.User;
@@ -28,10 +29,13 @@ public class LoginCommand implements Command {
 
     private static String USER_LOGIN = "userloginLog";
     private static String PASSWORD = "passwordLog";
+    private static String ID = "id";
+    private static String ROLE = "role";
+    private static String LOGIN = "login";
 
 
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse res) throws SQLException, ServletException, IOException, ServiceException {
+    public void execute(HttpServletRequest req, HttpServletResponse res) throws ControllerException {
         LOGGER.info("Got to LoginCommand");
 
         String login = req.getParameter(USER_LOGIN);
@@ -39,29 +43,33 @@ public class LoginCommand implements Command {
         List<String> params = new ArrayList<>();
         params.add(login);
         params.add(password);
-        if (validator.validateIsEmpty(params)) {
-            LOGGER.info("Empty fields");
-            res.sendRedirect("index.jsp?message=empty");
-        } else {
-            password = DigestUtils.md5Hex(password);
-            User user = new User(login, password);
-            UserDTO userDTO = userService.logination(user);
-            if (validator.validateIsNull(userDTO)) {
-                LOGGER.info("There is no such user (Error)");
-                res.sendRedirect("index.jsp?message=noSuchUser");
+        try {
+            if (validator.validateIsEmpty(params)) {
+                LOGGER.info("Empty fields");
+                res.sendRedirect("index.jsp?message=empty");
             } else {
-                req.getSession(true).setAttribute("id", userDTO.getId());
-                req.getSession().setAttribute("role", userDTO.getRole());
-                req.getSession().setAttribute("login", userDTO.getLogin());
-
-                if (userDTO.getRole() == 1 || userDTO.getRole() == 3) {
-                    LOGGER.info("Going to admin page");
-                    req.getRequestDispatcher("adminPage.jsp").forward(req, res);
-                    return;
+                password = DigestUtils.md5Hex(password);
+                User user = new User(login, password);
+                UserDTO userDTO = userService.logination(user);
+                if (validator.validateIsNull(userDTO)) {
+                    LOGGER.info("There is no such user (Error)");
+                    res.sendRedirect("index.jsp?message=noSuchUser");
+                } else {
+                    req.getSession(true).setAttribute(ID, userDTO.getId());
+                    req.getSession().setAttribute(ROLE, userDTO.getRole());
+                    req.getSession().setAttribute(LOGIN, userDTO.getLogin());
+                    if (userDTO.getRole() == 1 || userDTO.getRole() == 3) {
+                        LOGGER.info("Going to admin page");
+                        req.getRequestDispatcher("adminPage.jsp").forward(req, res);
+                    }else {
+                        LOGGER.info("Going to user page");
+                        res.sendRedirect("userPage.jsp");
+                    }
                 }
-                LOGGER.info("Going to user page");
-                res.sendRedirect("userPage.jsp");
             }
+        } catch (IOException | ServiceException | ServletException e) {
+            LOGGER.info("Service exception");
+            throw new ControllerException(e);
         }
     }
 

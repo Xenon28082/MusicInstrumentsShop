@@ -4,6 +4,12 @@
     height: 400px;
 }
 
+.bigProduct{
+    border: #2ecc71 solid 2px;
+    width: 200px;
+    height: 500px;
+}
+
 .image img{
     display: block;
     margin-top: 5px;

@@ -1,5 +1,6 @@
 package by.xenon28082.shop.controller.commands;
 
+import by.xenon28082.shop.controller.exception.ControllerException;
 import by.xenon28082.shop.dao.exception.DaoException;
 import by.xenon28082.shop.service.exception.ServiceException;
 
@@ -10,6 +11,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public interface Command {
-    void execute(HttpServletRequest req, HttpServletResponse res) throws SQLException, ServletException, IOException, ServiceException, DaoException;
+    void execute(HttpServletRequest req, HttpServletResponse res) throws ControllerException;
 
 }

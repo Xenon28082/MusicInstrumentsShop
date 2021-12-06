@@ -8,7 +8,6 @@ import java.util.List;
 
 public interface ProductDAO extends EntityFacade<Product> {
 
-    List<Product> findAllProducts() throws DaoException;
     List<Product> findProductsByType(String type) throws DaoException;
     String findProductVendor(long id) throws DaoException;
     long findVendorId(String name) throws DaoException;

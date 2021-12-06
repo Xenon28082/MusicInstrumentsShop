@@ -1,6 +1,7 @@
 package by.xenon28082.shop.controller.commands.commandsImpl;
 
 import by.xenon28082.shop.controller.commands.Command;
+import by.xenon28082.shop.controller.exception.ControllerException;
 import by.xenon28082.shop.entity.Product;
 import by.xenon28082.shop.service.ProductService;
 import by.xenon28082.shop.service.ServiceFactory;
@@ -27,8 +28,9 @@ public class GetProductsCommand implements Command {
     private static final String PAGE = "page";
     private static final String SHIFT = "shift";
 
+
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse res) throws SQLException, ServletException, IOException, ServiceException {
+    public void execute(HttpServletRequest req, HttpServletResponse res) throws ControllerException {
         LOGGER.info("Got to GetProductsCommand");
         String type = req.getParameter(TYPE);
         int shift = 0;
@@ -37,25 +39,32 @@ public class GetProductsCommand implements Command {
             page = Integer.parseInt(req.getParameter(PAGE));
             shift = Integer.parseInt(req.getParameter(SHIFT));
         } catch (NumberFormatException e) {
-            System.out.println("Null and Null");
+            LOGGER.info("Null param PAGE or SHIFT");
         }
-        List<Product> products = null;
+        try {
+            List<Product> products = null;
 
-        long productsCount = productService.countProducts();
+            long productsCount = 0;
+
+            productsCount = productService.countProducts();
 
 
-        if (type == null || type.equals(""))
-            products = productService.getProducts(page, shift);
-        else
-            products = productService.getProductsByType(type);
+            if (type == null || type.equals(""))
+                products = productService.getProducts(page, shift);
+            else
+                products = productService.getProductsByType(type);
 
-        req.setAttribute("items", products);
-        req.setAttribute("type", type);
-        req.setAttribute("count", productsCount);
-        if (products.size() == 0) {
-            req.getRequestDispatcher("itemsPage.jsp?message=noProducts").forward(req, res);
-        } else {
-            req.getRequestDispatcher("itemsPage.jsp").forward(req, res);
+            req.setAttribute("items", products);
+            req.setAttribute("type", type);
+            req.setAttribute("count", productsCount);
+            if (products.size() == 0) {
+                req.getRequestDispatcher("itemsPage.jsp?message=noProducts").forward(req, res);
+            } else {
+                req.getRequestDispatcher("itemsPage.jsp").forward(req, res);
+            }
+        } catch (ServiceException | ServletException | IOException e) {
+            LOGGER.info("ServiceException");
+            throw new ControllerException(e);
         }
     }
 
