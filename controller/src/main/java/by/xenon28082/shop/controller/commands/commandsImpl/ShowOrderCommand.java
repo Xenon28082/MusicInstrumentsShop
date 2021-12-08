@@ -68,11 +68,16 @@ public class ShowOrderCommand implements Command {
                 LOGGER.info("There is no ordered products");
                 res.sendRedirect("orderPage.jsp?message=noOrder");
             } else {
+                boolean isReserved = false;
+                if(orderService.checkOrderPresence(Long.parseLong(userId), orders)){
+                    isReserved = true;
+                }
                 List<Product> products = getProductsFromOrder(orders);
                 orders = setProductsToOrder(products, orders);
                 double sum = getSum(products);
                 req.getSession().setAttribute("orders", orders);
                 req.setAttribute("orderPrice", sum);
+                req.setAttribute("isreserved", isReserved);
                 req.getRequestDispatcher("orderPage.jsp").forward(req, res);
             }
         } catch (ServiceException | IOException | ServletException e) {

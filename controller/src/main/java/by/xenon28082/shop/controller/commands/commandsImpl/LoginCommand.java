@@ -32,6 +32,7 @@ public class LoginCommand implements Command {
     private static String ID = "id";
     private static String ROLE = "role";
     private static String LOGIN = "login";
+    private static String LOCALE = "locale";
 
 
     @Override
@@ -40,6 +41,8 @@ public class LoginCommand implements Command {
 
         String login = req.getParameter(USER_LOGIN);
         String password = req.getParameter(PASSWORD);
+        String locale = req.getParameter(LOCALE);
+        System.out.println(locale);
         List<String> params = new ArrayList<>();
         params.add(login);
         params.add(password);
@@ -58,6 +61,7 @@ public class LoginCommand implements Command {
                     req.getSession(true).setAttribute(ID, userDTO.getId());
                     req.getSession().setAttribute(ROLE, userDTO.getRole());
                     req.getSession().setAttribute(LOGIN, userDTO.getLogin());
+                    req.getSession().setAttribute(LOCALE, locale);
                     if (userDTO.getRole() == 1 || userDTO.getRole() == 3) {
                         LOGGER.info("Going to admin page");
                         req.getRequestDispatcher("adminPage.jsp").forward(req, res);

@@ -17,22 +17,41 @@
 <c:set var="orders" value="${sessionScope.orders}"/>
 <c:set var="message" value="${param.message}"/>
 <c:set var="finalPrice" value="${requestScope.orderPrice}"/>
+<c:set var="isReserved" value="${requestScope.isreserved}"/>
 <div class="blockCont" style="display: flex; justify-content: flex-start; flex-wrap: wrap;">
     <c:forEach var="order" items="${orders}">
-        <div class="bigProduct">
-            <div class="image">
-                <img src="http://placehold.it/170x220">
+        <c:if test="${isReserved}">
+            <div class="bigProduct" style="border: #2ecc71 solid 2px">
+                <div class="image">
+                    <img src="http://placehold.it/170x220">
+                </div>
+                <div class="info">
+                    <p>Order id - ${order.getOrderId()}</p>
+                    <p>User id - ${order.getUserId()}</p>
+                    <p>Product name - ${order.getProduct().getName()}</p>
+                    <p>Product price - ${order.getProduct().getPrice()}</p>
+                    <p>Product type - ${order.getProduct().getType()}</p>
+                    <p>Product vendor - ${order.getProduct().getVendor()}</p>
+                    <p>Amount - ${order.getAmount()}</p>
+                </div>
             </div>
-            <div class="info">
-                <p>Order id - ${order.getOrderId()}</p>
-                <p>User id - ${order.getUserId()}</p>
-                <p>Product name - ${order.getProduct().getName()}</p>
-                <p>Product price - ${order.getProduct().getPrice()}</p>
-                <p>Product type - ${order.getProduct().getType()}</p>
-                <p>Product vendor - ${order.getProduct().getVendor()}</p>
-                <p>Amount - ${order.getAmount()}</p>
+        </c:if>
+        <c:if test="${!isReserved}">
+            <div class="bigProduct" style="border: red solid 2px">
+                <div class="image">
+                    <img src="http://placehold.it/170x220">
+                </div>
+                <div class="info">
+                    <p>Order id - ${order.getOrderId()}</p>
+                    <p>User id - ${order.getUserId()}</p>
+                    <p>Product name - ${order.getProduct().getName()}</p>
+                    <p>Product price - ${order.getProduct().getPrice()}</p>
+                    <p>Product type - ${order.getProduct().getType()}</p>
+                    <p>Product vendor - ${order.getProduct().getVendor()}</p>
+                    <p>Amount - ${order.getAmount()}</p>
+                </div>
             </div>
-        </div>
+        </c:if>
     </c:forEach>
 
     <c:if test="${message == 'noOrder'}">

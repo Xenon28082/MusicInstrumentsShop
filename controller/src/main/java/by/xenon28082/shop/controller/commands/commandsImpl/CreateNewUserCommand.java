@@ -68,18 +68,15 @@ public class CreateNewUserCommand implements Command {
                         res.sendRedirect("index.jsp?message=loginExists");
                     }
                     if (user != null) {
-                        req.getSession(true).setAttribute("login", user.getLogin());
-                        req.getSession().setAttribute("id", user.getId());
-                        req.getSession().setAttribute("role", user.getRole());
                         LOGGER.info("Created new User:login - " + login + " (SUCCESS)");
-                        req.getRequestDispatcher("userPage.jsp").forward(req, res);
+                        res.sendRedirect("index.jsp?message=success");
                     } else {
                         LOGGER.info("Failed to create new user (FAILED)");
                         res.sendRedirect("index.jsp?message=failedToRegister");
                     }
                 }
             }
-        } catch (IOException | ServletException e) {
+        } catch (IOException e) {
             LOGGER.info("ServiceException");
             throw new ControllerException(e);
         }
