@@ -36,7 +36,6 @@ public class CommandsMap {
         COMMANDS.put("ACCEPT_FINAL_ORDER", new AcceptFinalOrderCommand());
         COMMANDS.put("REFUSE_FINAL_ORDER", new RefuseFinalOrderCommand());
         COMMANDS.put("CHANGE_LANG", new ChangeLocaleCommand());
-        COMMANDS.put("TEST_COMMAND", new TestCommand());
     }
 
     public Command getCommand(String command){

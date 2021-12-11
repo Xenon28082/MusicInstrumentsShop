@@ -1,4 +1,3 @@
-
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -68,7 +67,7 @@
         <c:out value="${ids}"/>
         <form action="FrontController" method="post">
             <input type="hidden" name="COMMAND" value="CLOSE_ORDER">
-            <button type="submit">Close order</button>
+            <button type="submit">Pay and close order</button>
         </form>
     </div>
 </c:if>

@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -10,6 +10,23 @@
     <title>Title</title>
     <link rel="stylesheet" href="Assets/CSS/ItemBlock.css">
     <link rel="stylesheet" href="Assets/CSS/VerticalMenu.css">
+    <c:set var="locale" value="${sessionScope.get('locale')}"/>
+    <c:if test="${locale == null}">
+
+        <fmt:setLocale value="en"/>
+    </c:if>
+    <c:if test="${locale != null}">
+        <fmt:setLocale value="${locale}"/>
+    </c:if>
+    <fmt:setBundle basename="localization.local" var="loc"/>
+    <fmt:message bundle="${loc}" key="addNewItemLabel" var="addNewItemLabel"/>
+    <fmt:message bundle="${loc}" key="productNameLabel" var="productNameLabel"/>
+    <fmt:message bundle="${loc}" key="productPriceLabel" var="productPriceLabel"/>
+    <fmt:message bundle="${loc}" key="productStockLabel" var="productStockLabel"/>
+    <fmt:message bundle="${loc}" key="guitarLabel" var="guitarLabel"/>
+    <fmt:message bundle="${loc}" key="keysLabel" var="keysLabel"/>
+    <fmt:message bundle="${loc}" key="perkLabel" var="perkLabel"/>
+    <fmt:message bundle="${loc}" key="whistLabel" var="whistLabel"/>
 </head>
 <body>
 
@@ -28,17 +45,17 @@
 <c:set var="vendors" value="${requestScope.vendors}"/>
 <div class="blockCont" style="display: flex; justify-content: flex-start; flex-wrap: wrap;">
     <form method="post" action="FrontController?COMMAND=ADD_NEW_ITEM">
-        <input type="text" name="productName" placeholder="Product name" autocomplete="off" required>
+        <input type="text" name="productName" placeholder="${productNameLabel}" autocomplete="off" required>
         <p></p>
-        <input type="number" name="productPrice" placeholder="Product price" min="1" autocomplete="off" required>
+        <input type="number" name="productPrice" placeholder="${productPriceLabel}" min="1" autocomplete="off" required>
         <p></p>
-        <input type="number" name="productStock" placeholder="Product stock" min="1" autocomplete="off" required>
+        <input type="number" name="productStock" placeholder="${productStockLabel}" min="1" autocomplete="off" required>
         <p></p>
         <select name="productType">
-            <option value="guitar">guitar</option>
-            <option value="percussion">percussion</option>
-            <option value="keys">keys</option>
-            <option value="whistle">whistle</option>
+            <option value="guitar">${guitarLabel}</option>
+            <option value="percussion">${perkLabel}</option>
+            <option value="keys">${keysLabel}</option>
+            <option value="whistle">${whistLabel}</option>
             <option></option>
         </select>
         <p></p>
@@ -48,7 +65,7 @@
             </c:forEach>
         </select>
         <p></p>
-        <button type="submit">Add new item</button>
+        <button type="submit">${addNewItemLabel}</button>
     </form>
 
     <c:if test="${message == 'negative'}">

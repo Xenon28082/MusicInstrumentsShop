@@ -75,6 +75,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Order findOrderById(long orderId) throws ServiceException {
+        try {
+            if (validator.validateIsNotPositive(orderId)) {
+                return null;
+            }
+            return dao.findById(orderId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
     public boolean deleteAllByProductId(long productId) throws ServiceException {
         try {
             if (validator.validateIsNotPositive(productId)) {

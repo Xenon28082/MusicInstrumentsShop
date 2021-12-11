@@ -1,8 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 
 <html>
@@ -10,6 +9,21 @@
     <title>Title</title>
     <link rel="stylesheet" href="Assets/CSS/ItemBlock.css">
     <link rel="stylesheet" href="Assets/CSS/VerticalMenu.css">
+    <c:set var="locale" value="${sessionScope.get('locale')}"/>
+    <c:if test="${locale == null}">
+        <fmt:setLocale value="en"/>
+    </c:if>
+    <c:if test="${locale != null}">
+        <fmt:setLocale value="${locale}"/>
+    </c:if>
+    <fmt:setBundle basename="localization.local" var="loc"/>
+    <fmt:message bundle="${loc}" key="itemNameLabel" var="itemNameLabel"/>
+    <fmt:message bundle="${loc}" key="itemPriceLabel" var="itemPriceLabel"/>
+    <fmt:message bundle="${loc}" key="itemVendorLabel" var="itemVendorLabel"/>
+    <fmt:message bundle="${loc}" key="itemStock" var="itemStock"/>
+    <fmt:message bundle="${loc}" key="deleteSome" var="deleteSome"/>
+    <fmt:message bundle="${loc}" key="deleteAll" var="deleteAll"/>
+    <fmt:message bundle="${loc}" key="addSome" var="addSome"/>
 </head>
 <body>
 
@@ -44,28 +58,28 @@
             </div>
 
             <div class="info">
-                <div><c:out value="ItemName - ${item.getName()}"/></div>
-                <div><c:out value="ItemPrice - ${item.getPrice()}"/></div>
-                <div><c:out value="ItemVendor - ${item.getVendor()}"/></div>
-                <div><c:out value="InStock - ${item.getStock()}"/></div>
+                <div><c:out value="${itemNameLabel} - ${item.getName()}"/></div>
+                <div><c:out value="${itemPriceLabel} - ${item.getPrice()}"/></div>
+                <div><c:out value="${itemPriceLabel} - ${item.getVendor()}"/></div>
+                <div><c:out value="${itemStock} - ${item.getStock()}"/></div>
                 <c:if test="${userRole == 1 || userRole == 3}">
                     <form method="post" action="FrontController">
                         <input type="hidden" name="COMMAND" value="DELETE_SOME"/>
                         <input type="hidden" name="productId" value="${item.getId()}">
                         <input type="number" name="deleteValue" value="0" required>
-                        <button type="submit">Delete Some</button>
+                        <button type="submit">${deleteSome}</button>
                     </form>
                     <form method="post" action="FrontController">
                         <input type="hidden" name="COMMAND" value="DELETE_SOME"/>
                         <input type="hidden" name="productId" value="${item.getId()}">
                         <input type="hidden" name="deleteValue" value="${item.getStock()}">
-                        <button type="submit">Delete all</button>
+                        <button type="submit">${deleteAll}</button>
                     </form>
                     <form method="post" action="FrontController">
                         <input type="hidden" name="COMMAND" value="ADD_SOME"/>
                         <input type="hidden" name="productId" value="${item.getId()}">
                         <input id="1" type="number" name="addValue" value="0" required>
-                        <button type="submit">Add some</button>
+                        <button type="submit">${addSome}</button>
                     </form>
 
                 </c:if>

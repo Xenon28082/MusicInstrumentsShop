@@ -15,6 +15,8 @@ public interface OrderService {
 
     Order findReservation(long productId, long userId) throws ServiceException;
 
+    Order findOrderById(long orderId) throws ServiceException;
+
     boolean deleteAllByProductId(long productId) throws ServiceException;
 
     boolean reserveOrder(boolean isReserved, long orderId) throws ServiceException;

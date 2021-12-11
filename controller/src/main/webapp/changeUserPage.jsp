@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -10,6 +11,21 @@
     <title>Title</title>
     <link rel="stylesheet" href="Assets/CSS/ItemBlock.css">
     <link rel="stylesheet" href="Assets/CSS/VerticalMenu.css">
+
+    <c:set var="locale" value="${sessionScope.get('locale')}"/>
+    <c:if test="${locale == null}">
+
+        <fmt:setLocale value="en"/>
+    </c:if>
+    <c:if test="${locale != null}">
+        <fmt:setLocale value="${locale}"/>
+    </c:if>
+    <fmt:setBundle basename="localization.local" var="loc"/>
+    <fmt:message bundle="${loc}" key="userLoginPlaceholder" var="userLoginPlaceholder"/>
+    <fmt:message bundle="${loc}" key="findLabel" var="findLabel"/>
+    <fmt:message bundle="${loc}" key="administratorLabel" var="administratorLabel"/>
+    <fmt:message bundle="${loc}" key="customerLabel" var="customerLabel"/>
+    <fmt:message bundle="${loc}" key="changeLabel" var="changeLabel"/>
 </head>
 <body>
 
@@ -26,8 +42,8 @@
 
 <div class="blockCont" style="display: flex; justify-content: flex-start; flex-wrap: wrap;">
     <form method="post" action="FrontController?COMMAND=GET_USER_INFO">
-        <input name="userLogin" placeholder="User Login" required/>
-        <button type="submit">Find</button>
+        <input name="userLogin" placeholder="${userLoginPlaceholder}" required/>
+        <button type="submit">${findLabel}</button>
     </form>
     <c:if test="${foundUser != null}">
         <form method="post" action="FrontController?COMMAND=UPDATE_USER">
@@ -38,10 +54,10 @@
                 <input disabled name="userFirstname" value="${foundUser.getName()}" required/>
                 <input disabled name="userLastname" value="${foundUser.getLastname()}" required/>
                 <select name="userRole">
-                    <option value="1">Administrator</option>
-                    <option value="2">Customer</option>
+                    <option value="1">${administratorLabel}</option>
+                    <option value="2">${customerLabel}</option>
                 </select>
-                <button type="submit">Change</button>
+                <button type="submit">${changeLabel}</button>
             </div>
         </form>
     </c:if>

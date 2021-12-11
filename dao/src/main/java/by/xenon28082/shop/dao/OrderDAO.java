@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface OrderDAO extends EntityFacade<Order> {
+
     List<Order> getOrders(long userId) throws DaoException;
 
     boolean deleteOrder(long userId, long orderId, int amount) throws DaoException;

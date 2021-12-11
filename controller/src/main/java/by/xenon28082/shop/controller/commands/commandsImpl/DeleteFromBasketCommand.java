@@ -4,6 +4,7 @@ import by.xenon28082.shop.controller.commands.Command;
 import by.xenon28082.shop.controller.exception.ControllerException;
 import by.xenon28082.shop.controller.validators.Validator;
 import by.xenon28082.shop.controller.validators.ValidatorImpl;
+import by.xenon28082.shop.entity.Order;
 import by.xenon28082.shop.entity.Product;
 import by.xenon28082.shop.service.OrderService;
 import by.xenon28082.shop.service.ProductService;
@@ -55,8 +56,8 @@ public class DeleteFromBasketCommand implements Command {
                 LOGGER.info("Value is not positive");
                 res.sendRedirect("FrontController?COMMAND=SHOW_BASKET&message=failed");
             } else {
-                Product product = productService.findProductById(productId);
-                if (product.getStock() < amountToDelete) {
+                Order order = orderService.findOrderById(orderId);
+                if (order.getAmount() < amountToDelete) {
                     LOGGER.info("Can't delete more then have");
                     res.sendRedirect("FrontController?COMMAND=SHOW_BASKET&message=more");
                 } else {
