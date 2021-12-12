@@ -27,7 +27,6 @@ public class ProductServiceImpl implements ProductService {
         List<Product> products = null;
         try {
             products = dao.getProductsPage(page, shift);
-            products.sort(new ProductIdComparator());
             return products;
         } catch (DaoException e) {
             throw new ServiceException(e);

@@ -26,6 +26,7 @@
     <fmt:message bundle="${loc}" key="keysLabel" var="keysLabel"/>
     <fmt:message bundle="${loc}" key="perkLabel" var="perkLabel"/>
     <fmt:message bundle="${loc}" key="whistLabel" var="whistLabel"/>
+    <fmt:message bundle="${loc}" key="finalOrdersLabel" var="finalOrdersLabel"/>
 </head>
 <body>
 
@@ -93,6 +94,11 @@
         <li><a class="mainRef" href="FrontController?COMMAND=SHOW_ORDER">
             <div class="img_n"><img src="https://img.icons8.com/ios/50/ffffff/shopping-basket.png"/></div>
             <span>${orderLabel}</span></a>
+        </li>
+
+        <li><a class="mainRef" href="FrontController?COMMAND=SHOW_USER_FINAL_ORDERS">
+            <div class="img_n"><img src="https://img.icons8.com/ios/50/ffffff/shopping-basket.png"/></div>
+            <span>${finalOrdersLabel}</span></a>
         </li>
 
         <li><a class="mainRef" href="FrontController?COMMAND=LOGOUT">

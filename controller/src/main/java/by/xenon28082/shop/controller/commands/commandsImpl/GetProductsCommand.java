@@ -57,6 +57,7 @@ public class GetProductsCommand implements Command {
             req.setAttribute("items", products);
             req.setAttribute("type", type);
             req.setAttribute("count", productsCount);
+            req.setAttribute("page", page);
             if (products.size() == 0) {
                 req.getRequestDispatcher("itemsPage.jsp?message=noProducts").forward(req, res);
             } else {

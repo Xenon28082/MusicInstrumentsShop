@@ -4,25 +4,47 @@ import java.util.List;
 
 public class FinalOrder {
 
-    private List<Product> products;
+    private List<Order> orders;
     private long finalOrderId;
     private long userId;
+    private boolean isAccepted;
+    private boolean isRefused;
 
-    public FinalOrder(List<Product> products, long finalOrderId, long userId) {
-        this.products = products;
+
+
+    public FinalOrder(long finalOrderId, long userId, boolean isAccepted, boolean isRefused, List<Order> orders) {
+        this.orders = orders;
         this.finalOrderId = finalOrderId;
         this.userId = userId;
+        this.isAccepted = isAccepted;
+        this.isRefused = isRefused;
     }
 
     public FinalOrder() {
     }
 
-    public List<Product> getProducts() {
-        return products;
+    public boolean isAccepted() {
+        return isAccepted;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
+    public void setAccepted(boolean accepted) {
+        isAccepted = accepted;
+    }
+
+    public boolean isRefused() {
+        return isRefused;
+    }
+
+    public void setRefused(boolean refused) {
+        isRefused = refused;
+    }
+
+    public List<Order> getProducts() {
+        return orders;
+    }
+
+    public void setProducts(List<Order> orders) {
+        this.orders = orders;
     }
 
     public long getFinalOrderId() {
@@ -39,5 +61,16 @@ public class FinalOrder {
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    @Override
+    public String toString() {
+        return "FinalOrder{" +
+                "orders=" + orders +
+                ", finalOrderId=" + finalOrderId +
+                ", userId=" + userId +
+                ", isAccepted=" + isAccepted +
+                ", isRefused=" + isRefused +
+                '}';
     }
 }

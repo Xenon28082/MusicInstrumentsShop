@@ -6,6 +6,7 @@ import by.xenon28082.shop.dao.OrderDAO;
 
 import by.xenon28082.shop.dao.databaseConnection.ConnectionPool;
 import by.xenon28082.shop.dao.exception.DaoException;
+import by.xenon28082.shop.entity.FinalOrder;
 import by.xenon28082.shop.entity.Product;
 import by.xenon28082.shop.entity.Order;
 
@@ -15,22 +16,23 @@ import java.util.List;
 
 public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
 
-    private static final String SAVE_RESERVATION_QUERY = "INSERT INTO orders (user_id, product_id, amount) VALUES (?,?,?)";
-    private static final String GET_RESERVATIONS_QUERY = "SELECT * FROM orders WHERE user_id = ?";
+    private static final String SAVE_RESERVATION_QUERY = "INSERT INTO orders (user_id, product_id_ref, amount) VALUES (?,?,?)";
+    private static final String GET_RESERVATIONS_QUERY = "SELECT * FROM orders WHERE user_id = ? ORDER BY order_id ASC ";
     private static final String DELETE_RESERVATION_QUERY = "DELETE FROM orders WHERE user_id = ? AND order_id = ?";
-    private static final String FIND_RESERVATION_QUERY = "SELECT * FROM orders WHERE user_id = ? AND product_id = ?";
-    private static final String FIND_RESERVATION_BY_ID_QUERY = "SELECT * FROM orders WHERE order_id = ?";
-    private static final String UPDATE_QUERY = "UPDATE orders SET amount = ? WHERE user_id = ? AND product_id = ?";
-    private static final String FIND_RESERVATION_BY_PRODUCT_ID_QUERY = "SELECT * FROM orders WHERE product_id = ?";
-    private static final String DELETE_ALL_BY_PRODUCT_ID_QUERY = "DELETE FROM orders WHERE product_id = ?";
+    private static final String FIND_RESERVATION_QUERY = "SELECT * FROM orders WHERE user_id = ? AND product_id_ref = ?";
+    private static final String FIND_RESERVATION_BY_ID_QUERY = "SELECT * FROM orders INNER JOIN products ON product_id = product_id_ref WHERE order_id = ?";
+    //    private static final String TEST = "SELECT * FROM orders INNER JOIN products ON product_id = product_id_ref WHERE order_id = ?";
+    private static final String UPDATE_QUERY = "UPDATE orders SET amount = ? WHERE user_id = ? AND product_id_ref = ?";
+    private static final String FIND_RESERVATION_BY_PRODUCT_ID_QUERY = "SELECT * FROM orders WHERE product_id_ref = ?";
+    private static final String DELETE_ALL_BY_PRODUCT_ID_QUERY = "DELETE FROM orders WHERE product_id_ref = ?";
     private static final String ADD_TO_RESERVE_QUERY = "UPDATE orders SET in_reservation = ? WHERE order_id = ?";
     private static final String GET_ORDER_QUERY = "SELECT * FROM orders WHERE user_id = ? AND in_reservation = TRUE";
     private static final String ADD_TO_FINAL_ORDERS_QUERY = "INSERT INTO final_orders (user_id, products_ids) VALUES (?, ?)";
     private static final String CHECK_PRESENCE_FINAL_ORDERS_QUERY = "SELECT COUNT(*) FROM final_orders WHERE user_id = ? AND products_ids = ?";
     private static final String GET_FINAL_ORDERS_QUERY = "SELECT * FROM final_orders";
+    private static final String GET_USER_FINAL_ORDERS_QUERY = "SELECT * FROM final_orders WHERE user_id = ?";
     private static final String ACCEPT_FINAL_ORDER_QUERY = "UPDATE final_orders SET is_accepted = TRUE WHERE order_id = ?";
     private static final String REFUSE_FINAL_ORDER_QUERY = "UPDATE final_orders SET is_refused = TRUE WHERE order_id = ?";
-
 
 
     public OrderDAOImpl(ConnectionPool connectionPool) {
@@ -311,12 +313,22 @@ public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
             preparedStatement = connection.prepareStatement(FIND_RESERVATION_BY_ID_QUERY);
             preparedStatement.setLong(1, id);
             resultSet = preparedStatement.executeQuery();
-            resultSet.next();
-            Order foundOrder = new Order(
-                    resultSet.getLong(2),
-                    resultSet.getLong(3),
-                    resultSet.getInt(4)
-            );
+            Order foundOrder = new Order();
+            if (resultSet.next()) {
+                foundOrder = new Order(
+                        resultSet.getLong(1),
+                        resultSet.getLong(2),
+                        resultSet.getLong(3),
+                        resultSet.getInt(4),
+                        resultSet.getBoolean(5),
+                        new Product(resultSet.getLong(6),
+                                resultSet.getString(7),
+                                resultSet.getDouble(8),
+                                resultSet.getLong(9),
+                                resultSet.getString(10),
+                                resultSet.getString(11))
+                );
+            }
             return foundOrder;
         } catch (SQLException | DaoException e) {
             throw new DaoException(e);
@@ -391,7 +403,7 @@ public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
                 String ids = resultSet.getString(3);
                 boolean accepted = resultSet.getBoolean(4);
                 boolean refused = resultSet.getBoolean(5);
-                if(refused || accepted){
+                if (refused || accepted) {
                     continue;
                 }
                 String[] orderIds = ids.split(" ");
@@ -399,6 +411,13 @@ public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
                 for (String id :
                         orderIds) {
                     Order order = findById(Long.parseLong(id));
+                    if (order.getProduct() == null) {
+                        order.setProduct(new Product(
+                                "Deleted",
+                                0,
+                                "Deleted"
+                        ));
+                    }
                     order.setOrderId(finalOrderId);
                     finalOrders.add(order);
                 }
@@ -407,7 +426,7 @@ public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
             return finalOrdersByUserId;
         } catch (DaoException | SQLException e) {
             throw new DaoException(e);
-        }finally {
+        } finally {
             close(resultSet);
             close(preparedStatement);
             retrieve(connection);
@@ -425,7 +444,7 @@ public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
             return preparedStatement.executeUpdate() != 0;
         } catch (DaoException | SQLException e) {
             throw new DaoException(e);
-        }finally {
+        } finally {
             close(preparedStatement);
             retrieve(connection);
         }
@@ -442,12 +461,55 @@ public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
             return preparedStatement.executeUpdate() != 0;
         } catch (DaoException | SQLException e) {
             throw new DaoException(e);
-        }finally {
+        } finally {
             close(preparedStatement);
             retrieve(connection);
         }
     }
 
-
-
+    @Override
+    public List<FinalOrder> getUserFinalOrders(long userId) throws DaoException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = getConnection(true);
+            preparedStatement = connection.prepareStatement(GET_USER_FINAL_ORDERS_QUERY);
+            preparedStatement.setLong(1, userId);
+            resultSet = preparedStatement.executeQuery();
+            List<FinalOrder> finalOrders = new ArrayList<>();
+            ArrayList<ArrayList<Order>> finalOrdersByUserId = new ArrayList<>();
+            while (resultSet.next()) {
+                long finalOrderId = resultSet.getLong(1);
+                String ids = resultSet.getString(3);
+                boolean accepted = resultSet.getBoolean(4);
+                boolean refused = resultSet.getBoolean(5);
+                String[] orderIds = ids.split(" ");
+                ArrayList<Order> orders = new ArrayList<>();
+                for (String id :
+                        orderIds) {
+                    Order order = findById(Long.parseLong(id));
+                    if (order.getProduct() == null) {
+                        order.setProduct(new Product(
+                                "Deleted",
+                                0,
+                                "Deleted"
+                        ));
+                    }
+                    order.setOrderId(finalOrderId);
+                    orders.add(order);
+                }
+                finalOrders.add(new FinalOrder(
+                        finalOrderId,
+                        userId,
+                        accepted,
+                        refused,
+                        orders
+                ));
+            }
+            return finalOrders;
+        } catch (DaoException | SQLException e) {
+            throw new DaoException(e);
+        }
+    }
 }

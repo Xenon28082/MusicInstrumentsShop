@@ -9,6 +9,12 @@ public class Product {
     private String type;
     private String vendor;
 
+    public Product(String name, double price, String vendor){
+        this.name = name;
+        this.price = price;
+        this.vendor = vendor;
+    }
+
     public Product(long id, String name, double price, long stock, String type, String vendor) {
         this.id = id;
         this.name = name;
@@ -76,5 +82,17 @@ public class Product {
 
     public void setVendor(String vendor) {
         this.vendor = vendor;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", stock=" + stock +
+                ", type='" + type + '\'' +
+                ", vendor='" + vendor + '\'' +
+                '}';
     }
 }

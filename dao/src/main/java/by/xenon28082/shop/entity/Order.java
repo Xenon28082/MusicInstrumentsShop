@@ -8,6 +8,15 @@ public class Order {
     private int amount;
     private boolean isReserved;
 
+    public Order(long orderId, long userId, long productId, int amount, boolean isReserved, Product product) {
+        this.orderId = orderId;
+        this.userId = userId;
+        this.product = product;
+        this.productId = productId;
+        this.amount = amount;
+        this.isReserved = isReserved;
+    }
+
     public Order(long userId, Product product, int amount, boolean isReserved) {
         this.userId = userId;
         this.product = product;

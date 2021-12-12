@@ -15,8 +15,7 @@ import java.util.List;
 
 public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
 
-    private static final String FIND_ALL_PRODUCTS_QUERY = "SELECT * FROM products";
-    private static final String FIND_PAGE_PRODUCTS_QUERY = "SELECT * FROM products LIMIT ? OFFSET ?";
+    private static final String FIND_PAGE_PRODUCTS_QUERY = "SELECT * FROM products ORDER BY product_id ASC LIMIT ? OFFSET ? ";
     private static final String FIND_PRODUCTS_BY_TYPE_QUERY = "SELECT * FROM products WHERE product_type = ?";
     private static final String FIND_PRODUCT_BY_ID_QUERY = "SELECT * FROM products WHERE product_id = ?";
     private static final String FIND_VENDOR_QUERY = "SELECT * FROM vendors WHERE vendor_id = ?";
@@ -24,7 +23,6 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
     private static final String FIND_VENDOR_BY_NAME_QUERY = "SELECT * FROM vendors WHERE vendor_name = ?";
     private static final String ADD_NEW_PRODUCTS_QUERY = "INSERT INTO products (product_name, price, in_stock, product_type, vendor_id) VALUES (?, ?, ?, ?, ?)";
     private static final String UPDATE_PRODUCT_QUERY = "UPDATE products SET in_stock = in_stock - ? WHERE product_id = ?";
-    private static final String DELETE_PRODUCT_QUERY = "DELETE FROM products WHERE product_id = ?";
     private static final String COUNT_PRODUCTS = "SELECT COUNT(*) FROM products";
 
     public ProductDAOImpl(ConnectionPool connectionPool) {

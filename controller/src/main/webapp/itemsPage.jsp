@@ -39,6 +39,7 @@
 <c:set var="type" value="${requestScope.type}"/>
 <c:set var="userRole" value="${sessionScope.role}"/>
 <c:set var="message" value="${param.message}"/>
+<c:set var="page" value="${requestScope.page}"/>
 <c:set var="shift" value="3"/>
 
 <c:if test="${userRole == 2}">
@@ -67,18 +68,21 @@
                         <input type="hidden" name="COMMAND" value="DELETE_SOME"/>
                         <input type="hidden" name="productId" value="${item.getId()}">
                         <input type="number" name="deleteValue" value="0" required>
+                        <input type="hidden" name="page" value="${page}">
                         <button type="submit">${deleteSome}</button>
                     </form>
                     <form method="post" action="FrontController">
                         <input type="hidden" name="COMMAND" value="DELETE_SOME"/>
                         <input type="hidden" name="productId" value="${item.getId()}">
                         <input type="hidden" name="deleteValue" value="${item.getStock()}">
+                        <input type="hidden" name="page" value="${page}">
                         <button type="submit">${deleteAll}</button>
                     </form>
                     <form method="post" action="FrontController">
                         <input type="hidden" name="COMMAND" value="ADD_SOME"/>
                         <input type="hidden" name="productId" value="${item.getId()}">
                         <input id="1" type="number" name="addValue" value="0" required>
+                        <input type="hidden" name="page" value="${page}">
                         <button type="submit">${addSome}</button>
                     </form>
 
@@ -89,6 +93,7 @@
                         <input type="hidden" name="COMMAND" value="ADD_TO_BASKET"/>
                         <input type="hidden" name="productId" value="${item.getId()}"/>
                         <input type="number" name="productAmount" min="1" value="1" required>
+                        <input type="hidden" name="page" value="${page}">
                         <button class="addToCart" type="submit"><img
                                 src="https://img.icons8.com/material-outlined/24/ffffff/plus--v1.png"/></button>
                     </form>

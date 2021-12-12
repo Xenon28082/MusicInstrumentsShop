@@ -2,7 +2,7 @@ package by.xenon28082.shop.service.impl;
 
 import by.xenon28082.shop.dao.OrderDAO;
 import by.xenon28082.shop.dao.exception.DaoException;
-import by.xenon28082.shop.dao.impl.comparators.OrderIdComparator;
+import by.xenon28082.shop.entity.FinalOrder;
 import by.xenon28082.shop.entity.Order;
 import by.xenon28082.shop.service.OrderService;
 import by.xenon28082.shop.service.exception.ServiceException;
@@ -42,7 +42,6 @@ public class OrderServiceImpl implements OrderService {
                 return null;
             }
             orders = dao.getOrders(userId);
-            orders.sort(new OrderIdComparator());
             return orders;
         } catch (DaoException e) {
             throw new ServiceException(e);
@@ -171,6 +170,15 @@ public class OrderServiceImpl implements OrderService {
     public boolean refuseFinalOrder(long orderId) throws ServiceException {
         try {
             return dao.refuseFinalOrder(orderId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<FinalOrder> getUserFinalOrders(long userId) throws ServiceException {
+        try {
+            return dao.getUserFinalOrders(userId);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

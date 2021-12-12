@@ -67,6 +67,8 @@
         <c:out value="${ids}"/>
         <form action="FrontController" method="post">
             <input type="hidden" name="COMMAND" value="CLOSE_ORDER">
+            <input type="hidden" name="finalPrice" value="${finalPrice}">
+            <input type="number" name="paid" min = "1" max="999999" required>
             <button type="submit">Pay and close order</button>
         </form>
     </div>
@@ -80,6 +82,15 @@
     </c:if>
     <c:if test="${message == 'exists'}">
         <div style="color: red">Such order already registered</div>
+    </c:if>
+    <c:if test="${message == 'negative'}">
+        <div style="color: red">Entered value must be positive</div>
+    </c:if>
+    <c:if test="${message == 'empty'}">
+        <div style="color: red">All fields must be fulfilled</div>
+    </c:if>
+    <c:if test="${message == 'notequal'}">
+        <div style="color: red">Your paid value is not equal to he price of your order</div>
     </c:if>
 </div>
 </body>

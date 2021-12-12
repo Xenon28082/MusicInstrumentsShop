@@ -1,5 +1,6 @@
 package by.xenon28082.shop.service;
 
+import by.xenon28082.shop.entity.FinalOrder;
 import by.xenon28082.shop.entity.Order;
 import by.xenon28082.shop.service.exception.ServiceException;
 
@@ -34,4 +35,6 @@ public interface OrderService {
     boolean acceptFinalOrder(long orderId) throws ServiceException;
 
     boolean refuseFinalOrder(long orderId) throws ServiceException;
+
+    List<FinalOrder> getUserFinalOrders(long userId) throws ServiceException;
 }

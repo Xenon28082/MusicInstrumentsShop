@@ -35,6 +35,7 @@ public class AddToBasketCommand implements Command {
     private static final String ID = "id";
     private static final String PRODUCT_ID = "productId";
     private static final String PRODUCT_AMOUNT = "productAmount";
+    private static final String PAGE = "page";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse res) throws ControllerException {
@@ -42,15 +43,16 @@ public class AddToBasketCommand implements Command {
         String userId = String.valueOf(req.getSession().getAttribute(ID));
         String productId = req.getParameter(PRODUCT_ID);
         String productAmount = req.getParameter(PRODUCT_AMOUNT);
+        String page = req.getParameter(PAGE);
         try {
             if (validator.validateIsNotPositive(Arrays.asList(userId, productId, productAmount))) {
                 LOGGER.info("negative values");
-                res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=0&shift=3&message=negative");
+                res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=" + page + "&shift=3&message=negative");
             } else {
                 Product product = productService.findProductById(Long.parseLong(productId));
                 if (product.getStock() < Long.parseLong(productAmount)) {
                     LOGGER.info("Stock is less then purchase amount");
-                    res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=0&shift=3&message=less");
+                    res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=" + page + "&shift=3&message=less");
                 } else {
                     Order order = new Order(Long.parseLong(userId), Long.parseLong(productId), Integer.parseInt(productAmount));
                     boolean isProductAdded = orderService.reserveProduct(order);
@@ -60,7 +62,7 @@ public class AddToBasketCommand implements Command {
                     } else {
                         LOGGER.info("Order - " + order + "failed to add (ERROR)");
                     }
-                    res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=0&shift=3");
+                    res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=" + page + "&shift=3");
                 }
             }
         } catch (IOException | ServiceException e) {

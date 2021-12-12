@@ -33,12 +33,14 @@ public class AddItemCommand implements Command {
     private static final String PRODUCT_ID = "productId";
     private static final String ADD_VALUE = "addValue";
     private static final String ID = "id";
+    private static final String PAGE = "page";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse res) throws ControllerException {
         LOGGER.info("Got to DeleteItemCommand");
         long productId = Long.parseLong(req.getParameter(PRODUCT_ID));
         long valueToAdd = Integer.parseInt(req.getParameter(ADD_VALUE));
+        String page = req.getParameter(PAGE);
         long userId = (long) req.getSession().getAttribute(ID);
 
 
@@ -48,7 +50,7 @@ public class AddItemCommand implements Command {
         try {
             if (validator.validateIsNotPositive(validator.convertToStringList(longParams))) {
                 LOGGER.info("Negative values");
-                res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&message=negative&page=0&shift=3");
+                res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&message=negative&page=" + page + "&shift=3");
             } else {
                 valueToAdd = -valueToAdd;
                 if (orderService.findReservation(productId, userId) != null) {
@@ -57,10 +59,10 @@ public class AddItemCommand implements Command {
 
                 if (productService.updateProduct(productId, valueToAdd)) {
                     LOGGER.info("Add complete productId - " + productId + " deleteValue - " + valueToAdd + " (SUCCESS)");
-                    res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=0&shift=3&message=success");
+                    res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=" + page + "&shift=3&message=success");
                 } else {
                     LOGGER.info("Add complete productId - " + productId + " deleteValue - " + valueToAdd + " (FAILED)");
-                    res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=0&shift=3&message=failed");
+                    res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=" + page + "&shift=3&message=failed");
                 }
 
             }

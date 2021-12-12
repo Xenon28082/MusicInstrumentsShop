@@ -33,6 +33,8 @@ public class DeleteItemCommand implements Command {
 
     private static final String PRODUCT_ID = "productId";
     private static final String DELETE_VALUE = "deleteValue";
+    private static final String PAGE = "page";
+    private static final String ID = "id";
 
 
     @Override
@@ -40,7 +42,8 @@ public class DeleteItemCommand implements Command {
         LOGGER.info("Got to DeleteItemCommand");
         long productId = Long.parseLong(req.getParameter(PRODUCT_ID));
         long valueToDelete = Integer.parseInt(req.getParameter(DELETE_VALUE));
-        long userId = (long) req.getSession().getAttribute("id");
+        String page = req.getParameter(PAGE);
+        long userId = (long) req.getSession().getAttribute(ID);
 
         List<Long> longParams = new ArrayList<>();
         longParams.add(productId);
@@ -49,7 +52,7 @@ public class DeleteItemCommand implements Command {
             Product product = productService.findProductById(productId);
             if (!(product.getStock() == 0 && valueToDelete == 0) && validator.validateIsNotPositive(validator.convertToStringList(longParams))) {
                 LOGGER.info("Negative values");
-                res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=0&shift=3&message=negative");
+                res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=" + page + "&shift=3&message=negative");
             } else {
                 Order foundOrder = orderService.findReservation(productId, userId);
                 if (!validator.validateIsNull(foundOrder)) {
@@ -58,14 +61,14 @@ public class DeleteItemCommand implements Command {
                 }
 
                 if (product.getStock() < valueToDelete) {
-                    res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=0&shift=3&message=more");
+                    res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=" + page + "&shift=3&message=more");
                 } else {
                     if (productService.updateProduct(productId, valueToDelete)) {
                         LOGGER.info("Delete complete productId - " + productId + " deleteValue - " + valueToDelete + " (SUCCESS)");
                     } else {
                         LOGGER.info("Delete complete productId - " + productId + " deleteValue - " + valueToDelete + " (FAILED)");
                     }
-                    res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=0&shift=3");
+                    res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=" + page + "&shift=3");
                 }
             }
         } catch (IOException | ServiceException e) {

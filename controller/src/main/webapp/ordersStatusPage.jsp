@@ -26,30 +26,27 @@
 </head>
 <body>
 <c:set var="finalOrders" value="${requestScope.finalOrders}"/>
-<c:set var="userId" value="${requestScope.userId}"/>
-<c:set var="test" value="${requestScope.test}"/>
 <jsp:include page="Assets/MenuJSPs/AdminMenu.jsp"/>
 
 <div class="blockCont">
-    <c:forEach var="finalOrder" items="${test}">
-
+    <c:forEach var="finalOrder" items="${finalOrders}">
         <div class="info" style="border: green solid 2px; display: flex; justify-content: flex-start">
-            <c:out value="User id - ${finalOrder.getUserId()}"/>
-            <c:forEach var="item" items="${finalOrder.getProducts()}">
+            <c:out value="User id - ${finalOrder.get(0).getUserId()}"/>
+            <c:forEach var="item" items="${finalOrder}">
                 <div class="info" style="border: green solid 2px">
-                    <div><c:out value="${itemNameLabel} - ${item.getName()}"/></div>
-                    <div><c:out value="${itemPriceLabel} - ${item.getPrice()}"/></div>
-                    <div><c:out value="${itemVendorLabel} - ${item.getVendor()}"/></div>
+                    <div><c:out value="${itemNameLabel} - ${item.getProduct().getName()}"/></div>
+                    <div><c:out value="${itemPriceLabel} - ${item.getProduct().getPrice()}"/></div>
+                    <div><c:out value="${itemVendorLabel} - ${item.getProduct().getVendor()}"/></div>
                 </div>
             </c:forEach>
             <form action="FrontController" method="post">
-                <input type="hidden" name="orderId" value="${finalOrder.getFinalOrderId()}">
+                <input type="hidden" name="orderId" value="${finalOrder.get(0).getOrderId()}">
                 <input type="hidden" name="COMMAND" value="ACCEPT_FINAL_ORDER">
                 <button type="submit">${acceptLabel}</button>
             </form>
 
             <form action="FrontController" method="post">
-                <input type="hidden" name="orderId" value="${finalOrder.getFinalOrderId()}">
+                <input type="hidden" name="orderId" value="${finalOrder.get(0).getOrderId()}">
                 <input type="hidden" name="COMMAND" value="REFUSE_FINAL_ORDER">
                 <button type="submit">${refuseLabel}</button>
             </form>

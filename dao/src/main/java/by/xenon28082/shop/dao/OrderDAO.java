@@ -1,12 +1,15 @@
 package by.xenon28082.shop.dao;
 
 import by.xenon28082.shop.dao.exception.DaoException;
+import by.xenon28082.shop.entity.FinalOrder;
 import by.xenon28082.shop.entity.Order;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public interface OrderDAO extends EntityFacade<Order> {
+
+    List<FinalOrder> getUserFinalOrders(long userId) throws DaoException;
 
     List<Order> getOrders(long userId) throws DaoException;
 
@@ -29,4 +32,5 @@ public interface OrderDAO extends EntityFacade<Order> {
     boolean acceptFinalOrder(long orderId) throws DaoException;
 
     boolean refuseFinalOrder(long orderId) throws DaoException;
+
 }
