@@ -27,10 +27,11 @@ public interface OrderDAO extends EntityFacade<Order> {
 
     boolean checkOrderPresence(long userId, List<Order> products) throws DaoException;
 
-    ArrayList<ArrayList<Order>> getFinalOrders() throws DaoException;
+    ArrayList<ArrayList<Order>> getFinalOrders(boolean getAllAccepted) throws DaoException;
 
     boolean acceptFinalOrder(long orderId) throws DaoException;
 
     boolean refuseFinalOrder(long orderId) throws DaoException;
 
+    boolean updateFinalOrder(long orderId) throws DaoException;
 }

@@ -30,11 +30,13 @@ public interface OrderService {
 
     boolean checkOrderPresence(long userId, List<Order> products) throws ServiceException;
 
-    ArrayList<ArrayList<Order>> getFinalOrders() throws ServiceException;
+    ArrayList<ArrayList<Order>> getFinalOrders(boolean getAllAccepted) throws ServiceException;
 
     boolean acceptFinalOrder(long orderId) throws ServiceException;
 
     boolean refuseFinalOrder(long orderId) throws ServiceException;
 
     List<FinalOrder> getUserFinalOrders(long userId) throws ServiceException;
+
+    boolean updateFinalOrder(long orderId) throws ServiceException;
 }

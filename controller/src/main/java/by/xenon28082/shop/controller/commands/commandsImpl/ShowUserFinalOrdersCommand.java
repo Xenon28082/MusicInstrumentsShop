@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-public class ShowUSerFinalOrdersCommand implements Command {
+public class ShowUserFinalOrdersCommand implements Command {
 
     private final String ID = "id";
 
@@ -24,10 +24,6 @@ public class ShowUSerFinalOrdersCommand implements Command {
         String userId = String.valueOf(req.getSession().getAttribute(ID));
         try {
             List<FinalOrder> userFinalOrders = orderService.getUserFinalOrders(Long.parseLong(userId));
-//            for (FinalOrder order:
-//                 userFinalOrders) {
-//                System.out.println(order);
-//            }
             req.setAttribute("finalOrders", userFinalOrders);
             req.getRequestDispatcher("userFinalOrdersPage.jsp").forward(req,res);
         } catch (ServiceException | ServletException | IOException e) {

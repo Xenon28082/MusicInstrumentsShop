@@ -15,7 +15,7 @@
 <div class="blockCont">
     <c:forEach var="finalOrder" items="${finalOrders}">
         <div class="info" style="border: #2ecc71 solid 2px">
-            <c:if test="${finalOrder.isAccepted() && !finalOrder.isRefused()}">
+            <c:if test="${finalOrder.isAccepted() && !finalOrder.isClosed() && !finalOrder.isRefused()}">
                 <div style="color: #2ecc71">Accepted</div>
             </c:if>
             <c:if test="${!finalOrder.isAccepted() && finalOrder.isRefused()}">
@@ -23,6 +23,9 @@
             </c:if>
             <c:if test="${!finalOrder.isAccepted() && !finalOrder.isRefused()}">
                 <div style="color: yellow">Processing</div>
+            </c:if>
+            <c:if test="${finalOrder.isClosed()}">
+                <div style="color: #2ecc71">Closed</div>
             </c:if>
             <c:forEach var="order" items="${finalOrder.getProducts()}">
 

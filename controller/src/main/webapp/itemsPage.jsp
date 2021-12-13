@@ -121,7 +121,6 @@
             There is no products
         </div>
     </c:if>
-    <c:set var="message" value="${param.message}"/>
 
     <c:if test="${message=='negative'}">
         <div style="border: red solid 2px"><c:out value="You can't insert negative values in input fields"/></div>

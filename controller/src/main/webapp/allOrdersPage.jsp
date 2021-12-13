@@ -42,22 +42,27 @@
             </c:forEach>
             <form action="FrontController" method="post">
                 <input type="hidden" name="orderId" value="${finalOrder.get(0).getOrderId()}">
-                <input type="hidden" name="COMMAND" value="ACCEPT_FINAL_ORDER">
+                <input type="hidden" name="COMMAND" value="UPDATE_FINAL_ORDER">
                 <button type="submit">${acceptLabel}</button>
             </form>
 
-            <form action="FrontController" method="post">
-                <input type="hidden" name="orderId" value="${finalOrder.get(0).getOrderId()}">
-                <input type="hidden" name="COMMAND" value="REFUSE_FINAL_ORDER">
-                <button type="submit">${refuseLabel}</button>
-            </form>
         </div>
     </c:forEach>
 </div>
 <div class="blockCont">
+    <c:if test="${message == 'failed'}">
+        <div style="border: red solid 2px">
+            Failed to close order
+        </div>
+    </c:if>
+    <c:if test="${message == 'success'}">
+        <div style="border: green solid 2px">
+            Order successfully closed
+        </div>
+    </c:if>
     <c:if test="${message == 'noorders'}">
         <div style="border: green solid 2px">
-            All orders are processed, there is no new orders.
+            All orders are closed, there is no new orders.
         </div>
     </c:if>
 </div>

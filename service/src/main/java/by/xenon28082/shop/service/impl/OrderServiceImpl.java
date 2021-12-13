@@ -149,9 +149,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public ArrayList<ArrayList<Order>> getFinalOrders() throws ServiceException {
+    public ArrayList<ArrayList<Order>> getFinalOrders(boolean getAllAccepted) throws ServiceException {
         try {
-            return dao.getFinalOrders();
+            return dao.getFinalOrders(getAllAccepted);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -179,6 +179,15 @@ public class OrderServiceImpl implements OrderService {
     public List<FinalOrder> getUserFinalOrders(long userId) throws ServiceException {
         try {
             return dao.getUserFinalOrders(userId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public boolean updateFinalOrder(long orderId) throws ServiceException {
+        try {
+            return dao.updateFinalOrder(orderId);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

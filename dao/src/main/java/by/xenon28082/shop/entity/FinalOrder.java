@@ -9,15 +9,33 @@ public class FinalOrder {
     private long userId;
     private boolean isAccepted;
     private boolean isRefused;
+    private boolean isClosed;
 
 
 
-    public FinalOrder(long finalOrderId, long userId, boolean isAccepted, boolean isRefused, List<Order> orders) {
+    public FinalOrder(long finalOrderId, long userId, boolean isAccepted, boolean isRefused, boolean isClosed, List<Order> orders) {
         this.orders = orders;
         this.finalOrderId = finalOrderId;
         this.userId = userId;
         this.isAccepted = isAccepted;
         this.isRefused = isRefused;
+        this.isClosed = isClosed;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
+    public boolean isClosed() {
+        return isClosed;
+    }
+
+    public void setClosed(boolean closed) {
+        isClosed = closed;
     }
 
     public FinalOrder() {

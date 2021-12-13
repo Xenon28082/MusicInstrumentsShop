@@ -27,6 +27,7 @@
     <fmt:message bundle="${loc}" key="whistLabel" var="whistLabel"/>
     <fmt:message bundle="${loc}" key="changeUserRoleLabel" var="changeUserRoleLabel"/>
     <fmt:message bundle="${loc}" key="changeOrderStatusLabel" var="changeOrderStatusLabel"/>
+    <fmt:message bundle="${loc}" key="finalOrdersLabel" var="finalOrdersLabel"/>
 </head>
 <body>
 
@@ -92,6 +93,11 @@
         <li><a class="mainRef" href="FrontController?COMMAND=GET_ORDERS">
             <div class="img_n"><img src="https://img.icons8.com/ios/50/ffffff/lifecycle--v1.png"/></div>
             <span>${changeOrderStatusLabel}</span></a>
+        </li>
+
+        <li><a class="mainRef" href="FrontController?COMMAND=GET_ORDERS&getAll=true">
+            <div class="img_n"><img src="https://img.icons8.com/ios/50/ffffff/lifecycle--v1.png"/></div>
+            <span>${finalOrdersLabel}</span></a>
         </li>
 
         <li><a class="mainRef" href="FrontController?COMMAND=LOGOUT">

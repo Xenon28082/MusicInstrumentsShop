@@ -21,7 +21,6 @@ public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
     private static final String DELETE_RESERVATION_QUERY = "DELETE FROM orders WHERE user_id = ? AND order_id = ?";
     private static final String FIND_RESERVATION_QUERY = "SELECT * FROM orders WHERE user_id = ? AND product_id_ref = ?";
     private static final String FIND_RESERVATION_BY_ID_QUERY = "SELECT * FROM orders INNER JOIN products ON product_id = product_id_ref WHERE order_id = ?";
-    //    private static final String TEST = "SELECT * FROM orders INNER JOIN products ON product_id = product_id_ref WHERE order_id = ?";
     private static final String UPDATE_QUERY = "UPDATE orders SET amount = ? WHERE user_id = ? AND product_id_ref = ?";
     private static final String FIND_RESERVATION_BY_PRODUCT_ID_QUERY = "SELECT * FROM orders WHERE product_id_ref = ?";
     private static final String DELETE_ALL_BY_PRODUCT_ID_QUERY = "DELETE FROM orders WHERE product_id_ref = ?";
@@ -33,6 +32,7 @@ public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
     private static final String GET_USER_FINAL_ORDERS_QUERY = "SELECT * FROM final_orders WHERE user_id = ?";
     private static final String ACCEPT_FINAL_ORDER_QUERY = "UPDATE final_orders SET is_accepted = TRUE WHERE order_id = ?";
     private static final String REFUSE_FINAL_ORDER_QUERY = "UPDATE final_orders SET is_refused = TRUE WHERE order_id = ?";
+    private static final String UPDATE_FINAL_ORDER_QUERY = "UPDATE final_orders SET is_closed = TRUE WHERE order_id = ?";
 
 
     public OrderDAOImpl(ConnectionPool connectionPool) {
@@ -388,7 +388,7 @@ public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
     }
 
     @Override
-    public ArrayList<ArrayList<Order>> getFinalOrders() throws DaoException {
+    public ArrayList<ArrayList<Order>> getFinalOrders(boolean getAllAccepted) throws DaoException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -401,11 +401,18 @@ public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
                 long finalOrderId = resultSet.getLong(1);
                 long userId = resultSet.getLong(2);
                 String ids = resultSet.getString(3);
-                boolean accepted = resultSet.getBoolean(4);
-                boolean refused = resultSet.getBoolean(5);
-                if (refused || accepted) {
+                boolean isAccepted = resultSet.getBoolean(4);
+                boolean isRefused = resultSet.getBoolean(5);
+                boolean isClosed = resultSet.getBoolean(6);
+                if(isClosed){
                     continue;
                 }
+                if (isRefused || (isAccepted && !getAllAccepted)) {
+                    continue;
+                }
+//                else if (!isRefused && !isAccepted) {
+//                    continue;
+//                }
                 String[] orderIds = ids.split(" ");
                 ArrayList<Order> finalOrders = new ArrayList<>();
                 for (String id :
@@ -482,8 +489,9 @@ public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
             while (resultSet.next()) {
                 long finalOrderId = resultSet.getLong(1);
                 String ids = resultSet.getString(3);
-                boolean accepted = resultSet.getBoolean(4);
-                boolean refused = resultSet.getBoolean(5);
+                boolean isAccepted = resultSet.getBoolean(4);
+                boolean isRefused = resultSet.getBoolean(5);
+                boolean isClosed = resultSet.getBoolean(6);
                 String[] orderIds = ids.split(" ");
                 ArrayList<Order> orders = new ArrayList<>();
                 for (String id :
@@ -502,14 +510,36 @@ public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
                 finalOrders.add(new FinalOrder(
                         finalOrderId,
                         userId,
-                        accepted,
-                        refused,
+                        isAccepted,
+                        isRefused,
+                        isClosed,
                         orders
                 ));
             }
             return finalOrders;
         } catch (DaoException | SQLException e) {
             throw new DaoException(e);
+        }finally {
+            close(preparedStatement);
+            close(resultSet);
+            retrieve(connection);
+        }
+    }
+
+    @Override
+    public boolean updateFinalOrder(long orderId) throws DaoException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = getConnection(true);
+            preparedStatement = connection.prepareStatement(UPDATE_FINAL_ORDER_QUERY);
+            preparedStatement.setLong(1, orderId);
+            return preparedStatement.executeUpdate() != 0;
+        } catch (DaoException | SQLException e) {
+            throw new DaoException(e);
+        }finally {
+            close(preparedStatement);
+            retrieve(connection);
         }
     }
 }
