@@ -22,8 +22,8 @@ public class UpdateUserPasswordCommand implements Command {
 
     private final Logger LOGGER = LoggerFactory.getLogger(UpdateUserPasswordCommand.class);
 
-    private static final UserService userService = ServiceFactory.getInstance().getUserService();
-    private static final Validator validator = ValidatorImpl.getInstance();
+    private final UserService userService = ServiceFactory.getInstance().getUserService();
+    private final Validator validator = ValidatorImpl.getInstance();
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse res) throws ControllerException {

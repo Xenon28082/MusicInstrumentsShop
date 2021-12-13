@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <!DOCTYPE html>
 
@@ -10,6 +10,25 @@
     <title>Title</title>
     <link rel="stylesheet" href="Assets/CSS/ItemBlock.css">
     <link rel="stylesheet" href="Assets/CSS/VerticalMenu.css">
+    <c:set var="locale" value="${sessionScope.get('loc')}"/>
+    <c:if test="${locale == null}">
+        <fmt:setLocale value="en"/>
+    </c:if>
+    <c:if test="${locale != null}">
+        <fmt:setLocale value="${locale}"/>
+    </c:if>
+
+    <fmt:setBundle basename="localization.local" var="loc"/>
+    <fmt:message bundle="${loc}" key="allOrdersLabel" var="allOrdersLabel"/>
+    <fmt:message bundle="${loc}" key="orderIdLabel" var="orderIdLabel"/>
+    <fmt:message bundle="${loc}" key="userIdLabel" var="userIdLabel"/>
+    <fmt:message bundle="${loc}" key="productNameLabel" var="productNameLabel"/>
+    <fmt:message bundle="${loc}" key="productPriceLabel" var="productPriceLabel"/>
+    <fmt:message bundle="${loc}" key="productStockLabel" var="productStockLabel"/>
+    <fmt:message bundle="${loc}" key="productTypeLabel" var="productTypeLabel"/>
+    <fmt:message bundle="${loc}" key="productVendorLabel" var="productVendorLabel"/>
+    <fmt:message bundle="${loc}" key="amountLabel" var="amountLabel"/>
+    <fmt:message bundle="${loc}" key="payAndCloseLabel" var="payAndCloseLabel"/>
 </head>
 <body>
 <jsp:include page="Assets/MenuJSPs/UserMenu.jsp"/>
@@ -25,13 +44,13 @@
                     <img src="http://placehold.it/170x220">
                 </div>
                 <div class="info">
-                    <p>Order id - ${order.getOrderId()}</p>
-                    <p>User id - ${order.getUserId()}</p>
-                    <p>Product name - ${order.getProduct().getName()}</p>
-                    <p>Product price - ${order.getProduct().getPrice()}</p>
-                    <p>Product type - ${order.getProduct().getType()}</p>
-                    <p>Product vendor - ${order.getProduct().getVendor()}</p>
-                    <p>Amount - ${order.getAmount()}</p>
+                    <p>${orderIdLabel} - ${order.getOrderId()}</p>
+                    <p>${userIdLabel} - ${order.getUserId()}</p>
+                    <p>${productNameLabel} - ${order.getProduct().getName()}</p>
+                    <p>${productPriceLabel} - ${order.getProduct().getPrice()}</p>
+                    <p>${productTypeLabel} - ${order.getProduct().getType()}</p>
+                    <p>${productVendorLabel} - ${order.getProduct().getVendor()}</p>
+                    <p>${amountLabel} - ${order.getAmount()}</p>
                 </div>
             </div>
         </c:if>
@@ -41,13 +60,13 @@
                     <img src="http://placehold.it/170x220">
                 </div>
                 <div class="info">
-                    <p>Order id - ${order.getOrderId()}</p>
-                    <p>User id - ${order.getUserId()}</p>
-                    <p>Product name - ${order.getProduct().getName()}</p>
-                    <p>Product price - ${order.getProduct().getPrice()}</p>
-                    <p>Product type - ${order.getProduct().getType()}</p>
-                    <p>Product vendor - ${order.getProduct().getVendor()}</p>
-                    <p>Amount - ${order.getAmount()}</p>
+                    <p>${orderIdLabel} - ${order.getOrderId()}</p>
+                    <p>${userIdLabel} - ${order.getUserId()}</p>
+                    <p>${productNameLabel} - ${order.getProduct().getName()}</p>
+                    <p>${productPriceLabel} - ${order.getProduct().getPrice()}</p>
+                    <p>${productTypeLabel} - ${order.getProduct().getType()}</p>
+                    <p>${productVendorLabel} - ${order.getProduct().getVendor()}</p>
+                    <p>${amountLabel} - ${order.getAmount()}</p>
                 </div>
             </div>
         </c:if>
@@ -69,7 +88,7 @@
             <input type="hidden" name="COMMAND" value="CLOSE_ORDER">
             <input type="hidden" name="finalPrice" value="${finalPrice}">
             <input type="number" name="paid" min = "1" max="999999" required>
-            <button type="submit">Pay and close order</button>
+            <button type="submit">${payAndCloseLabel}</button>
         </form>
     </div>
 </c:if>

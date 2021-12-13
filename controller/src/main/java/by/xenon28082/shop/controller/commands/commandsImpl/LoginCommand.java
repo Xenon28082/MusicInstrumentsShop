@@ -23,16 +23,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LoginCommand implements Command {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LoginCommand.class);
-    private UserService userService = ServiceFactory.getInstance().getUserService();
-    private static Validator validator = ValidatorImpl.getInstance();
+    private final Logger LOGGER = LoggerFactory.getLogger(LoginCommand.class);
+    private final UserService userService = ServiceFactory.getInstance().getUserService();
+    private final Validator validator = ValidatorImpl.getInstance();
 
-    private static String USER_LOGIN = "userloginLog";
-    private static String PASSWORD = "passwordLog";
-    private static String ID = "id";
-    private static String ROLE = "role";
-    private static String LOGIN = "login";
-    private static String LOCALE = "locale";
+    private final String USER_LOGIN = "userloginLog";
+    private final String PASSWORD = "passwordLog";
+    private final String ID = "id";
+    private final String ROLE = "role";
+    private final String LOGIN = "login";
+    private final String LOCALE = "locale";
 
 
     @Override

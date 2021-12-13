@@ -20,13 +20,13 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class GetProductsCommand implements Command {
-    private static final Logger LOGGER = LoggerFactory.getLogger(GetProductsCommand.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(GetProductsCommand.class);
 
     private final ProductService productService = ServiceFactory.getInstance().getProductService();
 
-    private static final String TYPE = "TYPE";
-    private static final String PAGE = "page";
-    private static final String SHIFT = "shift";
+    private final String TYPE = "TYPE";
+    private final String PAGE = "page";
+    private final String SHIFT = "shift";
 
 
     @Override

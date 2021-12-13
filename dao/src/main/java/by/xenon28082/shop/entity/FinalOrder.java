@@ -22,6 +22,14 @@ public class FinalOrder {
         this.isClosed = isClosed;
     }
 
+    public FinalOrder(long finalOrderId, long userId, boolean isAccepted, boolean isRefused, boolean isClosed) {
+        this.orders = orders;
+        this.userId = userId;
+        this.isAccepted = isAccepted;
+        this.isRefused = isRefused;
+        this.isClosed = isClosed;
+    }
+
     public List<Order> getOrders() {
         return orders;
     }

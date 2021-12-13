@@ -9,7 +9,8 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" type="text/css" href="Assets/CSS/VerticalMenu.css">
-    <c:set var="locale" value="${sessionScope.get('locale')}"/>
+
+    <c:set var="locale" value="${sessionScope.get('loc')}"/>
     <c:if test="${locale == null}">
         <fmt:setLocale value="en"/>
     </c:if>
@@ -27,6 +28,7 @@
     <fmt:message bundle="${loc}" key="perkLabel" var="perkLabel"/>
     <fmt:message bundle="${loc}" key="whistLabel" var="whistLabel"/>
     <fmt:message bundle="${loc}" key="finalOrdersLabel" var="finalOrdersLabel"/>
+    <fmt:message bundle="${loc}" key="changeLocaleLable" var="changeLocaleLable"/>
 </head>
 <body>
 
@@ -35,13 +37,15 @@
         String redirectURL = "index.jsp";
         response.sendRedirect(redirectURL);
     }
+    System.out.println("Locale - " + request.getSession().getAttribute("locale"));
+    System.out.println("try - " + request.getSession().getAttribute("try"));
 %>
 
 <header>
     <div class="head" style="display: flex; justify-content: space-between">
         <div class="ico">
             <a href="userPage.jsp">
-                <img src="Assets/images/test.png">
+                <img src="https://static-s.aa-cdn.net/img/gp/20600011418950/jArcNzG3wGOQlbu3HuyC1MZY4H4Z9zZfPJhTE0LbMdPTusxYGSePWTsceMj1ywbSH38=s300?v=1">
             </a>
         </div>
         <div class="ico">

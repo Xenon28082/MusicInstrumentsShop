@@ -4,7 +4,6 @@ import by.xenon28082.shop.controller.commands.Command;
 import by.xenon28082.shop.controller.exception.ControllerException;
 import by.xenon28082.shop.controller.validators.Validator;
 import by.xenon28082.shop.controller.validators.ValidatorImpl;
-import by.xenon28082.shop.dao.exception.DaoException;
 import by.xenon28082.shop.entity.Order;
 import by.xenon28082.shop.service.OrderService;
 import by.xenon28082.shop.service.ServiceFactory;
@@ -22,7 +21,7 @@ public class CloseOrderCommand implements Command {
 
     private final Validator validator = ValidatorImpl.getInstance();
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CloseOrderCommand.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(CloseOrderCommand.class);
 
     private final OrderService orderService = ServiceFactory.getInstance().getOrderService();
 
@@ -43,7 +42,7 @@ public class CloseOrderCommand implements Command {
                 LOGGER.info("Empty field");
                 res.sendRedirect("FrontController?COMMAND=SHOW_ORDER&message=empty");
             } else {
-                if (validator.validateIsNotPositive(Arrays.asList(paid))) {
+                if (validator.validateIsValidNumbers(Arrays.asList(paid))) {
                     LOGGER.info("Negative value");
                     res.sendRedirect("FrontController?COMMAND=SHOW_ORDER&message=negative");
                 } else {
@@ -51,7 +50,8 @@ public class CloseOrderCommand implements Command {
                         LOGGER.info("Not equal paid value and price value");
                         res.sendRedirect("FrontController?COMMAND=SHOW_ORDER&message=notequal");
                     } else {
-                        if (orderService.checkOrderPresence(Long.parseLong(userId), orders)) {
+                        if (orderService.checkOrderPresence(Long.parseLong(userId), orders) &&
+                                !orderService.getFinalOrder(Long.parseLong(userId), orders).isRefused()) {
                             LOGGER.info("Such order already exists");
                             res.sendRedirect("FrontController?COMMAND=SHOW_ORDER&message=exists");
                         } else {

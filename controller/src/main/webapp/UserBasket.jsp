@@ -8,7 +8,7 @@
     <title>Title</title>
     <link rel="stylesheet" href="Assets/CSS/ItemBlock.css">
     <link rel="stylesheet" href="Assets/CSS/VerticalMenu.css">
-    <c:set var="locale" value="${sessionScope.get('locale')}"/>
+    <c:set var="locale" value="${sessionScope.get('loc')}"/>
     <c:if test="${locale == null}">
         <fmt:setLocale value="en"/>
     </c:if>
@@ -64,7 +64,7 @@
                     <input type="hidden" name="COMMAND" value="DELETE_FROM_BASKET"/>
                     <input type="hidden" name="orderId" value="${order.getOrderId()}"/>
                     <input type="hidden" name="productId" value="${order.getProduct().getId()}"/>
-                    <input type="number" name="productAmount" min="1" value="1" required>
+                    <input type="number" name="productAmount" min="0" max="999999" value="1" required>
                     <button class="addToCart" type="submit">${deleteLabel}</button>
                 </form>
                 <c:if test="${order.getAmount() != 0}">

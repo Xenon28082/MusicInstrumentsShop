@@ -8,14 +8,14 @@
     <title>Title</title>
     <link rel="stylesheet" href="Assets/CSS/ItemBlock.css">
     <link rel="stylesheet" href="Assets/CSS/VerticalMenu.css">
-    <c:set var="locale" value="${sessionScope.get('locale')}"/>
+    <c:set var="locale" value="${sessionScope.get('loc')}"/>
     <c:if test="${locale == null}">
-
         <fmt:setLocale value="en"/>
     </c:if>
     <c:if test="${locale != null}">
         <fmt:setLocale value="${locale}"/>
     </c:if>
+
     <fmt:setBundle basename="localization.local" var="loc"/>
     <fmt:message bundle="${loc}" key="itemNameLabel" var="itemNameLabel"/>
     <fmt:message bundle="${loc}" key="itemPriceLabel" var="itemPriceLabel"/>

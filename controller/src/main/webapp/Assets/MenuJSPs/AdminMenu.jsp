@@ -7,7 +7,7 @@
 <html>
 <head>
     <title>Title</title>
-    <c:set var="locale" value="${sessionScope.get('locale')}"/>
+    <c:set var="locale" value="${sessionScope.get('loc')}"/>
     <c:if test="${locale == null}">
 
         <fmt:setLocale value="en"/>
@@ -28,6 +28,7 @@
     <fmt:message bundle="${loc}" key="changeUserRoleLabel" var="changeUserRoleLabel"/>
     <fmt:message bundle="${loc}" key="changeOrderStatusLabel" var="changeOrderStatusLabel"/>
     <fmt:message bundle="${loc}" key="finalOrdersLabel" var="finalOrdersLabel"/>
+    <fmt:message bundle="${loc}" key="changeLocaleLable" var="changeLocaleLable"/>
 </head>
 <body>
 
@@ -42,7 +43,7 @@
     <div class="head" style="display: flex; justify-content: space-between">
         <div class="ico">
             <a href="adminPage.jsp">
-                <img src="Assets/images/test.png">
+                <img src="https://static-s.aa-cdn.net/img/gp/20600011418950/jArcNzG3wGOQlbu3HuyC1MZY4H4Z9zZfPJhTE0LbMdPTusxYGSePWTsceMj1ywbSH38=s300?v=1">
             </a>
         </div>
         <div class="ico">

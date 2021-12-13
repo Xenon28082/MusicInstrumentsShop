@@ -34,4 +34,6 @@ public interface OrderDAO extends EntityFacade<Order> {
     boolean refuseFinalOrder(long orderId) throws DaoException;
 
     boolean updateFinalOrder(long orderId) throws DaoException;
+
+    FinalOrder getFinalOrder(long userId, List<Order> orders)throws DaoException;
 }

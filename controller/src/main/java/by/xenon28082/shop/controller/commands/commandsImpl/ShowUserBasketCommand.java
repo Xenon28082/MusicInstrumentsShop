@@ -19,12 +19,12 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class ShowUserBasketCommand implements Command {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LogoutCommand.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(LogoutCommand.class);
 
-    private static final OrderService orderService = ServiceFactory.getInstance().getOrderService();
+    private final OrderService orderService = ServiceFactory.getInstance().getOrderService();
 
-    private static final String ID = "id";
-    private static final String MESSAGE = "message";
+    private final String ID = "id";
+    private final String MESSAGE = "message";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse res) throws ControllerException {

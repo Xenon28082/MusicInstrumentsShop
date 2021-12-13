@@ -9,7 +9,7 @@
     <title>Title</title>
     <link rel="stylesheet" href="Assets/CSS/ItemBlock.css">
     <link rel="stylesheet" href="Assets/CSS/VerticalMenu.css">
-    <c:set var="locale" value="${sessionScope.get('locale')}"/>
+    <c:set var="locale" value="${sessionScope.get('loc')}"/>
     <c:if test="${locale == null}">
         <fmt:setLocale value="en"/>
     </c:if>
@@ -67,7 +67,7 @@
                     <form method="post" action="FrontController">
                         <input type="hidden" name="COMMAND" value="DELETE_SOME"/>
                         <input type="hidden" name="productId" value="${item.getId()}">
-                        <input type="number" name="deleteValue" value="0" required>
+                        <input type="number" name="deleteValue" value="0" min="0" max="999999"required>
                         <input type="hidden" name="page" value="${page}">
                         <button type="submit">${deleteSome}</button>
                     </form>
@@ -92,7 +92,7 @@
                         <input type="hidden" name="TYPE" value="${type}"/>
                         <input type="hidden" name="COMMAND" value="ADD_TO_BASKET"/>
                         <input type="hidden" name="productId" value="${item.getId()}"/>
-                        <input type="number" name="productAmount" min="1" value="1" required>
+                        <input type="number" name="productAmount" min="1" max="999999" value="1" required>
                         <input type="hidden" name="page" value="${page}">
                         <button class="addToCart" type="submit"><img
                                 src="https://img.icons8.com/material-outlined/24/ffffff/plus--v1.png"/></button>

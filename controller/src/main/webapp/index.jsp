@@ -3,16 +3,16 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="Assets/CSS/FallenBox.css">
 
-    <c:set var="locale" value="${sessionScope.get('locale')}"/>
+    <c:set var="locale" value="${sessionScope.get('loc')}"/>
     <c:if test="${locale == null}">
 
-        <fmt:setLocale value="en"/>
+        <fmt:setLocale value="ru"/>
     </c:if>
     <c:if test="${locale != null}">
         <fmt:setLocale value="${locale}"/>

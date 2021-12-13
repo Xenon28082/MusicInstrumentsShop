@@ -8,6 +8,19 @@
     <title>Title</title>
     <link rel="stylesheet" href="Assets/CSS/ItemBlock.css">
     <link rel="stylesheet" href="Assets/CSS/VerticalMenu.css">
+    <c:set var="locale" value="${sessionScope.get('loc')}"/>
+    <c:if test="${locale == null}">
+        <fmt:setLocale value="en"/>
+    </c:if>
+    <c:if test="${locale != null}">
+        <fmt:setLocale value="${locale}"/>
+    </c:if>
+
+    <fmt:setBundle basename="localization.local" var="loc"/>
+    <fmt:message bundle="${loc}" key="acceptedLabel" var="acceptedLabel"/>
+    <fmt:message bundle="${loc}" key="refusedLabel" var="refusedLabel"/>
+    <fmt:message bundle="${loc}" key="processingLabel" var="processingLabel"/>
+    <fmt:message bundle="${loc}" key="closedLabel" var="closedLabel"/>
 </head>
 <body>
 <jsp:include page="Assets/MenuJSPs/UserMenu.jsp"/>
@@ -16,16 +29,16 @@
     <c:forEach var="finalOrder" items="${finalOrders}">
         <div class="info" style="border: #2ecc71 solid 2px">
             <c:if test="${finalOrder.isAccepted() && !finalOrder.isClosed() && !finalOrder.isRefused()}">
-                <div style="color: #2ecc71">Accepted</div>
+                <div style="color: #2ecc71">${acceptedLabel}</div>
             </c:if>
             <c:if test="${!finalOrder.isAccepted() && finalOrder.isRefused()}">
-                <div style="color: red">Refused</div>
+                <div style="color: red">${refusedLabel}</div>
             </c:if>
             <c:if test="${!finalOrder.isAccepted() && !finalOrder.isRefused()}">
-                <div style="color: yellow">Processing</div>
+                <div style="color: yellow">${processingLabel}</div>
             </c:if>
             <c:if test="${finalOrder.isClosed()}">
-                <div style="color: #2ecc71">Closed</div>
+                <div style="color: #2ecc71">${closedLabel}</div>
             </c:if>
             <c:forEach var="order" items="${finalOrder.getProducts()}">
 

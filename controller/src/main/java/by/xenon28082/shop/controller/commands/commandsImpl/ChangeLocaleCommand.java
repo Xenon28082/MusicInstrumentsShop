@@ -20,12 +20,11 @@ public class ChangeLocaleCommand implements Command {
         try {
             String newLocale = req.getParameter("localeSelect");
             String returnValue = req.getParameter("pathBack");
-        System.out.println("new Locale is" + newLocale);
-            LOGGER.info("New language is" + newLocale);
-            req.getSession().setAttribute("locale", newLocale);
-            res.sendRedirect(returnValue);
+            LOGGER.info("New language is - " + newLocale);
+            req.getSession().setAttribute("loc", newLocale);
+            res.sendRedirect(returnValue+"");
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ControllerException(e);
         }
     }
 }

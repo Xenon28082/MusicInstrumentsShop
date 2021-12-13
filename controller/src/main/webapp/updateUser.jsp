@@ -8,7 +8,7 @@
     <title>Title</title>
     <link rel="stylesheet" href="Assets/CSS/ItemBlock.css">
     <link rel="stylesheet" href="Assets/CSS/VerticalMenu.css">
-    <c:set var="locale" value="${sessionScope.get('locale')}"/>
+    <c:set var="locale" value="${sessionScope.get('loc')}"/>
     <c:if test="${locale == null}">
 
         <fmt:setLocale value="en"/>
@@ -38,14 +38,14 @@
 <c:out value="name - ${foundUser.getName()}"/>
 <c:out value="lastname - ${foundUser.getLastname()}"/>
 <div class="blockCont">
-    <h1>Update login</h1>
+    <h1>${updateUserLogin}</h1>
     <form method="post" action="FrontController">
         <input type="hidden" name="COMMAND" value="UPDATE_USER_LOGIN">
         <input type="hidden" name="userId" value="${sessionScope.id}">
         <input name="newLogin" required>
         <button type="submit">${updateUserLogin}</button>
     </form>
-    <h1>Update password</h1>
+    <h1>${updateUserPassword}</h1>
     <form method="post" action="FrontController">
         <input type="hidden" name="COMMAND" value="UPDATE_USER_PASSWORD">
         <input type="hidden" name="userId" value="${sessionScope.id}">
@@ -64,6 +64,9 @@
     </c:if>
     <c:if test="${message == 'notEqual'}">
         <p style="color: red">Passwords must be equal</p>
+    </c:if>
+    <c:if test="${message == 'exists'}">
+        <p style="color: red">User with such login already exists</p>
     </c:if>
 </div>
 </body>

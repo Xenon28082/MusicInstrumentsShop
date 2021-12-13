@@ -5,36 +5,29 @@ import by.xenon28082.shop.controller.exception.ControllerException;
 import by.xenon28082.shop.controller.validators.Validator;
 import by.xenon28082.shop.controller.validators.ValidatorImpl;
 import by.xenon28082.shop.entity.Order;
-import by.xenon28082.shop.entity.Product;
 import by.xenon28082.shop.service.OrderService;
 import by.xenon28082.shop.service.ProductService;
 import by.xenon28082.shop.service.ServiceFactory;
 import by.xenon28082.shop.service.exception.ServiceException;
-import by.xenon28082.shop.service.impl.OrderServiceImpl;
-import by.xenon28082.shop.service.impl.ProductServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class DeleteFromBasketCommand implements Command {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DeleteFromBasketCommand.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(DeleteFromBasketCommand.class);
 
-    private static final OrderService orderService = ServiceFactory.getInstance().getOrderService();
+    private final OrderService orderService = ServiceFactory.getInstance().getOrderService();
     private final ProductService productService = ServiceFactory.getInstance().getProductService();
     private final Validator validator = ValidatorImpl.getInstance();
 
-    private static final String ID = "id";
-    private static final String ORDER_ID = "orderId";
-    private static final String PRODUCT_ID = "productId";
-    private static final String PRODUCT_AMOUNT = "productAmount";
+    private final String ID = "id";
+    private final String ORDER_ID = "orderId";
+    private final String PRODUCT_ID = "productId";
+    private final String PRODUCT_AMOUNT = "productAmount";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse res) throws ControllerException {
@@ -50,7 +43,7 @@ public class DeleteFromBasketCommand implements Command {
             hasNotDeleted = orderService.findReservation(productId, id).getAmount() != 0;
 
 
-            if (hasNotDeleted && validator.validateIsNotPositive(
+            if (hasNotDeleted && validator.validateIsValidNumbers(
                     Arrays.asList(String.valueOf(amountToDelete))
             )) {
                 LOGGER.info("Value is not positive");

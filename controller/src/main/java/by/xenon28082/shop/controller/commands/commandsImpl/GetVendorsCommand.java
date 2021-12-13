@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class GetVendorsCommand implements Command {
-    private static final Logger LOGGER = LoggerFactory.getLogger(GetVendorsCommand.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(GetVendorsCommand.class);
     private final ProductService productService = ServiceFactory.getInstance().getProductService();
 
     private final String VENDORS = "vendors";

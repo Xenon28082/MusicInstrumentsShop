@@ -30,6 +30,7 @@ public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
     private static final String CHECK_PRESENCE_FINAL_ORDERS_QUERY = "SELECT COUNT(*) FROM final_orders WHERE user_id = ? AND products_ids = ?";
     private static final String GET_FINAL_ORDERS_QUERY = "SELECT * FROM final_orders";
     private static final String GET_USER_FINAL_ORDERS_QUERY = "SELECT * FROM final_orders WHERE user_id = ?";
+    private static final String GET_FINAL_ORDER_QUERY = "SELECT * FROM final_orders WHERE user_id = ? AND products_ids = ?";
     private static final String ACCEPT_FINAL_ORDER_QUERY = "UPDATE final_orders SET is_accepted = TRUE WHERE order_id = ?";
     private static final String REFUSE_FINAL_ORDER_QUERY = "UPDATE final_orders SET is_refused = TRUE WHERE order_id = ?";
     private static final String UPDATE_FINAL_ORDER_QUERY = "UPDATE final_orders SET is_closed = TRUE WHERE order_id = ?";
@@ -410,9 +411,6 @@ public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
                 if (isRefused || (isAccepted && !getAllAccepted)) {
                     continue;
                 }
-//                else if (!isRefused && !isAccepted) {
-//                    continue;
-//                }
                 String[] orderIds = ids.split(" ");
                 ArrayList<Order> finalOrders = new ArrayList<>();
                 for (String id :
@@ -538,6 +536,42 @@ public class OrderDAOImpl extends AbstractDAO implements OrderDAO {
         } catch (DaoException | SQLException e) {
             throw new DaoException(e);
         }finally {
+            close(preparedStatement);
+            retrieve(connection);
+        }
+    }
+
+    @Override
+    public FinalOrder getFinalOrder(long userId, List<Order> orders) throws DaoException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = getConnection(true);
+            preparedStatement = connection.prepareStatement(GET_FINAL_ORDER_QUERY);
+            preparedStatement.setLong(1, userId);
+            String ids = "";
+
+            for (Order order :
+                    orders) {
+                ids = ids + order.getOrderId() + " ";
+            }
+            preparedStatement.setString(2, ids);
+            resultSet = preparedStatement.executeQuery();
+            FinalOrder foundOrder = null;
+
+            if(resultSet.next()){
+                foundOrder = new FinalOrder(resultSet.getLong(1),
+                        resultSet.getLong(2),
+                        resultSet.getBoolean(4),
+                        resultSet.getBoolean(5),
+                        resultSet.getBoolean(6));
+            }
+            return foundOrder;
+        } catch (SQLException | DaoException e) {
+            throw new DaoException(e);
+        }finally {
+            close(resultSet);
             close(preparedStatement);
             retrieve(connection);
         }

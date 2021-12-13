@@ -15,12 +15,12 @@ import java.io.IOException;
 
 public class ReservateProductCommand implements Command {
     private final Logger LOGGER = LoggerFactory.getLogger(ReservateProductCommand.class);
-    private static final OrderService orderService = ServiceFactory.getInstance().getOrderService();
+    private final OrderService orderService = ServiceFactory.getInstance().getOrderService();
 
-    private static final String ADD = "add";
-    private static final String DELETE = "delete";
-    private static final String IS_RESERVED = "isreserved";
-    private static final String ORDER_ID = "orderId";
+    private final String ADD = "add";
+    private final String DELETE = "delete";
+    private final String IS_RESERVED = "isreserved";
+    private final String ORDER_ID = "orderId";
 
 
     @Override

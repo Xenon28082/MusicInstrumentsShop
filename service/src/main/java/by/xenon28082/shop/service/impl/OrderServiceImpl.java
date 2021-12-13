@@ -192,4 +192,15 @@ public class OrderServiceImpl implements OrderService {
             throw new ServiceException(e);
         }
     }
+
+    @Override
+    public FinalOrder getFinalOrder(long userId, List<Order> orders) throws ServiceException {
+        try {
+            return dao.getFinalOrder(userId, orders);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+
 }

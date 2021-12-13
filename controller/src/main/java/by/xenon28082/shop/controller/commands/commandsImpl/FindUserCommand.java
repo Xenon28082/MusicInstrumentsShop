@@ -20,12 +20,12 @@ import java.sql.SQLException;
 
 public class FindUserCommand implements Command {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FindUserCommand.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(FindUserCommand.class);
 
-    private UserService userService = ServiceFactory.getInstance().getUserService();
+    private final UserService userService = ServiceFactory.getInstance().getUserService();
     private final Validator validator = ValidatorImpl.getInstance();
 
-    private static final String USER_LOGIN = "userLogin";
+    private final String USER_LOGIN = "userLogin";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse res) throws ControllerException {
@@ -51,10 +51,10 @@ public class FindUserCommand implements Command {
                 } else {
                     if (foundUser.getRole() != 3) {
                         req.setAttribute("foundUser", foundUser);
+                        req.getRequestDispatcher(path).forward(req, res);
                     } else {
                         res.sendRedirect(path + "?message=Cant change dir");
                     }
-                    req.getRequestDispatcher(path).forward(req, res);
                 }
             }
 

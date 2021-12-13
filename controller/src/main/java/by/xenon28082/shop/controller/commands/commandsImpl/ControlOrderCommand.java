@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 public class ControlOrderCommand implements Command {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ControlOrderCommand.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(ControlOrderCommand.class);
 
     private final Validator validator = ValidatorImpl.getInstance();
 

@@ -8,36 +8,32 @@ import by.xenon28082.shop.service.OrderService;
 import by.xenon28082.shop.service.ProductService;
 import by.xenon28082.shop.service.ServiceFactory;
 import by.xenon28082.shop.service.exception.ServiceException;
-import by.xenon28082.shop.service.impl.OrderServiceImpl;
-import by.xenon28082.shop.service.impl.ProductServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AddItemCommand implements Command {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AddItemCommand.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(AddItemCommand.class);
 
-    private static final OrderService orderService = ServiceFactory.getInstance().getOrderService();
+    private final OrderService orderService = ServiceFactory.getInstance().getOrderService();
     private final ProductService productService = ServiceFactory.getInstance().getProductService();
 
     private final Validator validator = ValidatorImpl.getInstance();
 
-    private static final String PRODUCT_ID = "productId";
-    private static final String ADD_VALUE = "addValue";
-    private static final String ID = "id";
-    private static final String PAGE = "page";
+    private final String PRODUCT_ID = "productId";
+    private final String ADD_VALUE = "addValue";
+    private final String ID = "id";
+    private final String PAGE = "page";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse res) throws ControllerException {
-        LOGGER.info("Got to DeleteItemCommand");
+        LOGGER.info("Got to AddItemCommand");
         long productId = Long.parseLong(req.getParameter(PRODUCT_ID));
         long valueToAdd = Integer.parseInt(req.getParameter(ADD_VALUE));
         String page = req.getParameter(PAGE);
@@ -48,7 +44,7 @@ public class AddItemCommand implements Command {
         longParams.add(productId);
         longParams.add(valueToAdd);
         try {
-            if (validator.validateIsNotPositive(validator.convertToStringList(longParams))) {
+            if (validator.validateIsValidNumbers(validator.convertToStringList(longParams))) {
                 LOGGER.info("Negative values");
                 res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&message=negative&page=" + page + "&shift=3");
             } else {

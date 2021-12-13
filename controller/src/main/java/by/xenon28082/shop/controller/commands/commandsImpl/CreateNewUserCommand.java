@@ -22,16 +22,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CreateNewUserCommand implements Command {
-    private UserService userService = ServiceFactory.getInstance().getUserService();
-    private static final Logger LOGGER = LoggerFactory.getLogger(AddToBasketCommand.class);
+    private final UserService userService = ServiceFactory.getInstance().getUserService();
+    private final Logger LOGGER = LoggerFactory.getLogger(AddToBasketCommand.class);
 
     private final Validator validator = ValidatorImpl.getInstance();
 
-    private static final String USER_LOGIN = "userlogin";
-    private static final String USER_NAME = "username";
-    private static final String USER_LASTNAME = "userlastname";
-    private static final String PASSWORD = "password";
-    private static final String CHECK_PASSWORD = "checkPassword";
+    private final String USER_LOGIN = "userlogin";
+    private final String USER_NAME = "username";
+    private final String USER_LASTNAME = "userlastname";
+    private final String PASSWORD = "password";
+    private final String CHECK_PASSWORD = "checkPassword";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse res) throws ControllerException {

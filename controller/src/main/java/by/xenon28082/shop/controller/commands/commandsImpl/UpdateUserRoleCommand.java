@@ -16,17 +16,17 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class UpdateUserRoleCommand implements Command {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UpdateUserRoleCommand.class);
-    private UserService userService = ServiceFactory.getInstance().getUserService();
+    private final Logger LOGGER = LoggerFactory.getLogger(UpdateUserRoleCommand.class);
+    private final UserService userService = ServiceFactory.getInstance().getUserService();
 
-    private static final String USER_LOGIN = "userLogin";
-    private static final String USER_FIRSTNAME = "userFirstname";
-    private static final String USER_LASTNAME = "userLastname";
-    private static final String USER_ROLE = "userRole";
-    private static final String USER_ID = "userId";
-    private static final String USER_LASTROLE = "userLastRole";
-    private static final String ROLE = "role";
-    private static final String ID = "id";
+    private final String USER_LOGIN = "userLogin";
+    private final String USER_FIRSTNAME = "userFirstname";
+    private final String USER_LASTNAME = "userLastname";
+    private final String USER_ROLE = "userRole";
+    private final String USER_ID = "userId";
+    private final String USER_LASTROLE = "userLastRole";
+    private final String ROLE = "role";
+    private final String ID = "id";
 
 
     @Override
@@ -49,9 +49,7 @@ public class UpdateUserRoleCommand implements Command {
                     id == 0
             ) {
                 LOGGER.info("all fields must be fulfilled (ERROR)");
-
                 req.getRequestDispatcher("changeUserPage.jsp?message=fieldsMustBeFulfilled").forward(req, res);
-
             } else {
                 if (lastRole == 1 && userRole == 2 && currentRole != 3) {
                     LOGGER.info("Trying to delete admin being not a director (ERROR)");

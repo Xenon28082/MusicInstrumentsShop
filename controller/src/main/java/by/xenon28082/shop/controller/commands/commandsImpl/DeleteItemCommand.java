@@ -10,31 +10,27 @@ import by.xenon28082.shop.service.OrderService;
 import by.xenon28082.shop.service.ProductService;
 import by.xenon28082.shop.service.ServiceFactory;
 import by.xenon28082.shop.service.exception.ServiceException;
-import by.xenon28082.shop.service.impl.OrderServiceImpl;
-import by.xenon28082.shop.service.impl.ProductServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DeleteItemCommand implements Command {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DeleteItemCommand.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(DeleteItemCommand.class);
 
-    private static final OrderService orderService = ServiceFactory.getInstance().getOrderService();
+    private final OrderService orderService = ServiceFactory.getInstance().getOrderService();
     private final ProductService productService = ServiceFactory.getInstance().getProductService();
 
     private final Validator validator = ValidatorImpl.getInstance();
 
-    private static final String PRODUCT_ID = "productId";
-    private static final String DELETE_VALUE = "deleteValue";
-    private static final String PAGE = "page";
-    private static final String ID = "id";
+    private final String PRODUCT_ID = "productId";
+    private final String DELETE_VALUE = "deleteValue";
+    private final String PAGE = "page";
+    private final String ID = "id";
 
 
     @Override
@@ -50,7 +46,7 @@ public class DeleteItemCommand implements Command {
         longParams.add(valueToDelete);
         try {
             Product product = productService.findProductById(productId);
-            if (!(product.getStock() == 0 && valueToDelete == 0) && validator.validateIsNotPositive(validator.convertToStringList(longParams))) {
+            if (!(product.getStock() == 0 && valueToDelete == 0) && validator.validateIsValidNumbers(validator.convertToStringList(longParams))) {
                 LOGGER.info("Negative values");
                 res.sendRedirect("FrontController?COMMAND=GET_PRODUCTS&page=" + page + "&shift=3&message=negative");
             } else {

@@ -1,5 +1,6 @@
 package by.xenon28082.shop.service;
 
+import by.xenon28082.shop.dao.exception.DaoException;
 import by.xenon28082.shop.entity.FinalOrder;
 import by.xenon28082.shop.entity.Order;
 import by.xenon28082.shop.service.exception.ServiceException;
@@ -39,4 +40,6 @@ public interface OrderService {
     List<FinalOrder> getUserFinalOrders(long userId) throws ServiceException;
 
     boolean updateFinalOrder(long orderId) throws ServiceException;
+
+    FinalOrder getFinalOrder(long userId, List<Order> orders) throws ServiceException;
 }

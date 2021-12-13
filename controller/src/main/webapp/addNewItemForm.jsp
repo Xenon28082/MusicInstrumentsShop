@@ -10,7 +10,7 @@
     <title>Title</title>
     <link rel="stylesheet" href="Assets/CSS/ItemBlock.css">
     <link rel="stylesheet" href="Assets/CSS/VerticalMenu.css">
-    <c:set var="locale" value="${sessionScope.get('locale')}"/>
+    <c:set var="locale" value="${sessionScope.get('loc')}"/>
     <c:if test="${locale == null}">
 
         <fmt:setLocale value="en"/>
@@ -47,9 +47,11 @@
     <form method="post" action="FrontController?COMMAND=ADD_NEW_ITEM">
         <input type="text" name="productName" placeholder="${productNameLabel}" autocomplete="off" required>
         <p></p>
-        <input type="number" name="productPrice" placeholder="${productPriceLabel}" min="1" autocomplete="off" required>
+        <input type="number" name="productPrice" placeholder="${productPriceLabel}" min="1" max="999999"
+               autocomplete="off" required>
         <p></p>
-        <input type="number" name="productStock" placeholder="${productStockLabel}" min="1" autocomplete="off" required>
+        <input type="number" name="productStock" placeholder="${productStockLabel}" min="1" max="999999"
+               autocomplete="off" required>
         <p></p>
         <select name="productType">
             <option value="guitar">${guitarLabel}</option>
@@ -67,13 +69,17 @@
         <p></p>
         <button type="submit">${addNewItemLabel}</button>
     </form>
-
+</div>
+<div class="blockCont">
     <c:if test="${message == 'negative'}">
         <div style="border: red solid 2px">All number fields must be positive</div>
     </c:if>
 
     <c:if test="${message == 'empty'}">
         <div style="border: red solid 2px">All fields must be fulfilled</div>
+    </c:if>
+    <c:if test="${message == 'success'}">
+        <div style="border: red solid 2px">Product has been added successfully</div>
     </c:if>
 </div>
 </body>

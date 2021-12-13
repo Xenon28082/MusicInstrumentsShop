@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class LogoutCommand implements Command {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LogoutCommand.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(LogoutCommand.class);
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse res) throws ControllerException {

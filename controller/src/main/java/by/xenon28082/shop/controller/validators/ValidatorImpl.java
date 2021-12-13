@@ -24,10 +24,10 @@ public class ValidatorImpl implements Validator {
     }
 
     @Override
-    public boolean validateIsNotPositive(List<String> params) {
+    public boolean validateIsValidNumbers(List<String> params) {
         for (String param : params) {
             try {
-                if (Long.parseLong(param) < 1) {
+                if (Long.parseLong(param) < 1 && Long.parseLong(param) < 999999) {
                     return true;
                 }
             }catch (Exception e){
