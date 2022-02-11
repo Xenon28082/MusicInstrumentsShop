@@ -88,7 +88,7 @@ public class ProductDAOImpl extends AbstractDAO implements ProductDAO {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         try {
-            connection = getConnection(false);
+            connection = getConnection(true);
             preparedStatement = connection.prepareStatement(ADD_NEW_PRODUCTS_QUERY);
             preparedStatement.setString(1, product.getName());
             preparedStatement.setDouble(2, product.getPrice());

@@ -29,7 +29,7 @@ public class ConnectionPoolImpl  implements ConnectionPool {
                 pool.add(dataBaseConfig.getConnection());
             }
         } catch (SQLException e) {
-
+            LOGGER.info("SQLException in initConnectionPool");
         }
         LOGGER.info("init pool.size() is " + pool.size());
         LOGGER.info("init taken.size() is " + taken.size());
